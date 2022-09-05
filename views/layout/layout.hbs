@@ -7,10 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
   <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
+  <link rel="icon" href="/images/favicon/logo.png">
 
   {{!--CSS Links --}}
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/admin/sign-in.css' />
+
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,8 +46,14 @@
 </head>
 
 <body>
-  
+  {{#if admin}}
+  {{else}}{{#if artist}}
+  {{else}}{{#if user}}
+  {{/if}}{{/if}}{{/if}}
   {{{body}}}
+
+  {{!-- JavaScripts --}}
+  <script src="/javascripts/user-validation.js"></script>
 </body>
 
 </html>

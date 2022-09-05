@@ -1,0 +1,88 @@
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register Card -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/artist" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img class="logo-icon" src="/images/icon/logo.png" alt="Logo">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">Britles</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Artist Sign Up</h4>
+                    <p class="mb-4">Create new account</p>
+
+                    <form id="userSignUpForm" class="mb-3" action="/artist/sign-up" method="POST">
+                        {{#if error}}
+                        <p class="form-alert-error">{{error}}</p>
+                        {{/if}}
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstname" name="firstName"
+                                placeholder="Enter first name" autofocus />
+                        </div>
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" name="lastName"
+                                placeholder="Enter last name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="userName"
+                                placeholder="Enter user name" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter your email" />
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" for="password">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password"
+                                    placeholder="Enter password" aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer" id="eyeIcon"><i
+                                        class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" for="password">Confirm password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="cpassword" class="form-control"
+                                    placeholder="Enter confirm password" aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer" id="cEyeIcon"><i
+                                        class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+                        {{!-- Alert Box --}}
+                        <p id="alertBox" style="display: none;" class="form-alert-error">Error </p>
+
+
+
+                        <button class="btn btn-primary d-grid w-100">Sign up</button>
+                    </form>
+
+                    <p class="text-center m-0">
+                        <span>Already have an account?</span>
+                        <a href="/artist/sign-in">
+                            <span>Sign in </span>
+                        </a>
+                    </p>
+                    <p class="text-center">
+                        <span>Create user account?</span>
+                        <a href="/sign-up">
+                            <span>Click here</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Register Card -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register Card -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/artist" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img class="logo-icon" src="/images/icon/logo.png" alt="Logo">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">Britles</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Artist Sign In</h4>
+                    <p class="mb-4">Login account</p>
+
+                    <form id="userSignInForm" class="mb-3" action="/artist/sign-in" method="POST">
+                       
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter your email" />
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label class="form-label" for="password">Password</label>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password"
+                                    placeholder="Enter password" aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer" id="eyeIcon"><i
+                                        class="bx bx-hide"></i></span>
+                            </div>
+                        </div>
+
+                        {{!-- Alert Box --}}
+                         {{#if error}}
+                        <p class="form-alert-error">{{error}}</p>
+                        {{/if}}
+
+                        <p id="alertBox" style="display: none;" class="form-alert-error">Error </p>
+
+                        <button class="btn btn-primary d-grid w-100">Sign In</button>
+                    </form>
+
+                    <p class="text-center m-0">
+                        <span>Don't have an account?</span>
+                        <a href="/artist/sign-up">
+                            <span>Sign up </span>
+                        </a>
+                    </p>
+                    <p class="text-center">
+                        <span>Sign in user account?</span>
+                        <a href="/sign-in">
+                            <span>Click here</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Register Card -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sign In On Submit Validation
+    document.getElementById('userSignInForm').addEventListener('submit', (event) => {
+        let box = document.getElementById('alertBox')
+        let email = document.getElementById('email')
+        let password = document.getElementById('password')
+
+        if (email.value == "" || password.value == "") {
+            box.style.display = 'block'
+            box.innerHTML = "Please fill the form"
+            event.preventDefault();
+        }
+    })
+
+    // Form Password Show and Hide
+document.getElementById('eyeIcon').addEventListener('click', (event) => {
+    let password = document.getElementById("password")
+    let icon = document.getElementById('eyeIcon')
+    if (password.type === "password") {
+        password.type = "text"
+        icon.innerHTML = `<i class='bx bx-show'></i>`
+    } else {
+        password.type = "password"
+        icon.innerHTML = `<i class='bx bx-hide'></i>`
+
+    }
+})
+</script>
