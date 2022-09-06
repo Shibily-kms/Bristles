@@ -14,7 +14,7 @@ let verifyAdmin = (req, res, next) => {
 /* GET users listing. */
 router.get('/', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
-  res.render('admin/overview',{title: "Overview | Admin panel"})
+  res.render('admin/overview', { title: "Overview | Admin panel", admin })
 })
 
 
@@ -46,9 +46,23 @@ router.post('/sign-in', (req, res) => {
 })
 
 // Admin Sign Out
-router.get('/sign-out',(req,res)=>{
+router.get('/sign-out', (req, res) => {
   req.session._BR_ADMIN = null
   res.redirect('/admin/sign-in')
+});
+
+
+// Product List
+router.get('/products/canvas-paint', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  res.render('admin/product-list', { title: "Products | Admin panel", admin, code: "proCN" })
+})
+
+// Add Products
+router.get('/products/canvas-paint/add-product', verifyAdmin, (req, res) => {
+  let category = "Canvas paint"
+  let admin = req.session._BR_ADMIN
+  res.render('admin/add-product', { title: "Add products | Admin panel", admin, code: "proCN", category })
 })
 
 module.exports = router;

@@ -47,6 +47,10 @@
   width: 0.25rem;
   height: 2.5rem;
   border-radius: 0.375rem 0 0 0.375rem;
+  -webkit-border-radius: 0.375rem 0 0 0.375rem;
+  -moz-border-radius: 0.375rem 0 0 0.375rem;
+  -ms-border-radius: 0.375rem 0 0 0.375rem;
+  -o-border-radius: 0.375rem 0 0 0.375rem;
 }
 .bg-menu-theme .menu-sub > .menu-item > .menu-link:before {
   content: "";
@@ -645,7 +649,7 @@ a:hover {
 .layout-navbar-fixed .layout-page:before {
   -webkit-backdrop-filter: saturate(200%) blur(10px);
           backdrop-filter: saturate(200%) blur(10px);
-  background: rgba(245, 245, 249, 0.6);
+  background: rgba(245, 249, 246, 0.6);
 }
 
 .bg-menu-theme {

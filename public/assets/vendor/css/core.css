@@ -15206,9 +15206,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
   margin-right: 0;
 }
 
-.layout-container {
-  min-height: 100vh;
-}
+
 
 .layout-wrapper,
 .layout-container {

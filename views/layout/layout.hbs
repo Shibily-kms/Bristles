@@ -9,11 +9,6 @@
   <!-- Favicon -->
   <link rel="icon" href="/images/favicon/logo.png">
 
-  {{!--CSS Links --}}
-  <link rel='stylesheet' href='/stylesheets/style.css' />
-  <link rel='stylesheet' href='/stylesheets/admin/sign-in.css' />
-
-
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,10 +38,16 @@
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="/assets/js/config.js"></script>
 
+    {{!--CSS Links --}}
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/admin/sign-in.css' />
+
 </head>
 
 <body>
   {{#if admin}}
+  {{>admin-top}}
+  {{>admin-side}}
   {{else}}{{#if artist}}
   {{else}}{{#if user}}
   {{/if}}{{/if}}{{/if}}
@@ -54,6 +55,17 @@
 
   {{!-- JavaScripts --}}
   <script src="/javascripts/user-validation.js"></script>
+  <!-- Core JS -->
+  <!-- build:js assets/vendor/js/core.js -->
+  <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="/assets/vendor/libs/popper/popper.js"></script>
+  <script src="/assets/vendor/js/bootstrap.js"></script>
+  <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="/assets/vendor/js/menu.js"></script>
+  <!-- endbuild -->
+
+  <!-- Main JS -->
+  <script src="/assets/js/main.js"></script>
 </body>
 
 </html>

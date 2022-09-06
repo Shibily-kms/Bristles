@@ -24,6 +24,7 @@ module.exports = {
                     }
                     body.password = await bcrypt.hash(body.password, 10)
                     db.get().collection(collection.USER_COLLECTION).insertOne(body).then((result) => {
+                        console.log(result);
                         resolve(result)
                     })
                 }
