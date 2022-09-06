@@ -1,0 +1,36 @@
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">Add Category</h4>
+
+        <!-- Basic Layout -->
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-sm-8">
+                <div class="form-background  mb-4">
+
+
+                    <div class="card-body">
+                        <form action="/admin/category/add-category" method="post">
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-fullname">Title</label>
+                                <input type="text" class="form-control" name="title" placeholder="Category title"
+                                    required />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+</div>
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('category').classList += " active"
+</script>

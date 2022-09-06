@@ -1,0 +1,69 @@
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">Category List</h4>
+        <!-- Basic Layout -->
+        <div class="pb-3 d-flex justify-content-end">
+            <a href="/admin/category/add-category">
+                <button type="button" class="btn btn-success"><i class='bx bx-plus-circle'></i> Add Category</button>
+            </a>
+        </div>
+        <!-- Hoverable Table rows -->
+        <div class="admin-table-div">
+
+            <div class="table-responsive">
+                <table class="table table-hover css-serial" id="table_id">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>CG ID</th>
+                            <th>Title</th>
+                            {{!-- <th>No of Products</th> --}}
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {{#each category}}
+                        <tr>
+                            <td></td>
+                            <td>{{this.cgId}}</td>
+                            <td>{{this.title}}</td>
+                            {{!-- <td>Active</td> --}}
+                            <td>
+                                <a href="/admin/category/{{this.cgId}}/edit ">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-primary">
+                                        <span class="tf-icons bx bxs-edit-alt"></span>
+                                    </button>
+                                </a>
+                                <a href="/admin/category/{{this.cgId}}/delete"
+                                    onclick="return confirm('Are you remove this category?')">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                        <span class="tf-icons bx bx-trash"></span>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--/ Hoverable Table rows -->
+
+
+
+
+    </div>
+</div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('category').classList += " active"
+</script>

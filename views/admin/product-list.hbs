@@ -10,13 +10,13 @@
     </div>
 </div>
 
+{{!-- Check active page --}}
+<p id="check-active-page" hidden>{{NOW_CAT}}</p>
 
-{{!-- Sidebar Action --}}
 
-
-{{!-- Sidebar Action --}}
 <script>
     document.getElementById('products').classList += " active open"
     let check = document.getElementById('check-active-page').innerHTML
+    check = "pro"+check
     document.getElementById(check).classList += " active"
 </script>

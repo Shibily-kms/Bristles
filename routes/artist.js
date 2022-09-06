@@ -53,7 +53,6 @@ router.get('/sign-in',(req,res)=>{
 
 router.post('/sign-in',(req,res)=>{
   artistHelper.doSignIn(req.body).then((data)=>{
-    console.log(data);
     if(data.emailError){
       req.session.error = "Invalid email id"
       res.redirect('/artist/sign-in')

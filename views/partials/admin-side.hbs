@@ -1,5 +1,5 @@
 <!-- Layout wrapper -->
-<div     style="position: fixed;">
+<div    >
 
     <!-- Menu -->
 
@@ -36,31 +36,15 @@
           </a>
 
           <ul class="menu-sub"> 
-            <li class="menu-item" id="proCN">
-              <a href="/admin/products/canvas-paint" class="menu-link">
-                <div data-i18n="Without menu">Canvas Paint</div>
+            {{#each CAT}}
+            <li class="menu-item" id="pro{{this.title}}">
+              <a href="/admin/products/{{this.title}}" class="menu-link">
+                <div data-i18n="Without menu">{{this.title}}</div>
               </a>
             </li>
-            <li class="menu-item" id="proWC">
-              <a href="layouts-without-navbar.html" class="menu-link">
-                <div data-i18n="Without navbar">Watercolor Paint</div>
-              </a>
-            </li>
-            <li class="menu-item" id="proOL">
-              <a href="layouts-container.html" class="menu-link">
-                <div data-i18n="Container">Oil Paint</div>
-              </a>
-            </li>
-            <li class="menu-item " id="proDT">
-              <a href="layouts-fluid.html" class="menu-link">
-                <div data-i18n="Fluid">Degital art</div>
-              </a>
-            </li>
-            <li class="menu-item" id="proAL">
-              <a href="layouts-blank.html" class="menu-link">
-                <div data-i18n="Blank">Acrylic Paint</div>
-              </a>
-            </li>
+            {{/each}}
+            
+            
           </ul>
         </li>
 
@@ -71,34 +55,22 @@
             <div data-i18n="Account Settings">Pending Products</div>
           </a>
           <ul class="menu-sub">
-            <li class="menu-item" id="pntCN">
-              <a href="" class="menu-link">
-                <div data-i18n="Without menu">Canvas Paint</div>
-              </a>
-            </li>
-            <li class="menu-item" id="pntWC">
-              <a href="layouts-without-navbar.html" class="menu-link">
-                <div data-i18n="Without navbar">Watercolor Paint</div>
-              </a>
-            </li>
-            <li class="menu-item" id="pntOL">
-              <a href="layouts-container.html" class="menu-link">
-                <div data-i18n="Container">Oil Paint</div>
-              </a>
-            </li>
-            <li class="menu-item " id="pntDT">
-              <a href="layouts-fluid.html" class="menu-link">
-                <div data-i18n="Fluid">Degital art</div>
-              </a>
-            </li>
-            <li class="menu-item" id="pntAL">
+            {{#each CAT}}
+            <li class="menu-item" id="pnt{{this.title}}">
               <a href="layouts-blank.html" class="menu-link">
-                <div data-i18n="Blank">Acrylic Paint</div>
+                <div data-i18n="Blank">{{this.title}}</div>
               </a>
             </li>
+            {{/each}}
           </ul>
         </li>
 
+        <li class="menu-item" id="category">
+          <a href="/admin/category" class="menu-link">
+            <i class="menu-icon tf-icons bx bxs-collection"></i>
+            <div data-i18n="Basic">Category</div>
+          </a>
+        </li>
         <li class="menu-item" id="artist">
           <a href="cards-basic.html" class="menu-link">
             <i class="menu-icon tf-icons bx bxs-brush"></i>
@@ -130,4 +102,3 @@
   
 </div>
 <!-- / Layout wrapper -->
-  <p id="check-active-page" hidden >{{code}}</p>

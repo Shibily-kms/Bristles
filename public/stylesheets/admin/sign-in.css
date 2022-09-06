@@ -31,25 +31,93 @@
 .sidebar-main-div {
     height: 100vh;
     position: fixed;
+    z-index: 1;
 }
-.top-header-over{
+
+.top-header-over {
     position: fixed;
     width: 100%;
-    
+    z-index: 1;
+
 }
-.admin-content-page-over{
+
+.admin-content-page-over {
     width: 100%;
-   
+
 }
 
 @media (min-width:1200px) {
-    .top-header-over{
+    .top-header-over {
         position: fixed;
         padding-left: 260px;
-        
+
     }
-    .admin-content-page-over{
+
+    .admin-content-page-over {
         padding-left: 260px;
-        
+
     }
+}
+
+.admin-alert {
+    position: fixed;
+    top: 90px;
+    width: 450px;
+    right: -450px;
+    padding: 0 17px 0 17px;
+    animation: admin-alert 4s ease-in-out;
+    -webkit-animation: admin-alert 4s ease-in-out;
+}
+
+@media (max-width:450px) {
+    .admin-alert {
+        width: 100%;
+    }
+}
+
+
+@keyframes admin-alert {
+    0% {
+        right: -450px;
+    }
+
+    15% {
+        right: 0px;
+    }
+
+    75% {
+        right: 0px;
+    }
+
+    95% {
+        right: -450px;
+    }
+
+    100% {
+
+        right: -450px;
+        display: none;
+
+    }
+}
+
+/* Admin Table */
+
+.admin-table-main-div {
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.admin-table-div {
+    background-color: white;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    box-shadow: 0px 0px 30px -6px rgba(209, 209, 209, 0.3);
+    -webkit-box-shadow: 0px 0px 30px -6px rgba(135, 135, 135, 0.3);
+    -moz-box-shadow: 0px 0px 30px -6px rgba(135, 135, 135, 0.3);
+    padding: 25px;
+    
 }
