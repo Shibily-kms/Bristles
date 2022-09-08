@@ -2,6 +2,11 @@ const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const adminHelpers = require('../helpers/admin-helpers');
+const store = require('../config/multer')
+const optionHelpers = require('../helpers/option-helper');
+const fs = require('fs');
+const path = require('path')
+
 // Middleware
 let verifyAdmin = (req, res, next) => {
   if (req.session._BR_ADMIN) {
@@ -118,7 +123,7 @@ router.post('/category/:id/edit', verifyAdmin, (req, res) => {
       req.session.error = "This category already used"
       res.redirect('/admin/category/' + id + '/edit')
     } else {
-      adminHelpers.getAllCategory().then((category)=>{
+      adminHelpers.getAllCategory().then((category) => {
         req.session._BR_CAT = category
         req.session.success = "New category created"
         res.redirect('/admin/category')
@@ -130,7 +135,7 @@ router.post('/category/:id/edit', verifyAdmin, (req, res) => {
 // delete Category
 router.get('/category/:id/delete', verifyAdmin, (req, res) => {
   adminHelpers.deleteCategory(req.params.id).then(() => {
-    adminHelpers.getAllCategory().then((category)=>{
+    adminHelpers.getAllCategory().then((category) => {
       req.session._BR_CAT = category
       res.redirect('/admin/category')
     })
@@ -139,20 +144,123 @@ router.get('/category/:id/delete', verifyAdmin, (req, res) => {
 
 
 // Product List
-router.get('/products/:_CAT', verifyAdmin, (req, res) => {
+router.get('/products/:_CAT', verifyAdmin, async (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
   let NOW_CAT = req.params._CAT
-  res.render('admin/product-list', { title: "Products | Admin panel", admin, CAT,NOW_CAT, code: "proCN" })
+  let productslist = await adminHelpers.getAllCatProduct(NOW_CAT)
+  if (req.session.success) {
+    res.render('admin/product-list', {
+      title: "Products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", productslist, "success": req.session.success
+    })
+    req.session.success = false
+  } else {
+    res.render('admin/product-list', { title: "Products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", productslist })
+  }
+
 })
 
 // Add Products
 router.get('/products/:_CAT/add-product', verifyAdmin, (req, res) => {
-  let category = "Canvas paint"
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
   let NOW_CAT = req.params._CAT
-  res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT,NOW_CAT, code: "proCN", category })
-})
+  if (req.session.success) {
+    res.render('admin/add-product', {
+      title: "Add products | Admin panel", admin, CAT, NOW_CAT, "success": req.session.success
+    })
+    req.session.success = false
+  } else {
+    res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT, NOW_CAT, code: "proCN",optionHelpers })
+  }
+});
+
+router.post('/products/:NOW_CAT/add-product', verifyAdmin, store.product.array('image', 4), (req, res) => {
+  let cgId = req.params.NOW_CAT
+  let image = []
+  for (let i = 0; i < req.files.length; i++) {
+    image[i] = req.files[i].filename
+  }
+  req.body.image = image
+  adminHelpers.addProduct(req.body).then(() => {
+    req.session.success = "New product created"
+    res.redirect('/admin/products/' + cgId + "/add-product")
+  })
+});
+
+// Edit Product
+router.get('/products/:_CAT/:proId/edit', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let NOW_CAT = req.params._CAT
+  adminHelpers.getOneProduct(req.params.proId).then((product) => {
+    for (let i = 0; i < optionHelpers.medium.length; i++) {
+      if (product.medium == optionHelpers.medium[i].name) {
+        optionHelpers.medium[i].option = true
+      }
+    }
+    for (let i = 0; i < optionHelpers.surface.length; i++) {
+      if (product.surface == optionHelpers.surface[i].name) {
+        optionHelpers.surface[i].option = true
+      }
+    }
+    for (let i = 0; i < optionHelpers.quality.length; i++) {
+      if (product.quality == optionHelpers.quality[i].name) {
+        optionHelpers.quality[i].option = true
+      }
+    }
+    res.render('admin/edit-product', { title: "Edit product | Admin panel", admin, CAT, NOW_CAT, product, optionHelpers })
+  })
+});
+
+
+router.post('/products/:NOW_CAT/edit-product', verifyAdmin, store.product.array('image', 4), (req, res) => {
+  let cgId = req.params.NOW_CAT
+  let image = []
+  for (let i = 0; i < req.files.length; i++) {
+    image[i] = req.files[i].filename
+  }
+  req.body.image = image
+  adminHelpers.editProduct(req.body).then((imageArry) => {
+    if (imageArry) {
+      console.log(imageArry.length);
+      for (let i = 0; i < imageArry.length; i++) {
+        var Imagepath = path.join(__dirname, '../public/images/products/' + imageArry[i])
+        fs.unlink(Imagepath, function (err) {
+          if (err)
+            return;
+        });
+      }
+    }
+    req.session.success = "Product updated"
+    res.redirect('/admin/products/' + cgId)
+  })
+});
+
+// Delete Product
+router.get('/products/:NOW_CAT/:prId/delete', verifyAdmin, (req, res) => {
+  let NOW_CAT = req.params.NOW_CAT
+  let prId = req.params.prId
+  adminHelpers.deleteProduct(prId).then(() => {
+    req.session.success = "Product removed from list"
+    res.redirect('/admin/products/' + NOW_CAT)
+  })
+});
+
+// View Product
+router.get('/products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let NOW_CAT = req.params.NOW_CAT
+  let prId = req.params.prId
+  adminHelpers.getOneProduct(prId).then((product) => {
+    res.render('admin/view-product', { title: "Edit product | Admin panel", admin, CAT, NOW_CAT, product })
+  })
+});
+
+
+
+
+
 
 module.exports = router;

@@ -20,7 +20,7 @@ module.exports = {
                         for (var i, i = 0; i < sting_length; i++) {
                             randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
                         }
-                        body.urId = "AR"+randomString
+                        body.arId = "AR"+randomString
                     }
                     body.password = await bcrypt.hash(body.password, 10)
                     db.get().collection(collection.ARTIST_COLLECTION).insertOne(body).then((result) => {

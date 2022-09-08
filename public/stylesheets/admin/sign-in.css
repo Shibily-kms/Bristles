@@ -119,5 +119,136 @@
     -webkit-box-shadow: 0px 0px 30px -6px rgba(135, 135, 135, 0.3);
     -moz-box-shadow: 0px 0px 30px -6px rgba(135, 135, 135, 0.3);
     padding: 25px;
+
+}
+
+/* Add Product */
+.product-add-admin .image-div {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.product-add-admin .image-view {
+    width: 24%;
+    height: auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    padding: 0 3px 0 3px;
+    margin-bottom: 5px;
+}
+
+.product-add-admin .image-add-button {
+    width: 24%;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    padding: 0 3px 0 3px;
+    background-color: rgb(233, 233, 233);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    min-height: 60px;
+    height: 85px;
+    min-width: 60px;
+}
+
+.product-add-admin .image-add-button i {
+    font-size: 25px;
+}
+
+/* Product View */
+.admin-product-view {
+    padding-top: 25px;
+}
+
+.admin-product-view h3 {
+    color: rgb(0, 85, 22);
+}
+
+.admin-product-view .artist {
+    background-color: rgb(163, 163, 163);
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 15px 3px 3px ;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    align-items: center;
+    color: black;
+    width: 350px;
+    max-width: 100%;
+}
+
+.admin-product-view .artist p {
+    margin: 0;
+}
+.admin-product-view .artist .section-one {
+
+    display: flex;
+}
+
+.admin-product-view .artist .section-one img {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+
+.admin-product-view .artist .section-one .details {
+
+    margin-left: 10px;
+    padding-top:5px ;
+}
+
+.admin-product-view .artist .section-one .details h4 {
+    margin: 0;
+    color: rgba(151, 0, 93, 0.795);
     
+}
+.admin-product-view .artist .section-two {
+    text-align: center;
+}
+
+.admin-product-view .artist .section-two .rate{
+    background-color: green;
+    padding: 2px 5px 2px 5px ;
+    color: white;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    
+}
+.admin-product-view .price{
+    color: black;
+}
+.admin-product-view .sub-head{
+    color: brown;
+    margin: 0;
+}
+
+
+.admin-product-view hr{
+    margin-top: 0;
+    background-color: gray;
+}
+
+.product-list-admin p{
+    margin: 0;
+    margin-top: 5px;
+    color: rgb(71, 71, 71);
 }

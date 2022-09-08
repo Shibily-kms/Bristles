@@ -1,14 +1,81 @@
-<div class="layout-wrapper layout-content-navbar">
-    <div class="layout-container">
-        <aside id="layout-menu" class="layout-menu " style="z-index: 1;">
-            <ul class="menu-inner "></ul>
-        </aside>
-
-        <div class=" container-fluid">
-            {{!-- Conternt Here --}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">{{NOW_CAT}} List</h4>
+        <!-- Basic Layout -->
+        <div class="pb-3 d-flex justify-content-end">
+            <a href="/admin/products/{{NOW_CAT}}/add-product">
+                <button type="button" class="btn btn-success"><i class='bx bx-plus-circle'></i> Add Products</button>
+            </a>
         </div>
+        <!-- Hoverable Table rows -->
+        <div class="admin-table-div">
+
+            <div class="table-responsive">
+                <table class="table table-hover css-serial" id="table_id">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>PR ID</th>
+                            <th>Title</th>
+                            <th>Medium</th>
+                            <th>Price</th>
+                            <th>Owner</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {{#each productslist}}
+                        <tr>
+                            <td></td>
+                            <td>{{this.prId}}</td>
+                            <td>{{this.title}}</td>
+                            <td>{{this.medium}}</td>
+                            <td>₹ {{this.price}}</td>
+                            {{#if this.arId}}
+                            <td>{{this.arId}}</td>
+                            {{else}}
+                            <td>Bristles</td>
+                            {{/if}}
+                            <td>
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view ">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                        <span class="tf-icons bx bxs-show"></span>
+                                    </button>
+                                </a>
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit ">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-primary">
+                                        <span class="tf-icons bx bxs-edit-alt"></span>
+                                    </button>
+                                </a>
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete"
+                                    onclick="return confirm('Are you remove this product?')">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                        <span class="tf-icons bx bx-trash"></span>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--/ Hoverable Table rows -->
+
+
+
+
     </div>
 </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>
 
 {{!-- Check active page --}}
 <p id="check-active-page" hidden>{{NOW_CAT}}</p>

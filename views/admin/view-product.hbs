@@ -1,0 +1,181 @@
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+
+        <h4 class="fw-bold  mb-4">View Product</h4>
+        <!-- Basic Layout -->
+        <div class="row pb-5">
+            <!-- Bootstrap carousel -->
+            <div class="col-md">
+                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                    <ol id="carousel-indicators" class="carousel-indicators">
+                        {{#each product.image}}
+                        <li data-bs-target="#carouselExample" data-bs-slide-to="{{@key}}" class=""></li>
+                        {{/each}}
+                    </ol>
+                    <div id="carousel-inner" class="carousel-inner">
+                        {{#each product.image}}
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="/images/products/{{this}}" alt="First slide" />
+                        </div>
+                        {{/each}}
+
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Bootstrap crossfade carousel -->
+            <div class="col-md admin-product-view">
+                <h3 class="">{{product.title}}_{{product.prId}}_{{product.size}}</h3>
+                <h5>Orginal Size : {{product.size}}</h5>
+                {{#if product.artist}}
+                <a href="">
+                    <div class="artist">
+                        <div class="section-one">
+                            <img src="/images/avatar/1.png" alt="artist_avatar">
+                            <div class="details">
+                                <h4>{{product.artist.name}}</h4>
+                                <p>Kerala, India - ({{product.artist.arId}})</p>
+                            </div>
+                        </div>
+                        <div class="section-two">
+                            <div class="rate">
+                                <p><i class='bx bxs-star'></i> 3.7</p>
+                            </div>
+                            <p>(500)</p>
+                        </div>
+                    </div>
+                </a>
+                {{else}}
+                <div class="artist">
+                    <div class="section-one">
+                        <img src="/images/icon/logo-2.png" alt="artist_avatar">
+                        <div class="details">
+                            <p>Provide By :</p>
+                            <h4>Britles company</h4>
+                        </div>
+                    </div>
+
+                </div>
+                {{/if}}
+                <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
+                <h6 class="sub-head">Specification</h6>
+                <hr>
+                <div class="product-list-admin pb-4">
+                    <div class="col row ">
+                        <div class="col-4">
+                            <p>Product Id</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{product.prId}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Availability</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: In Stoke</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Quality</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{product.quality}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Size</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{product.size}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Medium</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{product.medium}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Surface</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{product.surface}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Aritist</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: {{#if product.artist}}{{product.artist.name}}{{else}}Bristles company{{/if}}</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Return policy</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: 15 Days if ordered as Unframed. Not applicable if ordered as Framed or in Custom Size,
+                                or if delivery is outside India</p>
+                        </div>
+                    </div>
+                    <div class="col row">
+                        <div class="col-4">
+                            <p>Certificate</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: Provided</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="sub-head">Description</h6>
+                <hr>
+                <div class="product-list-admin pb-4">
+                    <p>{{product.description}}</p>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{{!-- Check active page --}}
+<p id="check-active-page" hidden>{{NOW_CAT}}</p>
+
+<script>
+    document.getElementById('products').classList += " active open"
+    let check = document.getElementById('check-active-page').innerHTML
+    check = "pro" + check
+    document.getElementById(check).classList += " active"
+</script>
+
+<script>
+    let carouselIndicators = document.getElementById('carousel-indicators')
+    let one = carouselIndicators.firstElementChild
+    one.className = "active"
+
+    let carouseInner = document.getElementById('carousel-inner')
+    let first = carouseInner.firstElementChild
+    first.className = "carousel-item active"
+
+
+</script>
