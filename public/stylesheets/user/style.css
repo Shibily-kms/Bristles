@@ -1,0 +1,142 @@
+/* Navbar */
+.user-navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.user-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-header .right {}
+
+.user-header .right a {
+    display: flex;
+    align-items: center;
+
+}
+
+.user-header .right img {
+    width: 35px;
+    height: 35px;
+}
+
+.user-header .right h3 {
+    color: white;
+    margin-top: 15px;
+    margin-left: 8px;
+}
+
+.user-header .left {
+    display: flex;
+    align-items: center;
+}
+
+.user-header .left .icon-div {
+    padding: 5px 5px 5px 5px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    color: white;
+    margin-right: 10px;
+
+}
+
+.user-header .left .icon-div i {
+    font-size: 30px;
+}
+
+/* User Page Commen */
+
+.user-page {
+    margin-top: 57px;
+}
+
+
+/* Slider */
+.slider {
+    width: 100%;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.slider img {
+    width: 100%;
+}
+
+/* product list */
+.card-rate {
+    display: flex;
+}
+
+.card-rate p {
+    margin: 0;
+}
+
+.card-rate .favorite {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.card-rate .favorite i {
+    color: red;
+}
+
+.card-boarder p, .card-boarder h5, .card-boarder h4, .card-boarder h6 {
+    margin: 0;
+}
+
+.card-boarder .card-price {
+    display: flex;
+    align-items: center;
+}
+
+.card-body>h5{
+    color:rgb(0, 113, 148);
+}
+       
+
+.card-boarder .card-price :nth-child(2) {
+ 
+    margin-left: 3px;
+    text-decoration:line-through;
+}
+.card-boarder .card-price :nth-child(3) {
+    margin-left: 3px;
+    color: green;
+    font-size: 14px;
+}
+.card-boarder .card-price :nth-child(4) {
+    font-weight: 400;
+    font-size: 12px;
+    color: green;
+}
+
+.card .heart-icon{
+    background-color: rgba(255, 255, 255, 0.562);
+    color: white;
+    /* color: red; */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 23px;
+    height: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    padding: 2px 0 0 2px;
+}

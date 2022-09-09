@@ -40,7 +40,8 @@
 
     {{!--CSS Links --}}
   <link rel='stylesheet' href='/stylesheets/commen.css' />
-  <link rel='stylesheet' href='/stylesheets/style/.css' />
+  <link rel='stylesheet' href='/stylesheets/admin/style.css' />
+  <link rel='stylesheet' href='/stylesheets/user/style.css' />
 
   {{!-- Jqury Table --}}
 
@@ -60,6 +61,7 @@
   {{>admin-side}}
   {{else}}{{#if artist}}
   {{else}}{{#if user}}
+  {{>user-top}}
   {{/if}}{{/if}}{{/if}}
   {{{body}}}
 
