@@ -1,5 +1,5 @@
- {{>admin-top}}
-  {{>admin-side}}
+{{>admin-top}}
+{{>admin-side}}
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
         {{!-- Header --}}
@@ -64,13 +64,7 @@
                 </table>
             </div>
         </div>
-        <!--/ Hoverable Table rows -->
-
-
-
-
     </div>
-</div>
 </div>
 <script>
 
@@ -86,6 +80,6 @@
 <script>
     document.getElementById('products').classList += " active open"
     let check = document.getElementById('check-active-page').innerHTML
-    check = "pro"+check
+    check = "pro" + check
     document.getElementById(check).classList += " active"
 </script>

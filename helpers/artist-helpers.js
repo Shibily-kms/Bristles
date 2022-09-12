@@ -4,7 +4,7 @@ var ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 
 module.exports = {
-    // Artist Sign Up
+    // Sign Start
     doSignUp: (body) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email }).then(async (user) => {
@@ -49,6 +49,6 @@ module.exports = {
             })
         })
     }
-
+    // Sign End
 
 }

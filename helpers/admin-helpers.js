@@ -146,7 +146,7 @@ module.exports = {
     editProduct: (body) => {
         return new Promise((resolve, reject) => {
             let images = null
-            console.log(body.image.length, 'body her');
+           
             db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: body.prId }).then((product) => {
                 if (body.image.length == 0) {
                     body.image = product.image
@@ -182,9 +182,17 @@ module.exports = {
                 resolve()
             })
          })
-    }
+    },
     // Product End
 
+    // User Start
+    getAllUser:()=>{
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.USER_COLLECTION).find().toArray().then((user)=>{
+                resolve(user)
+            })
+         })
+    }
 
 
 

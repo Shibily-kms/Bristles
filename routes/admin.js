@@ -213,7 +213,6 @@ router.get('/products/:_CAT/:proId/edit', verifyAdmin, (req, res) => {
   })
 });
 
-
 router.post('/products/:NOW_CAT/edit-product', verifyAdmin, store.product.array('image', 4), (req, res) => {
   let cgId = req.params.NOW_CAT
   let image = []
@@ -223,7 +222,7 @@ router.post('/products/:NOW_CAT/edit-product', verifyAdmin, store.product.array(
   req.body.image = image
   adminHelpers.editProduct(req.body).then((imageArry) => {
     if (imageArry) {
-      console.log(imageArry.length);
+      
       for (let i = 0; i < imageArry.length; i++) {
         var Imagepath = path.join(__dirname, '../public/images/products/' + imageArry[i])
         fs.unlink(Imagepath, function (err) {
@@ -258,6 +257,14 @@ router.get('/products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
   })
 });
 
+// All User
+router.get('/user-list',verifyAdmin,(req,res)=>{
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  adminHelpers.getAllUser().then((user)=>{
+    res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT,user})
+  })
+})
 
 
 

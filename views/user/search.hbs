@@ -1,0 +1,132 @@
+{{>user-top}}
+<div class="container user-page pt-3 mb-5">
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="border-radius: 10px;">
+                <div class="app-brand demo">
+                    <span class=" filter-logo "> <i class='bx bx-filter-alt'></i> Filter</span>
+                    <a href="javascript:void(0);"
+                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+                    </a>
+                </div>
+
+                <form action="/search" method="get">
+                    <ul class="menu-inner py-1">
+                        <li class="menu-item px-2">
+                            {{!-- Section Start --}}
+                            <div class="mb-3">
+                                <p class="text-dark fw-semibold">CATEGORY</p>
+                                <div class=" ">
+                                    <div class="list-group">
+                                        {{#each categoryList}}
+                                        <label class="list-group-item">
+                                            <input class="form-check-input me-1 cursor-pointer" type="checkbox"
+                                                name="category" {{#if this.tick}}checked{{/if}} value="{{this.title}}"
+                                                onchange="this.form.submit()" />
+                                            {{this.title}}
+                                        </label>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{!-- Section End --}}
+                        </li>
+                        <li class="menu-item px-2">
+                            {{!-- Section Start --}}
+                            <p class="text-dark fw-semibold">MEDIUM</p>
+                            <div class="mb-3 ">
+                                <div class="list-group">
+                                    {{#each otherList.medium}}
+                                    <label class="list-group-item">
+                                        <input class="form-check-input me-1 cursor-pointer" type="checkbox"
+                                            value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="medium"
+                                            onchange="this.form.submit()" />
+                                        {{this.name}}
+                                    </label>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{!-- Section End --}}
+                        </li>
+                        <li class="menu-item px-2">
+                            {{!-- Section Start --}}
+                            <p class="text-dark fw-semibold">SURFACE</p>
+                            <div class=" mb-3">
+                                <div class="list-group">
+                                    {{#each otherList.surface}}
+                                    <label class="list-group-item">
+                                        <input class="form-check-input me-1 cursor-pointer" type="checkbox"
+                                            value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="surface"
+                                            onchange="this.form.submit()" />
+                                        {{this.name}}
+                                    </label>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{!-- Section End --}}
+                        </li>
+                        <li class=" menu-item px-2">
+                            {{!-- Section Start --}}
+                            <p class="text-dark fw-semibold">QUALITY</p>
+                            <div class="mb-3 ">
+                                <div class="list-group">
+                                    {{#each otherList.quality}}
+                                    <label class="list-group-item">
+                                        <input class="form-check-input me-1 cursor-pointer " type="checkbox"
+                                            value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="quality"
+                                            onchange="this.form.submit()" />
+                                        {{this.name}}
+                                    </label>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{!-- Section End --}}
+                        </li>
+                    </ul>
+                </form>
+
+            </aside>
+
+            <div class="container-fluid">
+                <div class="row">
+                    {{#if product.[0]}}
+                    {{#each product}}
+                    <div class="col-sm-6 col-md-4 col-lg-4 mb-4">
+                        <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
+                            <div class="card h-100">
+                                <img class="card-img-top" src="/images/products/{{this.image.[0]}}"
+                                    alt="product image" />
+                                <div class="heart-icon">
+                                    <i class='bx bxs-heart'></i>
+                                </div>
+                                <div class="card-body card-boarder">
+                                    <h5 class="">{{this.title}}</h5>
+                                    <p>Size : {{this.size}}</p>
+                                    <p>{{this.medium}} - {{this.quality}}dsfd</p>
+                                    <div class="card-price mt-2">
+                                        <h4 class="text-dark">₹ {{this.price}}</h4>
+                                        <h6>₹4000</h6>
+                                        <i class='bx bxs-offer'></i>
+                                        <h6> 25% off</h6>
+                                    </div>
+                                    <small>Free delivery</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div class="col-12">
+                        <div class="d-flex justify-content-center pt-5  w-100 ">
+                         <h3 class="pt-5">No Items Available</h3>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

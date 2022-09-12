@@ -11,31 +11,38 @@
             </div>
 
             <div class="left">
-                <div class="" style="display: flex;">
-                    <a href="">
-                        <div class="icon-div">
-                            <i class='bx bx-search'></i>
+                <div class="items">
+                    {{#if toggleIcon}}
+                    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                            <i class="bx bx-menu bx-sm"></i>
+                        </a>
+                    </div>
+                    {{/if}}
+                    {{!-- Search Input --}}
+                    <form action="/search" method="get" class="d-none d-sm-block " autocomplete="off">
+                        <div class="input-group">
+                            <input type="text" class="form-control  bg-dark text-light" id="search" name="q" value="{{question}}"
+                                placeholder="Search..." aria-describedby="search product" />
+                            <button type="submit" id="search"
+                                class="input-group-text cursor-pointer bg-dark text-light"><i
+                                    class='bx bx-search search-icon'></i></button>
                         </div>
-                    </a>
-                    <a href="">
-                        <div class="icon-div">
+                    </form>
+                    {{!-- Cart Icon --}}
+                    <a href="" class="">
+                        <div class="icon-div ">
                             <i class='bx bx-cart-alt'></i>
                         </div>
                     </a>
+                    {{!-- Profile Toggle --}}
+                    <ul class="navbar-nav flex-row align-items-center ms-auto  ">
 
-                </div>
-                <div>
-
-                    <ul class="navbar-nav flex-row align-items-center ms-auto">
-                        <!-- Place this tag where you want the button to render. -->
-
-
-                        <!-- User -->
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                 data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
-                                    <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                                    <img src="/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -44,7 +51,7 @@
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img src="../assets/img/avatars/1.png" alt
+                                                    <img src="/assets/img/avatars/1.png" alt
                                                         class="w-px-40 h-auto rounded-circle" />
                                                 </div>
                                             </div>
@@ -64,36 +71,49 @@
                                         <span class="align-middle">My Profile</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="bx bx-cog me-2"></i>
-                                        <span class="align-middle">Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <span class="d-flex align-items-center align-middle">
-                                            <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                                            <span class="flex-grow-1 align-middle">Billing</span>
-                                            <span
-                                                class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                                        </span>
-                                    </a>
-                                </li>
+
                                 <li>
                                     <div class="dropdown-divider"></div>
                                 </li>
+                                {{#if user}}
                                 <li>
                                     <a class="dropdown-item" href="/sign-out">
                                         <i class="bx bx-power-off me-2"></i>
                                         <span class="align-middle">Sign Out</span>
                                     </a>
                                 </li>
+                                {{else}}
+                                <li>
+                                    <a class="dropdown-item" href="/sign-in">
+                                        <i class="bx bx-power-off me-2"></i>
+                                        <span class="align-middle">Sign In</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/artist/sign-in">
+                                        <i class="bx bx-power-off me-2"></i>
+                                        <span class="align-middle">Artist Sign In</span>
+                                    </a>
+                                </li>
+                                {{/if}}
                             </ul>
                         </li>
                         <!--/ User -->
                     </ul>
+
                 </div>
+
+            </div>
+            <div class="bottom  d-block d-sm-none">
+                {{!-- Search Input --}}
+                <form action="/search" method="get" class=" ">
+                    <div class="input-group">
+                        <input type="text" class="form-control  bg-dark text-light" id="search" name="q" value="{{question}}"
+                            placeholder="Search..." aria-describedby="search product" />
+                        <button type="submit" id="search" class="input-group-text cursor-pointer bg-dark text-light"><i
+                                class='bx bx-search search-icon'></i></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

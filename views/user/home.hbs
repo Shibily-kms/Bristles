@@ -1,3 +1,5 @@
+{{>user-top}}
+
 <div class="slider user-page">
     <img src="/images/icon/slider.jpg" alt="slider">
 </div>
@@ -8,7 +10,7 @@
         <h4 class="fw-bold  mb-4">Category List</h4>
         {{#each category}}
         <div class="col-sm-6 col-lg-4 mb-4">
-            <a class="text-secondary" href="/c/{{this.title}}">
+            <a class="text-secondary" href="/list/{{this.title}}">
                 <div class="card text-center">
                     <div class="card-body">
                         <p class="card-text">Category {{this.no}} </p>

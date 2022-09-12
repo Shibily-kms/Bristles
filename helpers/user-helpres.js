@@ -2,10 +2,10 @@ var db = require('../config/connection')
 var collection = require('../config/collection')
 var ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
-const randomID = require('../config/randomId')
+const optionHelpers = require('../helpers/option-helper');
 
 module.exports = {
-    // Usr Sign Up
+    // User Sign Start
     doSignUp: (body) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ email: body.email }).then(async (user) => {
@@ -50,8 +50,9 @@ module.exports = {
             })
         })
     },
+    // Sign End
 
-    // Set Token
+    // Set Token Start
     setToken: () => {
         return new Promise((resolve, reject) => {
             let token = ''
@@ -67,7 +68,135 @@ module.exports = {
             }
             resolve(token)
         })
-    }
+    },
+    // Set Token End
 
+    getAllProduct: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find().toArray().then((produt) => {
+                resolve(produt)
+            })
+        })
+    },
+
+    // Filter Start
+    filterProduct: (category, medium, surface, quality) => {
+
+        return new Promise(async (resolve, reject) => {
+            let response = []
+            let categoryList = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
+            let otherList = optionHelpers
+            // let FullProduct = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+
+
+
+
+
+            // if (typeof category == "string") {
+            //     tickCategory(category)
+            //     // category = [category]
+            // } else if (typeof category == "object") {
+            //     for (let i = 0; i < category.length; i++) {
+            //         tickCategory(category[i])
+            //     }
+            //     // category = Object.values(category)
+            // } else {
+            //     // category = []
+            // }
+
+            // if (typeof medium == "string") {
+            //     tickMedium(medium)
+            //     medium = [medium]
+            // } else if (typeof medium == "object") {
+            //     for (let i = 0; i < medium.length; i++) {
+            //         tickMedium(medium[i])
+            //         medium = Object.values(medium)
+            //     }
+            // } else {
+            //     medium = []
+            // }
+            // if (typeof surface == "string") {
+            //     tickSurface(surface)
+            // } else if (typeof surface == "object") {
+            //     for (let i = 0; i < surface.length; i++) {
+            //         tickSurface(surface[i])
+
+            //     }
+            // }
+            // if (typeof quality == "string") {
+            //     tickQuality(quality)
+            // } else if (typeof quality == "object") {
+            //     for (let i = 0; i < quality.length; i++) {
+            //         tickQuality(quality[i])
+
+            //     }
+            // }
+            // // Tick Funcitons Start
+            // function tickCategory(item) {
+            //     for (let i = 0; i < categoryList.length; i++) {
+            //         if (categoryList[i].title == item) {
+            //             categoryList[i].tick = true
+            //         }
+
+
+            //     }
+            //     return;
+            // }
+            // function tickMedium(item) {
+            //     for (let i = 0; i < otherList.medium.length; i++) {
+            //         if (otherList.medium[i].name == item) {
+            //             otherList.medium[i].tick = true
+            //         }
+            //     }
+            //     return;
+            // }
+            // function tickSurface(item) {
+            //     for (let i = 0; i < otherList.surface.length; i++) {
+            //         if (otherList.surface[i].name == item) {
+            //             otherList.surface[i].tick = true
+            //         }
+            //     }
+            //     return;
+            // }
+            // function tickQuality(item) {
+            //     for (let i = 0; i < otherList.quality.length; i++) {
+            //         if (otherList.quality[i].name == item) {
+            //             otherList.quality[i].tick = true
+            //         }
+            //     }
+            //     return;
+            // }
+
+            response.categoryList = categoryList
+            response.otherList = otherList
+            // Tick Functions End
+           
+            // let filter = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: { $in: category },medium:{$in : medium} }).toArray()
+
+            // response.product = filter
+            resolve(response)
+
+
+        })
+    },
+    // Filter End
+
+    // Search Start
+    searchProduct: (question) => {
+        return new Promise(async (resolve, reject) => {
+            let product = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+            let searchPattern = new RegExp('(\\w*' + question + '\\w*)', 'gi');
+            let searchResult = []
+            for (let i = 0; i < product.length; i++) {
+                let check = product[i].title.match(searchPattern)
+                if (check) {
+                    searchResult.push(product[i])
+                }
+            }
+            resolve(searchResult)
+        })
+    },
+
+    // Search End
 
 }

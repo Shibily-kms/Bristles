@@ -1,5 +1,4 @@
 module.exports =  {
-
     medium: [
         { name: "Acrylic" },
         { name: "Color Ball" },
@@ -33,8 +32,6 @@ module.exports =  {
         { name: "Ultra HD Prints" },
         { name: "No Quality" }
     ]
-
-
 }
 
 
