@@ -3,7 +3,7 @@
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
         {{!-- Header --}}
-        <h4 class="fw-bold  mb-4">Artist List</h4>
+        <h4 class="fw-bold  mb-4">New Artist List</h4>
         <!-- Basic Layout -->
        
         <div class="admin-table-div">
@@ -14,10 +14,9 @@
                         <tr>
                             <th>Sl No</th>
                             <th>AR ID</th>
-                            <th>Profile</th>
                             <th>FULL NAME</th>
                             <th>EMAIL ID</th>
-                            <th>STATUS</th>
+                           
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -26,22 +25,25 @@
                         <tr>
                             <td></td>
                             <td>{{this.arId}}</td>
-                            <td></td>
                             <td>{{this.firstName}} {{this.lastName}}</td>
                             <td>{{this.email}}</td>
-                            <td>UnBloked</td>
                             
                             <td>
-                                <a href="/admin/artist/all-artist/{{this.arId}}/view ">
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view " title="view">
                                     <button type="button" class="btn rounded-pill btn-icon btn-dark">
                                         <span class="tf-icons bx bxs-show"></span>
                                     </button>
                                 </a>
-                               
-                                <a href="/admin/artist/all-artist/{{this.arId}}/delete"
-                                    onclick="return confirm('Remove this artist?')">
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit " title="Active"
+                                 onclick="return confirm('Active this account?')">
+                                    <button type="button" class="btn rounded-pill btn-icon btn-success">
+                                        <span class="tf-icons bx bx-check"></span>
+                                    </button>
+                                </a>
+                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete" title="Reject"
+                                    onclick="return confirm('Reject this account?')">
                                     <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                        <span class="tf-icons bx bx-trash"></span>
+                                        <span class="tf-icons bx bx-x"></span>
                                     </button>
                                 </a>
                             </td>
@@ -67,5 +69,5 @@
 
 <script>
     document.getElementById('artist').classList += " active open"
-    document.getElementById('artistOk').classList += " active"
+    document.getElementById('artistNot').classList += " active"
 </script>

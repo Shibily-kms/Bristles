@@ -96,25 +96,28 @@ router.get('/sign-out', (req, res) => {
 // Product List
 
 router.get('/list/:NOW_CAT', (req, res) => {
+  let user = req.session._BR_USER
   let NOW_CAT = req.params.NOW_CAT
   adminHelpers.getAllCatProduct(NOW_CAT).then((product) => {
-    res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT })
+    res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT, user })
   })
 });
 
 // View Product
 router.get('/list/:NOW_CAT/:prId/view', (req, res) => {
+  let user = req.session._BR_USER
   let NOW_CAT = req.params.NOW_CAT
   let prId = req.params.prId
   adminHelpers.getOneProduct(prId).then((product) => {
     console.log(product.image);
-    res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT })
+    res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT, user })
   })
 
 })
 
 // Search
 router.get('/search', async (req, res) => {
+  let user = req.session._BR_USER
   let question = req.query.q
   let category = req.query.category
   let medium = req.query.medium
@@ -126,7 +129,7 @@ router.get('/search', async (req, res) => {
     let categoryList = response.categoryList
     let otherList = response.otherList
     // let product = response.product
-    res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, otherList, product, question })
+    res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, otherList, product, question, user })
     // console.log(response);
   })
 })

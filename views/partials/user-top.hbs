@@ -22,8 +22,8 @@
                     {{!-- Search Input --}}
                     <form action="/search" method="get" class="d-none d-sm-block " autocomplete="off">
                         <div class="input-group">
-                            <input type="text" class="form-control  bg-dark text-light" id="search" name="q" value="{{question}}"
-                                placeholder="Search..." aria-describedby="search product" />
+                            <input type="text" class="form-control  bg-dark text-light" id="search" name="q"
+                                value="{{question}}" placeholder="Search..." aria-describedby="search product" />
                             <button type="submit" id="search"
                                 class="input-group-text cursor-pointer bg-dark text-light"><i
                                     class='bx bx-search search-icon'></i></button>
@@ -42,10 +42,15 @@
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                 data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
+                                    {{#if user}}
                                     <img src="/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                                    {{else}}
+                                    <img src="/images/avatar/avatar.png" alt class="w-px-40 h-auto rounded-circle" />
+                                    {{/if}}
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
+                                {{#if user}}
                                 <li>
                                     <a class="dropdown-item" href="#">
                                         <div class="d-flex">
@@ -56,8 +61,8 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">John Doe</span>
-                                                <small class="text-muted">Admin</small>
+                                                <span class="fw-semibold d-block">{{user.userName}}</span>
+                                                <small class="text-muted">UR ID : {{user.urId}}</small>
                                             </div>
                                         </div>
                                     </a>
@@ -65,6 +70,7 @@
                                 <li>
                                     <div class="dropdown-divider"></div>
                                 </li>
+                                {{/if}}
                                 <li>
                                     <a class="dropdown-item" href="#">
                                         <i class="bx bx-user me-2"></i>
@@ -108,8 +114,8 @@
                 {{!-- Search Input --}}
                 <form action="/search" method="get" class=" ">
                     <div class="input-group">
-                        <input type="text" class="form-control  bg-dark text-light" id="search" name="q" value="{{question}}"
-                            placeholder="Search..." aria-describedby="search product" />
+                        <input type="text" class="form-control  bg-dark text-light" id="search" name="q"
+                            value="{{question}}" placeholder="Search..." aria-describedby="search product" />
                         <button type="submit" id="search" class="input-group-text cursor-pointer bg-dark text-light"><i
                                 class='bx bx-search search-icon'></i></button>
                     </div>

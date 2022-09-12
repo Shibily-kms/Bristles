@@ -10,14 +10,30 @@ let verifyArtist = (req,res,next)=>{
     res.redirect('/artist/sign-in')
   }
 }
+let verifyAccountConfirm = (req,res,next)=>{
+  if(req.session._BR_ARTIST_CHECK && req.session._BR_ARTIST_CHECK_ID){
+    artistHelper.checkAccountActivation(req.session._BR_ARTIST_CHECK_ID).then((response)=>{
+      if(response.NotActivated){
+        res.redirect('/artist/check-account')
+      }else{
+        req.session._BR_ARTIST_CHECK_ID = false
+        req.session._BR_ARTIST_CHECK = false
+        next()
+      }
+    })
+  }else{
+    next()
+  }
+}
 
 /* GET home page. */
-router.get('/', (req, res)=> {
-  res.render('artist/overview', { title: 'Overview | Bristles' });
+router.get('/', verifyArtist,(req, res)=> {
+  let artist = req.session._BR_ARTIST
+  res.render('artist/overview', { title: 'Overview | Bristles' ,artist});
 });
 
 // User Sign Up
-router.get('/sign-up',(req,res)=>{
+router.get('/sign-up',verifyAccountConfirm,(req,res)=>{
   if(req.session._BR_ARTIST){
     res.redirect('/artist')
   }else if(req.session.error){
@@ -34,13 +50,16 @@ router.post('/sign-up',(req,res)=>{
       req.session.error = "Email Id existed"
       res.redirect('/artist/sign-up')
     }else if(response){
+      console.log(response);
+      req.session._BR_ARTIST_CHECK_ID = response.insertedId
+      req.session._BR_ARTIST_CHECK = true
       res.redirect('/artist/sign-in')
     }
   })
 });
 
 // User Sign In
-router.get('/sign-in',(req,res)=>{
+router.get('/sign-in',verifyAccountConfirm,(req,res)=>{
   if(req.session._BR_ARTIST){
     res.redirect('/artist')
   }else if(req.session.error){
@@ -71,6 +90,11 @@ router.post('/sign-in',(req,res)=>{
 router.get('/sign-out',(req,res)=>{
   req.session._BR_ARTIST = false
   res.redirect('/artist/sign-in')
+});
+
+// Artist Check Account 
+router.get('/check-account',(req,res)=>{
+  res.render('artist/check-account',{title : "Place wait..."})
 })
 
 module.exports = router;

@@ -192,8 +192,28 @@ module.exports = {
                 resolve(user)
             })
          })
-    }
+    },
+    // User End
 
+    // Artist Start
+    getAllPendingArtist:()=>{
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.ARTIST_COLLECTION).find({status:"Pending"}).toArray().then((artist)=>{
+                resolve(artist)
+            })
+         })
+    },
+
+    getAllArtist:()=>{
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.ARTIST_COLLECTION).find({status:"Active"}).toArray().then((artist)=>{
+                resolve(artist)
+            })
+         })
+    },
+
+
+    // Artist End
 
 
 

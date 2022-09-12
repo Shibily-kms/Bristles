@@ -71,11 +71,26 @@
             <div data-i18n="Basic">Category</div>
           </a>
         </li>
+      
         <li class="menu-item" id="artist">
-          <a href="cards-basic.html" class="menu-link">
+          <a href="javascript:void(0);" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bxs-brush"></i>
-            <div data-i18n="Basic">Artists</div>
+            <div data-i18n="Account Settings">Artists</div>
           </a>
+          <ul class="menu-sub">
+            
+            <li class="menu-item" id="artistOk">
+              <a href="/admin/artist/all-artist" class="menu-link">
+                <div data-i18n="Blank">All Artist</div>
+              </a>
+            </li>
+            <li class="menu-item" id="artistNot">
+              <a href="/admin/artist/new-account" class="menu-link">
+                <div data-i18n="Blank">New Accounts</div>
+              </a>
+            </li>
+          
+          </ul>
         </li>
         <li class="menu-item" id="user">
           <a href="/admin/user-list" class="menu-link">

@@ -266,6 +266,26 @@ router.get('/user-list',verifyAdmin,(req,res)=>{
   })
 })
 
+// All Pending Artist
+router.get('/artist/new-account',verifyAdmin,(req,res)=>{
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  adminHelpers.getAllPendingArtist().then((artist)=>{
+    res.render('admin/artist-pending-list', { title: "Pending Artists | Admin panel", admin, CAT,artist})
+  })
+})
+
+
+// All Artist
+
+router.get('/artist/all-artist',verifyAdmin,(req,res)=>{
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  adminHelpers.getAllArtist().then((artist)=>{
+    res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT,artist})
+  })
+})
+
 
 
 

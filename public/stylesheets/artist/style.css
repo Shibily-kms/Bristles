@@ -1,0 +1,19 @@
+.check-account{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.check-account .box-boreder{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.check-account .box-boreder img{
+    width: 250px;  
+}
+.check-account .box-boreder div{
+    width: 100%;
+}
