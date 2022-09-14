@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-let userHelper = require('../helpers/user-helpres')
+const express = require('express');
+const router = express.Router();
+const userHelper = require('../helpers/user-helpres')
 const adminHelpers = require('../helpers/admin-helpers');
 // const optionHelpers = require('../helpers/option-helper');
 

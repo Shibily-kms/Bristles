@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-let artistHelper = require('../helpers/artist-helpers')
+const express = require('express');
+const router = express.Router();
+const artistHelper = require('../helpers/artist-helpers')
 
 // middlewear
 let verifyArtist = (req,res,next)=>{

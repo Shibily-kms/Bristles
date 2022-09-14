@@ -1,25 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
-var MongoDBSession = require('connect-mongodb-session')(session);
-var MongoURI = "mongodb://localhost:27017/sessions"
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const sessionSet = require('./config/connection').sessionSet
 
-var userRouter = require('./routes/user');
-var adminRouter = require('./routes/admin');
-var artistRouter = require('./routes/artist');
+const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
+const artistRouter = require('./routes/artist');
 
-var hbs = require('express-handlebars');
-var app = express();
-var db = require('./config/connection')
+const hbs = require('express-handlebars');
+const app = express();
+const db = require('./config/connection')
 
-var store = new MongoDBSession({
-  uri: MongoURI,
-  collection: 'Sessions'
-  
-})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,13 +26,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session Connection with time
-app.use(session({
-  secret:"key",
-  resave:false,
-  saveUninitialized:false,
-  store:store,
-  cookie:{maxAge: 1000 * 60 * 60 * 24 * 30 * 6} // six months 
-}))
+app.use(sessionSet)
+
 
 app.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache,private,no-store,must-revalidate,max-stale=0,post-check=0,pre-check=0');

@@ -1,6 +1,6 @@
-var db = require('../config/connection')
-var collection = require('../config/collection')
-var ObjectId = require('mongodb').ObjectId;
+const db = require('../config/connection')
+const collection = require('../config/collection')
+const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 const optionHelpers = require('../helpers/option-helper');
 
@@ -184,16 +184,20 @@ module.exports = {
     // Search Start
     searchProduct: (question) => {
         return new Promise(async (resolve, reject) => {
-            let product = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-            let searchPattern = new RegExp('(\\w*' + question + '\\w*)', 'gi');
             let searchResult = []
-            for (let i = 0; i < product.length; i++) {
-                let check = product[i].title.match(searchPattern)
-                if (check) {
-                    searchResult.push(product[i])
+            if (question == '') {
+                resolve(searchResult)
+            } else {
+                let product = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+                let searchPattern = new RegExp('(\\w*' + question + '\\w*)', 'gi');
+                for (let i = 0; i < product.length; i++) {
+                    let check = product[i].title.match(searchPattern)
+                    if (check) {
+                        searchResult.push(product[i])
+                    }
                 }
+                resolve(searchResult)
             }
-            resolve(searchResult)
         })
     },
 

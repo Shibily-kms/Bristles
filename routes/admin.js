@@ -1,6 +1,6 @@
 const { response } = require('express');
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const adminHelpers = require('../helpers/admin-helpers');
 const store = require('../config/multer')
 const optionHelpers = require('../helpers/option-helper');
@@ -29,10 +29,10 @@ router.get('/sign-in', (req, res, next) => {
   if (req.session._BR_ADMIN) {
     res.redirect('/admin')
   } else if (req.session.error) {
-    res.render('admin/sign-in', { title: "Admin Sign IN", "error": req.session.error })
+    res.render('admin/sign-in', { title: "Admin Sign In", "error": req.session.error })
     req.session.error = false
   } else {
-    res.render('admin/sign-in', { title: "Admin Sign IN" })
+    res.render('admin/sign-in', { title: "Admin Sign In" })
   }
 });
 

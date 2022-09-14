@@ -1,6 +1,6 @@
-var db = require('../config/connection')
-var collection = require('../config/collection')
-var ObjectId = require('mongodb').ObjectId;
+const db = require('../config/connection')
+const collection = require('../config/collection')
+const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 
 module.exports = {
