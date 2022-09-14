@@ -1,8 +1,17 @@
 <div class="check-account">
+    {{#if rejected}}
     <div class="box-boreder ">
-        <img class="" src="/images/icon/verifying.gif" alt="">
         <div>
-        <h4>Your account will be activated within 24 hours</h4>
+            <img class="" src="/images/icon/reject.gif" alt="">
+            <h4>Your account Not Approved <br><a href="/artist/sign-up" class="btn btn-primary mt-3">Try agin !</a></h4>
         </div>
     </div>
+    {{else}}
+    <div class="box-boreder ">
+        <div>
+            <img class="" src="/images/icon/verifying.gif" alt="">
+            <h4>Your account will be activated within 24 hours</h4>
+        </div>
+    </div>
+    {{/if}}
 </div>
