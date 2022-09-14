@@ -2,6 +2,7 @@ const db = require('../config/connection')
 const collection = require('../config/collection')
 const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 module.exports = {
     // Sign Start
@@ -20,7 +21,7 @@ module.exports = {
                         for (var i, i = 0; i < sting_length; i++) {
                             randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
                         }
-                        body.arId = "AR"+randomString
+                        body.arId = "AR" + randomString
                     }
                     body.status = "Pending"
                     body.password = await bcrypt.hash(body.password, 10)
@@ -34,36 +35,70 @@ module.exports = {
 
     doSignIn: (body) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({email:body.email,status:"Active"}).then(async(data)=>{
-                if(data){
-                    await bcrypt.compare(body.password,data.password).then((status)=>{
-                        if(status){
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email, status: "Active" }).then(async (data) => {
+                if (data) {
+                    await bcrypt.compare(body.password, data.password).then((status) => {
+                        if (status) {
                             delete data.password;
                             resolve(data)
-                        }else{
-                            resolve({passError :true})
+                        } else {
+                            resolve({ passError: true })
                         }
                     })
-                }else{
-                    resolve({emailError:true})
+                } else {
+                    resolve({ emailError: true })
                 }
             })
         })
     },
 
-    checkAccountActivation:(CHECK_ID)=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({_id:ObjectId(CHECK_ID)}).then((result)=>{
-               if(result.status == "Active"){
-                    resolve({active:true})
-                }else if(result.status == "Pending"){
-                    resolve({NotActivated : true})
-                }else if(result.status == "Rejected"){
-                    resolve({Rejected :true})
+    checkAccountActivation: (CHECK_ID) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ _id: ObjectId(CHECK_ID) }).then((result) => {
+                if (result.status == "Active") {
+                    resolve({ active: true })
+                } else if (result.status == "Pending") {
+                    resolve({ NotActivated: true })
+                } else if (result.status == "Rejected") {
+                    resolve({ Rejected: true })
                 }
+            })
+        })
+    },
+    // Sign End
+
+    // Artist About Start
+    getArtist: (arId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId }).then((result) => {
+                try {
+                    if (result.status == "Pending") {
+                        result.pending = true
+                    } else if (result.status == "Active") {
+                        result.active = true
+                    } else if (result.status == "Rejected") {
+                        result.rejected = true
+                    }
+                    resolve(result)
+                    
+                } catch (error) {
+                    console.log("Exp01");
+                    resolve({exception : true})
+                }
+            })
+        })
+    },
+    // Artist About End
+
+    // Product Start
+    getPendingList:(arId)=>{
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.PRODUCT_COLLECTION).find({status:'Pending'}).toArray().then((product)=>{
+                resolve(product)
             })
          })
     }
-    // Sign End
+    // Product End
+
 
 }

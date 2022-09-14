@@ -116,7 +116,7 @@ module.exports = {
 
     getAllCatProduct: (CAT) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT,delete:false }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, delete: false }).toArray().then((result) => {
                 resolve(result)
             })
         })
@@ -125,15 +125,15 @@ module.exports = {
     getOneProduct: (proId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: proId }).then((result) => {
-                if(result.arId){
-                    db.get().collection(collection.ARTIST_COLLECTION).findOne({arId:result.arId}).then((artist)=>{
+                if (result.arId) {
+                    db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: result.arId }).then((artist) => {
                         let artistDetails = {
-                            arId : artist.arId,
-                            email : artist.email,
-                            name : artist.userName,
-                            image : artist.image,
-                            rate : artist.rate,
-                            rateCount : artist.rateCount
+                            arId: artist.arId,
+                            email: artist.email,
+                            name: artist.userName,
+                            image: artist.image,
+                            rate: artist.rate,
+                            rateCount: artist.rateCount
                         }
                         result.artist = artistDetails
                     })
@@ -146,7 +146,7 @@ module.exports = {
     editProduct: (body) => {
         return new Promise((resolve, reject) => {
             let images = null
-           
+
             db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: body.prId }).then((product) => {
                 if (body.image.length == 0) {
                     body.image = product.image
@@ -162,7 +162,7 @@ module.exports = {
                         surface: body.surface,
                         quality: body.quality,
                         image: body.image,
-                        price : parseInt(body.price) 
+                        price: parseInt(body.price)
                     }
                 }).then(() => {
                     resolve(images)
@@ -172,45 +172,82 @@ module.exports = {
         })
     },
 
-    deleteProduct:(prId)=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.PRODUCT_COLLECTION).updateOne({prId},{
-                $set:{
-                    delete : true
+    deleteProduct: (prId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
+                $set: {
+                    delete: true
                 }
-            }).then(()=>{
+            }).then(() => {
                 resolve()
             })
-         })
+        })
     },
     // Product End
 
     // User Start
-    getAllUser:()=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.USER_COLLECTION).find().toArray().then((user)=>{
+    getAllUser: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).find().toArray().then((user) => {
                 resolve(user)
             })
-         })
+        })
     },
     // User End
 
     // Artist Start
-    getAllPendingArtist:()=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.ARTIST_COLLECTION).find({status:"Pending"}).toArray().then((artist)=>{
+    getAllPendingArtist: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).find({ status: "Pending" }).toArray().then((artist) => {
                 resolve(artist)
             })
-         })
+        })
     },
 
-    getAllArtist:()=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.ARTIST_COLLECTION).find({status:"Active"}).toArray().then((artist)=>{
+    getAllArtist: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ["Active", "Blocked"] } }).toArray().then((artist) => {
                 resolve(artist)
             })
-         })
+        })
     },
+
+    approveArtist: (arId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                $set: {
+                    status: "Active"
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+
+    rejectArtist: (arId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                $set: {
+                    status: "Rejected"
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+
+    deleteArtist: (arId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                $set: {
+                    status: "Deleted"
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+
 
 
     // Artist End

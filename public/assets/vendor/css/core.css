@@ -17,7 +17,7 @@
   --bs-gray-50: rgba(67, 89, 113, 0.05);
   --bs-primary: #696cff;
   --bs-secondary: #8592a3;
-  --bs-success: #198754;
+  --bs-success: rgb(25, 135, 84);
   --bs-info: #03c3ec;
   --bs-warning: #ffab00;
   --bs-danger: #ff3e1d;
@@ -26,7 +26,7 @@
   --bs-gray: rgba(67, 89, 113, 0.1);
   --bs-primary-rgb: 105, 108, 255;
   --bs-secondary-rgb: 133, 146, 163;
-  --bs-success-rgb: 113, 221, 55;
+  --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 3, 195, 236;
   --bs-warning-rgb: 255, 171, 0;
   --bs-danger-rgb: 255, 62, 29;
@@ -6386,8 +6386,8 @@ label.btn {
 }
 .btn-success:hover {
   color: #fff;
-  background-color: #66c732;
-  border-color: #66c732;
+  background-color: #0d5f39;
+  border-color: #0d5f39;
   transform: translateY(-1px);
 }
 .btn-check:focus + .btn-success, .btn-success:focus, .btn-success.focus {

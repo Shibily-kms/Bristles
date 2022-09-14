@@ -5,7 +5,7 @@
         {{!-- Header --}}
         <h4 class="fw-bold  mb-4">Artist List</h4>
         <!-- Basic Layout -->
-       
+
         <div class="admin-table-div">
 
             <div class="table-responsive">
@@ -26,24 +26,26 @@
                         <tr>
                             <td></td>
                             <td>{{this.arId}}</td>
-                            <td></td>
+                            <td><img class="table-list-image" src="/images/avatar/1.png" alt=""></td>
                             <td>{{this.firstName}} {{this.lastName}}</td>
                             <td>{{this.email}}</td>
-                            <td>UnBloked</td>
-                            
+                            <td > <span class="status-{{this.status}} status">{{this.status}}</span></td>
+
                             <td>
-                                <a href="/admin/artist/all-artist/{{this.arId}}/view ">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-dark">
-                                        <span class="tf-icons bx bxs-show"></span>
-                                    </button>
-                                </a>
-                               
-                                <a href="/admin/artist/all-artist/{{this.arId}}/delete"
-                                    onclick="return confirm('Remove this artist?')">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                        <span class="tf-icons bx bx-trash"></span>
-                                    </button>
-                                </a>
+                                <span class="table-action-td">
+                                    <a href="/admin/artist/{{this.arId}}/view ">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                            <span class="tf-icons bx bxs-show"></span>
+                                        </button>
+                                    </a>
+
+                                    <a href="/admin/artist/{{this.arId}}/delete"
+                                        onclick="return confirm('Remove this artist?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                         {{/each}}

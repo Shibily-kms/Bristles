@@ -5,7 +5,8 @@ const adminHelpers = require('../helpers/admin-helpers');
 const store = require('../config/multer')
 const optionHelpers = require('../helpers/option-helper');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
+const artistHelpers = require('../helpers/artist-helpers');
 
 // Middleware
 let verifyAdmin = (req, res, next) => {
@@ -171,7 +172,7 @@ router.get('/products/:_CAT/add-product', verifyAdmin, (req, res) => {
     })
     req.session.success = false
   } else {
-    res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT, NOW_CAT, code: "proCN",optionHelpers })
+    res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", optionHelpers })
   }
 });
 
@@ -222,7 +223,7 @@ router.post('/products/:NOW_CAT/edit-product', verifyAdmin, store.product.array(
   req.body.image = image
   adminHelpers.editProduct(req.body).then((imageArry) => {
     if (imageArry) {
-      
+
       for (let i = 0; i < imageArry.length; i++) {
         var Imagepath = path.join(__dirname, '../public/images/products/' + imageArry[i])
         fs.unlink(Imagepath, function (err) {
@@ -258,33 +259,93 @@ router.get('/products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
 });
 
 // All User
-router.get('/user-list',verifyAdmin,(req,res)=>{
+router.get('/user-list', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
-  adminHelpers.getAllUser().then((user)=>{
-    res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT,user})
+  adminHelpers.getAllUser().then((user) => {
+    res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT, user })
   })
 })
 
 // All Pending Artist
-router.get('/artist/new-account',verifyAdmin,(req,res)=>{
+router.get('/artist/new-account', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
-  adminHelpers.getAllPendingArtist().then((artist)=>{
-    res.render('admin/artist-pending-list', { title: "Pending Artists | Admin panel", admin, CAT,artist})
+  adminHelpers.getAllPendingArtist().then((artist) => {
+    if (req.session.success) {
+      res.render('admin/artist-pending-list', { title: "Pending Artists | Admin panel", admin, CAT, artist, "success": req.session.success })
+      req.session.success = false
+    } else if (req.session.error) {
+      res.render('admin/artist-pending-list', { title: "Pending Artists | Admin panel", admin, CAT, artist, "error": req.session.error })
+      req.session.error = false
+    } else {
+      res.render('admin/artist-pending-list', { title: "Pending Artists | Admin panel", admin, CAT, artist })
+    }
   })
 })
 
 
 // All Artist
-
-router.get('/artist/all-artist',verifyAdmin,(req,res)=>{
+router.get('/artist/all-artist', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
-  adminHelpers.getAllArtist().then((artist)=>{
-    res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT,artist})
+  adminHelpers.getAllArtist().then((artist) => {
+    if(req.session.success){
+      res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT, artist,"success":req.session.success })
+      req.session.success = false
+    }else{
+      res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT, artist })
+    }
   })
-})
+});
+
+// View One Artist
+router.get('/artist/:arId/view', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let arId = req.params.arId
+  artistHelpers.getArtist(arId).then((artist) => {
+    if (artist.exception) {
+      req.session.error = "Invalid Aritist Id"
+      res.render('admin/view-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
+      req.session.error = false
+    } else if (req.session.success) {
+      res.render('admin/view-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('admin/view-artist', { title: "View Artist | Admin panel", admin, CAT, artist })
+    }
+  })
+});
+
+// Approve artist Account
+router.get('/artist/:arId/account-approve', verifyAdmin, (req, res) => {
+  let arId = req.params.arId
+  adminHelpers.approveArtist(arId).then(() => {
+    req.session.success = 'Account approved'
+    res.redirect('/admin/artist/' + arId + '/view')
+  })
+});
+
+// Reject Artist Account
+router.get('/artist/:arId/account-reject', verifyAdmin, (req, res) => {
+  let arId = req.params.arId
+  adminHelpers.rejectArtist(arId).then(() => {
+    req.session.success = 'Account Rejected'
+    res.redirect('/admin/artist/new-account')
+  })
+});
+
+// Delete Artist Account
+router.get('/artist/:arId/delete', verifyAdmin, (req, res) => {
+  let arId = req.params.arId
+  adminHelpers.deleteArtist(arId).then(() => {
+    req.session.success = 'Account Deleted'
+    res.redirect('/admin/artist/all-artist')
+  })
+});
+
+
 
 
 

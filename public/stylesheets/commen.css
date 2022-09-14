@@ -47,3 +47,26 @@ a {
 .artist-rate-card .rate p i{
   margin-right: 3px;
 }
+/* Alert */
+#smallAlert .close-button{
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+/* Table */
+.table-list-image{
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+.table-action-td{
+  display: flex;
+}
+.table-action-td a{
+  margin: 0 2px ;
+}

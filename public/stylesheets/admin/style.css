@@ -1,3 +1,20 @@
+/* Status Color */
+.status {
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    border: solid 1px black;
+    padding: 2px 10px;
+}
+
+.status-Active {
+    background-color: rgb(157, 255, 157);
+    color: rgb(0, 165, 0);
+    border-color: rgb(0, 165, 0);
+}
+
 .logo-icon {
     width: 40px;
     height: 40px;
@@ -177,7 +194,7 @@
     background-color: rgb(163, 163, 163);
     display: flex;
     justify-content: space-between;
-    padding: 3px 15px 3px 3px ;
+    padding: 3px 15px 3px 3px;
     border-radius: 100px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
@@ -192,6 +209,7 @@
 .admin-product-view .artist p {
     margin: 0;
 }
+
 .admin-product-view .artist .section-one {
 
     display: flex;
@@ -210,32 +228,35 @@
 .admin-product-view .artist .section-one .details {
 
     margin-left: 10px;
-    padding-top:5px ;
+    padding-top: 5px;
 }
 
 .admin-product-view .artist .section-one .details h4 {
     margin: 0;
     color: rgba(151, 0, 93, 0.795);
-    
+
 }
+
 .admin-product-view .artist .section-two {
     text-align: center;
 }
-.admin-product-view .price{
+
+.admin-product-view .price {
     color: black;
 }
-.admin-product-view .sub-head{
+
+.admin-product-view .sub-head {
     color: brown;
     margin: 0;
 }
 
 
-.admin-product-view hr{
+.admin-product-view hr {
     margin-top: 0;
     background-color: gray;
 }
 
-.product-list-admin p{
+.product-list-admin p {
     margin: 0;
     margin-top: 5px;
     color: rgb(71, 71, 71);

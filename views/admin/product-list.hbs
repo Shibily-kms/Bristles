@@ -1,5 +1,5 @@
- {{>admin-top}}
-  {{>admin-side}}
+{{>admin-top}}
+{{>admin-side}}
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
         {{!-- Header --}}
@@ -40,22 +40,24 @@
                             <td>Bristles</td>
                             {{/if}}
                             <td>
-                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view ">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-dark">
-                                        <span class="tf-icons bx bxs-show"></span>
-                                    </button>
-                                </a>
-                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit ">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-primary">
-                                        <span class="tf-icons bx bxs-edit-alt"></span>
-                                    </button>
-                                </a>
-                                <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete"
-                                    onclick="return confirm('Are you remove this product?')">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                        <span class="tf-icons bx bx-trash"></span>
-                                    </button>
-                                </a>
+                                <span class="table-action-td">
+                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view ">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                            <span class="tf-icons bx bxs-show"></span>
+                                        </button>
+                                    </a>
+                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit ">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-primary">
+                                            <span class="tf-icons bx bxs-edit-alt"></span>
+                                        </button>
+                                    </a>
+                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete"
+                                        onclick="return confirm('Are you remove this product?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                         {{/each}}
@@ -71,7 +73,7 @@
 
     </div>
 </div>
-</div>
+
 <script>
 
     $(document).ready(function () {
@@ -86,6 +88,6 @@
 <script>
     document.getElementById('products').classList += " active open"
     let check = document.getElementById('check-active-page').innerHTML
-    check = "pro"+check
+    check = "pro" + check
     document.getElementById(check).classList += " active"
 </script>
