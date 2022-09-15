@@ -159,7 +159,7 @@ router.get('/pending-list/:prId/view', verifyArtist, (req, res) => {
   let prId = req.params.prId
   let artist = req.session._BR_ARTIST
   artistHelper.getOneProduct(prId).then((product) => {
-    res.render('artist/view-product', { title: 'View Product | Bristles', artist, product, })
+    res.render('artist/view-pending', { title: 'View Product | Bristles', artist, product, })
   })
 });
 
@@ -229,9 +229,38 @@ router.get('/pending-list/:prId/delete', verifyArtist, (req, res) => {
     req.session.success = "Product Removed from Database"
     res.redirect('/artist/pending-list/')
   })
+});
+
+// Product List
+router.get('/product-list', verifyArtist, (req, res) => {
+  let artist = req.session._BR_ARTIST
+  artistHelper.getAllProducts(artist.arId).then((productList) => {
+    if (req.session.success) {
+      res.render('artist/product-list', { title: 'Product List | Bristles', artist, productList, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('artist/product-list', { title: 'Product List | Bristles', artist, productList, })
+    }
+  })
 })
 
+// View  Product
+router.get('/product-list/:prId/view', verifyArtist, (req, res) => {
+  let prId = req.params.prId
+  let artist = req.session._BR_ARTIST
+  artistHelper.getOneProduct(prId).then((product) => {
+    res.render('artist/view-product', { title: 'View Product | Bristles', artist, product, })
+  })
+});
 
+// Delete Product
+router.get('/product-list/:prId/delete', verifyArtist, (req, res) => {
+  let prId = req.params.prId
+  adminHelpers.deleteProduct(prId).then(() => {
+    req.session.success = "This Product Deleted"
+    res.redirect('/artist/product-list')
+  })
+})
 
 
 module.exports = router;
