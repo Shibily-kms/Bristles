@@ -1,8 +1,8 @@
-{{>admin-top}}
-{{>admin-side}}
+{{>artist-side}}
+{{>artist-top}}
+
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
-
         <h4 class="fw-bold  mb-4">View Product</h4>
         <!-- Basic Layout -->
         <div class="row pb-5">
@@ -36,36 +36,7 @@
             <div class="col-md admin-product-view">
                 <h3 class="">{{product.title}}_{{product.prId}}_{{product.size}}</h3>
                 <h5>Orginal Size : {{product.size}}</h5>
-                {{#if product.artist}}
-                <a href="">
-                    <div class="artist">
-                        <div class="section-one">
-                            <img src="/images/avatar/1.png" alt="artist_avatar">
-                            <div class="details">
-                                <h4>{{product.artist.name}}</h4>
-                                <p>Kerala, India - ({{product.artist.arId}})</p>
-                            </div>
-                        </div>
-                        <div class="artist-rate-card section-two">
-                            <div class="rate">
-                                <p><i class='bx bxs-star'></i> 3.7</p>
-                            </div>
-                            <p>(500)</p>
-                        </div>
-                    </div>
-                </a>
-                {{else}}
-                <div class="artist">
-                    <div class="section-one">
-                        <img src="/images/icon/logo-2.png" alt="artist_avatar">
-                        <div class="details">
-                            <p>Provide By :</p>
-                            <h4>Bristles company</h4>
-                        </div>
-                    </div>
 
-                </div>
-                {{/if}}
                 <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
                 <h6 class="sub-head">Specification</h6>
                 <hr>
@@ -151,25 +122,18 @@
                     <p>{{product.description}}</p>
                 </div>
                 {{/if}}
-
-
-
-
             </div>
         </div>
     </div>
 </div>
 
 
-{{!-- Check active page --}}
-<p id="check-active-page" hidden>{{NOW_CAT}}</p>
 
+{{!-- Sidebar Action --}}
 <script>
-    document.getElementById('products').classList += " active open"
-    let check = document.getElementById('check-active-page').innerHTML
-    check = "pro" + check
-    document.getElementById(check).classList += " active"
+    document.getElementById('pending').classList += " active"
 </script>
+
 
 <script>
     let carouselIndicators = document.getElementById('carousel-indicators')

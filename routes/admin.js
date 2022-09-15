@@ -2,8 +2,8 @@ const { response } = require('express');
 const express = require('express');
 const router = express.Router();
 const adminHelpers = require('../helpers/admin-helpers');
-const store = require('../config/multer')
 const optionHelpers = require('../helpers/option-helper');
+const store = require('../config/multer')
 const fs = require('fs');
 const path = require('path');
 const artistHelpers = require('../helpers/artist-helpers');
@@ -15,7 +15,7 @@ let verifyAdmin = (req, res, next) => {
   } else {
     res.redirect('/admin/sign-in')
   }
-}
+} 
 
 /* GET users listing. */
 router.get('/', verifyAdmin, (req, res) => {
@@ -228,7 +228,7 @@ router.post('/products/:NOW_CAT/edit-product', verifyAdmin, store.product.array(
         var Imagepath = path.join(__dirname, '../public/images/products/' + imageArry[i])
         fs.unlink(Imagepath, function (err) {
           if (err)
-            return;
+            return err;
         });
       }
     }
@@ -344,6 +344,7 @@ router.get('/artist/:arId/delete', verifyAdmin, (req, res) => {
     res.redirect('/admin/artist/all-artist')
   })
 });
+
 
 
 

@@ -12,6 +12,35 @@ a {
   color: #00B7FF;
 }
 
+/* Status Color */
+.status {
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  -ms-border-radius: 100px;
+  -o-border-radius: 100px;
+  border: solid 1px black;
+  padding: 2px 10px;
+}
+
+.status-Active {
+  background-color: rgb(157, 255, 157);
+  color: rgb(0, 165, 0);
+  border-color: rgb(0, 165, 0);
+}
+
+.status-Pending {
+  background-color: rgb(209, 209, 209);
+  color: rgb(36, 36, 36);
+  border-color: rgb(36, 36, 36);
+}
+.status-Rejected {
+  background-color: rgb(255, 204, 204);
+  color: rgb(206, 0, 0);
+  border-color: rgb(206, 0, 0);
+}
+
+
 /* Admin Slide header */
 #admin-header {
   position: fixed;
@@ -70,3 +99,4 @@ a {
 .table-action-td a{
   margin: 0 2px ;
 }
+

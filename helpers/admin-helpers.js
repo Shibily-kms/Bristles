@@ -104,7 +104,8 @@ module.exports = {
                     randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
                 }
                 body.prId = "PR" + randomString
-                body.delete = false
+                body.delete = false,
+                body.status = 'Approve'
             }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body).then(() => {
                 resolve()
@@ -116,7 +117,7 @@ module.exports = {
 
     getAllCatProduct: (CAT) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, delete: false }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] } , delete: false }).toArray().then((result) => {
                 resolve(result)
             })
         })
@@ -248,9 +249,16 @@ module.exports = {
         })
     },
 
-
-
     // Artist End
+    // Pending Products Start
+    getAllCatPending: (CAT) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Pending','Rejected'] } , delete: false }).toArray().then((result) => {
+                resolve(result)
+            })
+        })
+    },
+    // Pending Products End
 
 
 

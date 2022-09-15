@@ -60,6 +60,23 @@
 <body>
 
   {{{body}}}
+
+  
+{{!-- Alert --}}
+{{#if success}}
+<div class=" admin-alert">
+  <div class="alert alert-success alert-dismissible" role="alert">{{success}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+{{/if}}
+{{#if error}}
+<div class=" admin-alert">
+  <div class="alert alert-danger alert-dismissible" role="alert">{{error}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+{{/if}}
   {{!-- {{>yes-or-no}} --}}
   {{!-- JavaScripts --}}
   <script src="/javascripts/user-validation.js"></script>

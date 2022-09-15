@@ -127,9 +127,9 @@ router.get('/search', async (req, res) => {
   let product = await userHelper.searchProduct(question)
   userHelper.filterProduct(category, medium, surface, quality).then(async (response) => {
     let categoryList = response.categoryList
-    let otherList = response.otherList
+    let optionList = response.optionList
     // let product = response.product
-    res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, otherList, product, question, user })
+    res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, product, question, user })
     // console.log(response);
   })
 })

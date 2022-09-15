@@ -39,7 +39,7 @@
                             <p class="text-dark fw-semibold">MEDIUM</p>
                             <div class="mb-3 ">
                                 <div class="list-group">
-                                    {{#each otherList.medium}}
+                                    {{#each optionList.medium}}
                                     <label class="list-group-item">
                                         <input class="form-check-input me-1 cursor-pointer" type="checkbox"
                                             value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="medium"
@@ -56,7 +56,7 @@
                             <p class="text-dark fw-semibold">SURFACE</p>
                             <div class=" mb-3">
                                 <div class="list-group">
-                                    {{#each otherList.surface}}
+                                    {{#each optionList.surface}}
                                     <label class="list-group-item">
                                         <input class="form-check-input me-1 cursor-pointer" type="checkbox"
                                             value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="surface"
@@ -73,7 +73,7 @@
                             <p class="text-dark fw-semibold">QUALITY</p>
                             <div class="mb-3 ">
                                 <div class="list-group">
-                                    {{#each otherList.quality}}
+                                    {{#each optionList.quality}}
                                     <label class="list-group-item">
                                         <input class="form-check-input me-1 cursor-pointer " type="checkbox"
                                             value="{{this.name}}" {{#if this.tick}}checked{{/if}} name="quality"

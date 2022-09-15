@@ -1,4 +1,10 @@
 
+// Table SetUp
+$(document).ready(function () {
+    $('#table_id').DataTable();
+});
+
+
 // Open File input on click icon
 function chooseSlider() {
     document.getElementById('inputChoose').click();

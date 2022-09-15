@@ -85,7 +85,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let response = []
             let categoryList = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
-            let otherList = optionHelpers
+            let optionList = optionHelpers
             // let FullProduct = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
 
 
@@ -143,32 +143,32 @@ module.exports = {
             //     return;
             // }
             // function tickMedium(item) {
-            //     for (let i = 0; i < otherList.medium.length; i++) {
-            //         if (otherList.medium[i].name == item) {
-            //             otherList.medium[i].tick = true
+            //     for (let i = 0; i < optionList.medium.length; i++) {
+            //         if (optionList.medium[i].name == item) {
+            //             optionList.medium[i].tick = true
             //         }
             //     }
             //     return;
             // }
             // function tickSurface(item) {
-            //     for (let i = 0; i < otherList.surface.length; i++) {
-            //         if (otherList.surface[i].name == item) {
-            //             otherList.surface[i].tick = true
+            //     for (let i = 0; i < optionList.surface.length; i++) {
+            //         if (optionList.surface[i].name == item) {
+            //             optionList.surface[i].tick = true
             //         }
             //     }
             //     return;
             // }
             // function tickQuality(item) {
-            //     for (let i = 0; i < otherList.quality.length; i++) {
-            //         if (otherList.quality[i].name == item) {
-            //             otherList.quality[i].tick = true
+            //     for (let i = 0; i < optionList.quality.length; i++) {
+            //         if (optionList.quality[i].name == item) {
+            //             optionList.quality[i].tick = true
             //         }
             //     }
             //     return;
             // }
 
             response.categoryList = categoryList
-            response.otherList = otherList
+            response.optionList = optionList
             // Tick Functions End
            
             // let filter = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: { $in: category },medium:{$in : medium} }).toArray()

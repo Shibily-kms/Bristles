@@ -1,0 +1,125 @@
+{{>artist-side}}
+{{>artist-top}}
+
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        <h4 class="fw-bold  mb-4">Edit Product</h4>
+        <!-- Basic Layout -->
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-sm-8">
+                <div class="form-background  mb-4">
+
+                    <div class="card-body">
+                        <form action="/artist/pending-list/edit-product" method="post"
+                            enctype="multipart/form-data" class="product-add-admin">
+                            {{!-- Hidden Inputs--}}
+                            <input type="text" class="form-control" id="basic-default-company" name="prId"
+                                value="{{product.prId}}" required hidden />
+
+                            {{!-- Image Setting --}}
+                            <div class="image-div">
+
+                                <img id="image-show-0" {{#if
+                                    product.image.[0]}}src="/images/products/{{product.image.[0]}}" {{else}}
+                                    style="display:none" {{/if}} class="image-view" alt="">
+                                <img id="image-show-1" {{#if
+                                    product.image.[1]}}src="/images/products/{{product.image.[1]}}" {{else}}
+                                    style="display:none" {{/if}} class="image-view" alt="">
+                                <img id="image-show-2" {{#if
+                                    product.image.[2]}}src="/images/products/{{product.image.[2]}}" {{else}}
+                                    style="display:none" {{/if}} class="image-view" alt="">
+                                <img id="image-show-3" {{#if
+                                    product.image.[3]}}src="/images/products/{{product.image.[3]}}" {{else}}
+                                    style="display:none" {{/if}} class="image-view" alt="">
+
+                                <div id="choose-image-div" onclick="chooseSlider()" data-title="Choose image"
+                                    class="image-add-button">
+                                    <i class='bx bxs-camera-plus'></i>
+                                </div>
+                                <input type="file" onchange="viewImage(event)" hidden accept="image/jpg, image/jpeg"
+                                    multiple name="image" id="inputChoose" max="4">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-fullname">Title</label>
+                                <input type="text" class="form-control" id="basic-default-fullname" name="title"
+                                    value="{{product.title}}" required placeholder="Paint title" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company">Size</label>
+                                <input type="text" class="form-control" id="basic-default-company" name="size" required
+                                    placeholder="Eg : 24in X 24in" value="{{product.size}}" />
+                            </div>
+
+                           
+
+
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1" class="form-label">category</label>
+                                <select class="form-select" id="exampleFormControlSelect1" name="category" required
+                                    aria-label="Default select example">
+                                    {{#each category}}
+                                    <option {{#if this.option}} selected {{/if}} value="{{this.title}}">{{this.title}}
+                                    </option>
+                                    {{/each}}
+
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1" class="form-label">Medium</label>
+                                <select class="form-select" id="exampleFormControlSelect1" name="medium" required
+                                    aria-label="Default select example">
+                                    {{#each optionHelpers.medium}}
+                                    <option {{#if this.option}} selected {{/if}} value="{{this.name}}">{{this.name}}
+                                    </option>
+                                    {{/each}}
+
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1" class="form-label">Surface</label>
+                                <select class="form-select" id="exampleFormControlSelect1" name="surface" required
+                                    aria-label="Default select example">
+                                    {{#each optionHelpers.surface}}
+                                    <option {{#if this.option}} selected {{/if}} value="{{this.name}}">{{this.name}}
+                                    </option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlSelect1" class="form-label">Quality</label>
+                                <select class="form-select" id="exampleFormControlSelect1" name="quality" required
+                                    aria-label="Default select example">
+                                    {{#each optionHelpers.quality}}
+                                    <option {{#if this.option}} selected {{/if}} value="{{this.name}}">{{this.name}}
+                                    </option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-company">Price</label>
+                                <input type="number" class="form-control" id="basic-default-company"
+                                    value="{{product.price}}" name="price" required placeholder="₹ 000.00" />
+                            </div>
+                            <div class="mb-3">
+                                <lable class="form-label" for="basic-default-message">Description</label>
+                                    <textarea id="basic-default-message" class="form-control" style="description"
+                                        placeholder="About paint" name="description">{{product.description}}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Edit details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('pending').classList += " active"
+</script>
