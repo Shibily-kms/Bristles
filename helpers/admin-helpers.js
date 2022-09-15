@@ -105,7 +105,7 @@ module.exports = {
                 }
                 body.prId = "PR" + randomString
                 body.delete = false,
-                body.status = 'Approve'
+                    body.status = 'Approve'
             }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body).then(() => {
                 resolve()
@@ -117,7 +117,7 @@ module.exports = {
 
     getAllCatProduct: (CAT) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] } , delete: false }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] }, delete: false }).toArray().then((result) => {
                 resolve(result)
             })
         })
@@ -138,6 +138,10 @@ module.exports = {
                         }
                         result.artist = artistDetails
                     })
+                }
+                console.log(result);
+                if (result.status == "Rejected") {
+                    result.reject = true
                 }
                 resolve(result)
             })
@@ -253,11 +257,40 @@ module.exports = {
     // Pending Products Start
     getAllCatPending: (CAT) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Pending','Rejected'] } , delete: false }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Pending', 'Rejected'] }, delete: false }).toArray().then((result) => {
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i].status == "Pending") {
+                        result[i].Pending = true
+                    }
+                }
                 resolve(result)
             })
         })
     },
+
+    approveAndRejectProduct: (prId,option) => {
+        return new Promise((resolve, reject) => {
+            if(option == "approve"){
+                db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
+                    $set: {
+                        status: "Approve"
+                    }
+                }).then(() => {
+                    resolve({approve:true})
+                })
+            }else if(option == "reject"){
+                db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
+                    $set: {
+                        status: "Rejected"
+                    }
+                }).then(() => {
+                    resolve({reject:true})
+                })
+            }
+            
+        })
+    }
+
     // Pending Products End
 
 

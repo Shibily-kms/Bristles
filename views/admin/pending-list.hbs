@@ -1,0 +1,82 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">{{NOW_CAT}} List</h4>
+        
+        <!-- Hoverable Table rows -->
+        <div class="admin-table-div">
+
+            <div class="table-responsive">
+                <table class="table table-hover css-serial" id="table_id">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>PR ID</th>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {{#each productslist}}
+                        <tr>
+                            <td></td>
+                            <td>{{this.prId}}</td>
+                            <td>{{this.title}}</td>
+                            <td>₹ {{this.price}}</td>
+                            <td>{{this.arId}}</td>
+                            <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
+                            <td>
+                                <span class="table-action-td">
+                                    <a href="/admin/pending-products/{{this.category}}/{{this.prId}}/view " title="view">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                            <span class="tf-icons bx bxs-show"></span>
+                                        </button>
+                                    </a>
+                                    <a title="Approve" href="/admin/pending-products/{{this.category}}/{{this.prId}}/approve"
+                                        onclick="return confirm('Approve this Artist ?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-success">
+                                            <span class="tf-icons bx bx-check"></span>
+                                        </button>
+                                    </a>
+                                    {{#if this.Pending}}
+                                    <a title="Reject" href="/admin/pending-products/{{this.category}}/{{this.prId}}/reject"
+                                        onclick="return confirm('Reject this Artist ?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bx-x"></span>
+                                        </button>
+                                    </a>
+                                    {{/if}}
+                                </span>
+                            </td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--/ Hoverable Table rows -->
+
+
+
+
+    </div>
+</div>
+
+
+
+{{!-- Check active page --}}
+<p id="check-active-page" hidden>{{NOW_CAT}}</p>
+
+
+<script>
+    document.getElementById('pendingPro').classList += " active open"
+    let check = document.getElementById('check-active-page').innerHTML
+    check = "pnt" + check
+    document.getElementById(check).classList += " active"
+</script>

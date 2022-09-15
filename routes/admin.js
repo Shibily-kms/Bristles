@@ -15,7 +15,7 @@ let verifyAdmin = (req, res, next) => {
   } else {
     res.redirect('/admin/sign-in')
   }
-} 
+}
 
 /* GET users listing. */
 router.get('/', verifyAdmin, (req, res) => {
@@ -152,11 +152,11 @@ router.get('/products/:_CAT', verifyAdmin, async (req, res) => {
   let productslist = await adminHelpers.getAllCatProduct(NOW_CAT)
   if (req.session.success) {
     res.render('admin/product-list', {
-      title: "Products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", productslist, "success": req.session.success
+      title: "Products | Admin panel", admin, CAT, NOW_CAT, productslist, "success": req.session.success
     })
     req.session.success = false
   } else {
-    res.render('admin/product-list', { title: "Products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", productslist })
+    res.render('admin/product-list', { title: "Products | Admin panel", admin, CAT, NOW_CAT, productslist })
   }
 
 })
@@ -172,7 +172,7 @@ router.get('/products/:_CAT/add-product', verifyAdmin, (req, res) => {
     })
     req.session.success = false
   } else {
-    res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT, NOW_CAT, code: "proCN", optionHelpers })
+    res.render('admin/add-product', { title: "Add products | Admin panel", admin, CAT, NOW_CAT, optionHelpers })
   }
 });
 
@@ -254,7 +254,13 @@ router.get('/products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
   let NOW_CAT = req.params.NOW_CAT
   let prId = req.params.prId
   adminHelpers.getOneProduct(prId).then((product) => {
-    res.render('admin/view-product', { title: "Edit product | Admin panel", admin, CAT, NOW_CAT, product })
+    if (req.session.success) {
+      res.render('admin/view-product', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('admin/view-product', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
+
+    }
   })
 });
 
@@ -290,10 +296,10 @@ router.get('/artist/all-artist', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
   adminHelpers.getAllArtist().then((artist) => {
-    if(req.session.success){
-      res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT, artist,"success":req.session.success })
+    if (req.session.success) {
+      res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT, artist, "success": req.session.success })
       req.session.success = false
-    }else{
+    } else {
       res.render('admin/artist-list', { title: "Artists | Admin panel", admin, CAT, artist })
     }
   })
@@ -345,7 +351,52 @@ router.get('/artist/:arId/delete', verifyAdmin, (req, res) => {
   })
 });
 
+// Pending Product List
+router.get('/pending-products/:_CAT', verifyAdmin, async (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let NOW_CAT = req.params._CAT
+  let productslist = await adminHelpers.getAllCatPending(NOW_CAT)
+  if (req.session.success) {
+    res.render('admin/pending-list', {
+      title: "Pending Products | Admin panel", admin, CAT, NOW_CAT, productslist, "success": req.session.success
+    })
+    req.session.success = false
+  } else {
+    res.render('admin/pending-list', { title: "Pending Products | Admin panel", admin, CAT, NOW_CAT, productslist })
+  }
 
+});
+
+// View Pending Product
+router.get('/pending-products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let NOW_CAT = req.params.NOW_CAT
+  let prId = req.params.prId
+  adminHelpers.getOneProduct(prId).then((product) => {
+    
+      res.render('admin/view-pending', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
+  
+  })
+})
+
+// Approve And Reject Pending Product
+
+router.get('/pending-products/:NOW_CAT/:prId/:choose', verifyAdmin, (req, res) => {
+  let NOW_CAT = req.params.NOW_CAT
+  let prId = req.params.prId
+  let choose = req.params.choose
+  adminHelpers.approveAndRejectProduct(prId,choose).then((response) => {
+    if(response.approve){
+      req.session.success = "This Product Approved"
+      res.redirect('/admin/products/' + NOW_CAT + '/' + prId + '/view')
+    }else if( response.reject) {
+      req.session.success = "This Product Rejected"
+      res.redirect('/admin/pending-products/' + NOW_CAT )
+    }
+  })
+})
 
 
 

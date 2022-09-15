@@ -34,6 +34,7 @@
             </div>
             <!-- Bootstrap crossfade carousel -->
             <div class="col-md admin-product-view">
+
                 <h3 class="">{{product.title}}_{{product.prId}}_{{product.size}}</h3>
                 <h5>Orginal Size : {{product.size}}</h5>
                 {{#if product.artist}}
@@ -67,6 +68,19 @@
                 </div>
                 {{/if}}
                 <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
+                <div class="buttons mb-3">
+                    <a href="/admin/pending-products/{{product.category}}/{{product.prId}}/approve"
+                        class="btn btn-success" onclick="return confirm('Approve this Product ?')"><i
+                            class='bx bx-check'></i> Approve </a>
+                    {{#if product.reject}}
+                    <a class="btn  text-danger"><i class='bx bx-info-circle'></i> This Product was
+                        <strong>Rejected</strong></a>
+                    {{else}}
+                    <a href="/admin/pending-products/{{product.category}}/{{product.prId}}/reject"
+                        class="btn btn-danger " onclick="return confirm('Reject this Product ?')"><i
+                            class='bx bx-x'></i> Rejected</a>
+                    {{/if}}
+                </div>
                 <h6 class="sub-head">Specification</h6>
                 <hr>
                 <div class="product-list-admin pb-4">
@@ -164,10 +178,11 @@
 {{!-- Check active page --}}
 <p id="check-active-page" hidden>{{NOW_CAT}}</p>
 
+
 <script>
-    document.getElementById('products').classList += " active open"
+    document.getElementById('pendingPro').classList += " active open"
     let check = document.getElementById('check-active-page').innerHTML
-    check = "pro" + check
+    check = "pnt" + check
     document.getElementById(check).classList += " active"
 </script>
 
@@ -179,6 +194,4 @@
     let carouseInner = document.getElementById('carousel-inner')
     let first = carouseInner.firstElementChild
     first.className = "carousel-item active"
-
-
 </script>
