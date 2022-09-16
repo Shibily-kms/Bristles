@@ -41,7 +41,7 @@
                 <a href="/admin/artist/{{product.artist.arId}}/view">
                     <div class="artist">
                         <div class="section-one">
-                            <img src="/images/avatar/1.png" alt="artist_avatar">
+                            <img src="/images/artist/{{product.artist.image}}" onerror="this.onerror=null;callfun(this);" alt="artist_avatar" >
                             <div class="details">
                                 <h4>{{product.artist.name}}</h4>
                                 <p>Kerala, India - ({{product.artist.arId}})</p>
@@ -184,6 +184,12 @@
     let check = document.getElementById('check-active-page').innerHTML
     check = "pnt" + check
     document.getElementById(check).classList += " active"
+
+    // Image Null Avatar
+    function callfun(obj) {
+    var noimg = "/images/avatar/avatar3.png";
+    obj.src = noimg;
+}
 </script>
 
 <script>

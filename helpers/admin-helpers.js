@@ -134,7 +134,8 @@ module.exports = {
                             name: artist.userName,
                             image: artist.image,
                             rate: artist.rate,
-                            rateCount: artist.rateCount
+                            rateCount: artist.rateCount,
+                            image : artist.image
                         }
                         result.artist = artistDetails
                     })

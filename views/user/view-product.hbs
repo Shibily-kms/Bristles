@@ -37,7 +37,7 @@
             <a href="">
                 <div class="artist">
                     <div class="section-one">
-                        <img src="/images/avatar/1.png" alt="artist_avatar">
+                        <img src="/images/artist/{{product.artist.image}}" onerror="this.onerror=null;callfun(this);" alt="artist_avatar">
                         <div class="details">
                             <h4>{{product.artist.name}}</h4>
                             <p>Kerala, India - ({{product.artist.arId}})</p>
@@ -167,5 +167,10 @@
     let first = carouseInner.firstElementChild
     first.className = "carousel-item active"
 
+    // Image Null Avatar
+    function callfun(obj) {
+        var noimg = "/images/avatar/avatar3.png";
+        obj.src = noimg;
+    }
 
 </script>
