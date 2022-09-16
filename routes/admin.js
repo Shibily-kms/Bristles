@@ -75,6 +75,13 @@ router.get('/category', verifyAdmin, (req, res) => {
     }
   })
 })
+// Profile
+router.get('/profile', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  res.render('admin/profile', { title: "Add Category | Admin panel", admin, CAT, })
+})
+
 // Add category
 router.get('/category/add-category', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
@@ -375,9 +382,9 @@ router.get('/pending-products/:NOW_CAT/:prId/view', verifyAdmin, (req, res) => {
   let NOW_CAT = req.params.NOW_CAT
   let prId = req.params.prId
   adminHelpers.getOneProduct(prId).then((product) => {
-    
-      res.render('admin/view-pending', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
-  
+
+    res.render('admin/view-pending', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
+
   })
 })
 
@@ -387,13 +394,13 @@ router.get('/pending-products/:NOW_CAT/:prId/:choose', verifyAdmin, (req, res) =
   let NOW_CAT = req.params.NOW_CAT
   let prId = req.params.prId
   let choose = req.params.choose
-  adminHelpers.approveAndRejectProduct(prId,choose).then((response) => {
-    if(response.approve){
+  adminHelpers.approveAndRejectProduct(prId, choose).then((response) => {
+    if (response.approve) {
       req.session.success = "This Product Approved"
       res.redirect('/admin/products/' + NOW_CAT + '/' + prId + '/view')
-    }else if( response.reject) {
+    } else if (response.reject) {
       req.session.success = "This Product Rejected"
-      res.redirect('/admin/pending-products/' + NOW_CAT )
+      res.redirect('/admin/pending-products/' + NOW_CAT)
     }
   })
 })

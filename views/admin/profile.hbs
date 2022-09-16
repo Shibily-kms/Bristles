@@ -1,0 +1,30 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        <div class="row justify-content-center">
+            <h4>Profile</h4>
+            <div class="col-lg-5 col-sm-8">
+                <div class="form-background  mb-4">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-default-fullname">Company Title</label>
+                            <input type="text" class="form-control" id="basic-default-fullname"
+                                value="{{admin.username}}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="basic-default-company">Email Address</label>
+                            <input type="text" class="form-control" id="basic-default-company" required
+                                placeholder="Eg : 24in X 24in" value="{{admin.email}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('profile').classList += " active"
+</script>
