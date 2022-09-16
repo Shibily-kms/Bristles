@@ -212,3 +212,22 @@
 .camera-icon-div .camera-icon i {
     color: white;
 }
+
+/* Footer */
+.footer .icon-div{
+    display: flex;
+    height: 100%;
+    align-items: center;
+   
+}
+.footer .icon-div h3{
+    color: white;
+    margin: 0;
+    margin-left: 10px;
+    
+}
+.footer .icon{
+        width: 35px;
+        height: 35px;
+        
+}
