@@ -173,6 +173,7 @@ router.post('/profile/edit', verifyUser, store.user.single('image'), (req, res) 
           return err;
       });
     }
+    delete obj.deleteImage;
     req.session._BR_USER = obj
     req.session.success = "Profile edited"
     res.redirect('/profile')

@@ -1,0 +1,148 @@
+{{>artist-side}}
+{{>artist-top}}
+
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        <h4 class="fw-bold  mb-4">Account</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/artist/profile"><i class='bx bxs-user me-1'></i>
+                            Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/artist/change-password"><i class='bx bxs-lock-open-alt'></i> Change password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/artist/change-email"><i class='bx bxs-envelope'></i> Change email</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            <img src="/images/artist/{{artistData.image}}" alt="user-avatar" class="d-block rounded"
+                                height="100" onerror="this.onerror=null;callfun(this);" width="100"
+                                id="uploadedAvatar" />
+                            <div class="button-wrapper">
+
+
+                                <h5 class="text-dark mb-1 ">{{artistData.firstName}} {{artistData.lastName}}</h5>
+                                <p class="text-muted mb-1">AR ID : {{artistData.arId}}</p>
+                                <a class="btn btn-sm btn-primary text-white" href="/artist/profile/edit" title="Edit profile">
+                                    <i class="bx bxs-pencil d-block d-md-none"></i>
+                                    <span class="d-none d-md-block">Edit profile</span>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input class="form-control" type="text" id="firstName" name="firstName"
+                                    value="{{artistData.firstName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input class="form-control" type="text" id="lastName" name="lastName"
+                                    value="{{artistData.lastName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="userName" class="form-label">User Name</label>
+                                <input class="form-control" type="text" id="userName" name="userName"
+                                    value="{{artistData.userName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input class="form-control" type="email" id="email" name="email"
+                                    value="{{artistData.email}}" readonly />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label for="mobile" class="form-label">Mobile</label>
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    value="{{artistData.mobile}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="place" class="form-label">Place</label>
+                                <input type="text" class="form-control" id="place" name="place"
+                                    value="{{artistData.place}}" readonly />
+                            </div>
+
+
+
+                        </div>
+                        <!-- /Account -->
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h6>Address</h6>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="Name" class="form-label">Name</label>
+                                <input class="form-control" type="text" id="Name" name="name"
+                                    value="{{artistData.address.name}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input class="form-control" type="number" id="phone" name="phone"
+                                    value="{{artistData.address.phone}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="pincode" class="form-label">Pincode</label>
+                                <input class="form-control" type="number" id="pincode" name="pincode"
+                                    value="{{artistData.address.pincode}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="locality" class="form-label">Locality</label>
+                                <input class="form-control" type="text" id="locality" name="locality"
+                                    value="{{artistData.address.locality}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="area" class="form-label">Area/Street</label>
+                                <input class="form-control" type="text" id="area" name="area"
+                                    value="{{artistData.address.area}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="city" class="form-label">City/District/town</label>
+                                <input class="form-control" type="text" id="city" name="city"
+                                    value="{{artistData.address.city}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="state" class="form-label">State</label>
+                                <input class="form-control" type="text" id="state" name="state"
+                                    value="{{artistData.address.state}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="landmark" class="form-label">Landmark</label>
+                                <input class="form-control" type="text" id="landmark" name="landmark"
+                                    value="{{artistData.address.landmark}}" readonly />
+                            </div>
+                        </div>
+                        <!-- /Account -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- / Content -->
+    </div>
+
+
+</div>
+
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('profile').classList += " active"
+</script>

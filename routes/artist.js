@@ -259,7 +259,105 @@ router.get('/product-list/:prId/delete', verifyArtist, (req, res) => {
     req.session.success = "This Product deleted"
     res.redirect('/artist/product-list')
   })
+});
+
+// Profile 
+router.get('/profile', verifyArtist, (req, res) => {
+  let artist = req.session._BR_ARTIST
+  artistHelper.getArtist(artist.arId).then((artistData) => {
+    if (req.session.success) {
+      res.render('artist/profile', { title: 'Profile | Bristles', artist, artistData, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('artist/profile', { title: 'Profile | Bristles', artist, artistData })
+    }
+  })
 })
+
+// Edit Profile
+router.get('/profile/edit', verifyArtist, (req, res) => {
+  let artist = req.session._BR_ARTIST
+  artistHelper.getArtist(artist.arId).then((artistData) => {
+    res.render('artist/edit-profile', { title: 'Edit profile | Bristles', artist, artistData })
+  })
+});
+
+router.post('/profile/edit', verifyArtist, store.artist.single('image'), (req, res) => {
+  let image = null
+  if(req.file){
+    image = req.file.filename
+  }
+  req.body.image = image
+  artistHelper.editProfile(req.body).then((obj) => {
+    if(obj.deleteImage){
+      var Imagepath = path.join(__dirname, '../public/images/artist/' + obj.deleteImage)
+      fs.unlink(Imagepath, function (err) {
+        if (err)
+          return err;
+      });
+    }
+    delete obj.deleteImage;
+    req.session._BR_ARTIST = obj
+    req.session.success = "Profile edited"
+    res.redirect('/artist/profile')
+  })
+});
+
+
+// Chnage Password
+router.get('/change-password',verifyArtist,(req,res)=>{
+  let artist = req.session._BR_ARTIST
+  if(req.session.success){
+    res.render('artist/change-password',{title: 'Change Password | Bristles', artist,"success":req.session.success })
+    req.session.success = false
+  }else if(req.session.error){
+    res.render('artist/change-password',{title: 'Change Password | Bristles', artist,"error":req.session.error })
+    req.session.error = false
+  }else{
+    res.render('artist/change-password',{title: 'Change Password | Bristles', artist })
+  }
+});
+
+router.post('/change-password',verifyArtist,(req,res)=>{
+  artistHelper.changePassword(req.body).then((response)=>{
+    if(response.passErr){
+      req.session.error = "Incorrect current password"
+      res.redirect('/artist/change-password')
+    }else{
+      req.session.success = "Password changed"
+      res.redirect('/artist/change-password')
+    }
+  })
+})
+
+// Change Email
+
+router.get('/change-email',verifyArtist,(req,res)=>{
+  let artist = req.session._BR_ARTIST
+  if(req.session.success){
+    res.render('artist/change-email',{title: 'Change Email | Bristles', artist,"success":req.session.success })
+    req.session.success = false
+  }else if(req.session.error){
+    res.render('artist/change-email',{title: 'Change Email | Bristles', artist,"error":req.session.error })
+    req.session.error = false
+  }else{
+    res.render('artist/change-email',{title: 'Change Email | Bristles', artist })
+  }
+});
+
+router.post('/change-email',verifyArtist,(req,res)=>{
+  artistHelper.changeEmail(req.body).then((response)=>{
+    if(response.emailErr){
+      req.session.error = "This email already used"
+      res.redirect('/artist/change-email')
+    }else{
+      req.session._BR_ARTIST.email = response
+      req.session.success = "Email changed"
+      res.redirect('/artist/change-email')
+    }
+  })
+})
+
 
 
 module.exports = router;

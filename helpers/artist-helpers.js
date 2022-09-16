@@ -81,16 +81,105 @@ module.exports = {
                         result.rejected = true
                     }
                     resolve(result)
-                }else{
-                   
-                        resolve({ exception: true })
-
+                } else {
+                    resolve({ exception: true })
                 }
-
-               
             })
         })
     },
+
+    editProfile: (body) => {
+        return new Promise((resolve, reject) => {
+            let image = null
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
+                if (body.image == null) {
+                    body.image = artist.image
+                } else {
+                    image = artist.image
+                }
+                let obj = {
+                    name: body.name,
+                    phone: body.phone,
+                    pincode: body.pincode,
+                    locality: body.locality,
+                    area: body.area,
+                    city: body.city,
+                    state: body.state,
+                    landmark: body.landmark
+                }
+                db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId: body.arId }, {
+                    $set: {
+                        firstName: body.firstName,
+                        lastName: body.lastName,
+                        userName: body.userName,
+                        mobile: body.mobile,
+                        place: body.place,
+                        address: obj,
+                        image: body.image
+                    }
+                }).then(() => {
+                    let obj= {
+                        firstName: body.firstName,
+                        lastName: body.lastName,
+                        userName: body.userName,
+                        email : artist.email,
+                        mobile: body.mobile,
+                        place: body.place,
+                        image: body.image,
+                        arId : artist.arId,
+                        deleteImage : image
+                    }
+                    resolve(obj)    
+                })
+            })
+
+        })
+    },
+
+    changePassword: (body) => {
+        console.log(body,'bdy');
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
+                if (artist) {
+                    bcrypt.compare(body.currentPassword, artist.password).then(async (status) => {
+                        if (status) {
+                            let newPass = await bcrypt.hash(body.newPassword, 10)
+                            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId: body.arId }, {
+                                $set: {
+                                    password: newPass
+                                }
+                            }).then((response) => {
+                                resolve(response)
+                            })
+                        } else {
+                            resolve({ passErr: true })
+                        }
+                    })
+                }
+            })
+        })
+    },
+
+    
+    changeEmail:(body)=>{
+        console.log(body);
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({email:body.email}).then((artist)=>{
+                if(artist){
+                    resolve({emailErr:true})
+                }else{
+                    db.get().collection(collection.ARTIST_COLLECTION).updateOne({arId:body.arId},{
+                        $set:{
+                            email : body.email
+                        }
+                    }).then(()=>{
+                        resolve(body.email)
+                    })
+                }
+            })
+         })
+    },
+
     // Artist About End
 
     // Product Start
