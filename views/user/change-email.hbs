@@ -1,0 +1,95 @@
+{{>user-top}}
+<div class="container user-page">
+    <div class=" flex-grow-1 container-p-y">
+        <h4 class="fw-bold  mb-4">Account</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profile"><i class='bx bxs-user me-1'></i>
+                            Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/whish-list"><i class='bx bxs-heart'></i> Whish list</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order"><i class='bx bxs-package'></i> Orders</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+
+                    <!-- Account -->
+                    <form action="/profile/change-email" method="post"
+                        id="userProfileEditForm" onsubmit="return userChangeEmail()">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                <span class="camera-icon-div">
+                                    <img src="/images/user/{{user.image}}" alt="user-avatar" class="d-block rounded"
+                                        height="100" width="100" id="uploadedProfile"
+                                        onerror="this.onerror=null;callfun(this);" />
+                                </span>
+                                <div class="button-wrapper">
+
+
+                                    <h5 class="text-dark mb-1 ">{{user.firstName}} {{user.lastName}}</h5>
+                                    <p class="text-muted mb-1">UR ID : {{user.urId}}</p>
+                                    <a class="btn btn-sm btn-secondary text-white" title="Edit profile" href="/profile">
+                                        <i class="bx bx-left-arrow-alt d-block d-md-none"></i>
+                                        <span class="d-none d-md-block">Back to profile</span>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-0" />
+
+
+                        {{!-- Hidden Inputes --}}
+                        <input type="text" name="urId" value="{{user.urId}}" hidden>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <div class="col-12 col-md-6">
+                                    <h5>Change Email address</h5>
+                                    <div class="mb-3 col-12">
+                                        <label for="currentEmail" class="form-label">current email</label>
+                                        <input class="form-control" type="email" id="currentEmail" readonly
+                                           value="{{user.email}}"   />
+                                        
+
+                                    </div>
+                                    <div class="mb-3 col-12">
+                                        <label for="email" class="form-label">new Email</label>
+                                        <input class="form-control" type="email" id="email"
+                                            name="email"  />
+                                        <small class="text-danger" id="emailAlert" style="display: none;"></small>
+
+                                    </div>
+                                    <div class="mb-3 d-flex justify-content-end col-12 ">
+                                        <a href="/profile/change-email"
+                                            class="btn btn-secondary col-md-3 col-sm-5 col-6 me-1">Reset</a>
+                                        <button type="submit"
+                                            class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <!-- /Account -->
+                        </div>
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- / Content -->
+    </div>
+</div>
+
+<script>
+    console.log(document.getElementById('lastNameAlert'))
+    document.getElementById('profile').className = "dropdown-item active"
+</script>

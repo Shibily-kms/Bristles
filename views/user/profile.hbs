@@ -1,0 +1,151 @@
+{{>user-top}}
+<div class="container user-page">
+    <div class=" flex-grow-1 container-p-y">
+        <h4 class="fw-bold  mb-4">Account</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profile"><i class='bx bxs-user me-1'></i>
+                            Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/whish-list"><i
+                                class='bx bxs-heart'></i> Whish list</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order"><i
+                                class='bx bxs-package'></i> Orders</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            <img src="/images/user/{{userData.image}}" alt="user-avatar" class="d-block rounded"
+                                height="100" onerror="this.onerror=null;callfun(this);" width="100"
+                                id="uploadedAvatar" />
+                            <div class="button-wrapper">
+
+
+                                <h5 class="text-dark mb-1 ">{{userData.firstName}} {{userData.lastName}}</h5>
+                                <p class="text-muted mb-1">UR ID : {{userData.urId}}</p>
+                                <a class="btn btn-sm btn-primary text-white" href="/profile/edit" title="Edit profile">
+                                    <i class="bx bxs-pencil d-block d-md-none"></i>
+                                    <span class="d-none d-md-block">Edit profile</span>
+                                </a>
+                                <a class="btn btn-sm btn-primary text-white" href="/profile/change-password" title="Change password">
+                                    <i class="bx bx-lock-open-alt d-block d-md-none"></i>
+                                    <span class="d-none d-md-block">Change password</span>
+                                </a>
+                                <a class="btn btn-sm btn-primary text-white" href="/profile/change-email" title="Change email">
+                                    <i class="bx bx-envelope-open d-block d-md-none"></i>
+                                    <span class="d-none d-md-block">Change email</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input class="form-control" type="text" id="firstName" name="firstName"
+                                    value="{{userData.firstName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input class="form-control" type="text" id="lastName" name="lastName"
+                                    value="{{userData.lastName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="userName" class="form-label">User Name</label>
+                                <input class="form-control" type="text" id="userName" name="userName"
+                                    value="{{userData.userName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input class="form-control" type="email" id="email" name="email"
+                                    value="{{userData.email}}" readonly />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label for="mobile" class="form-label">Mobile</label>
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    value="{{userData.mobile}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="place" class="form-label">Place</label>
+                                <input type="text" class="form-control" id="place" name="place"
+                                    value="{{userData.place}}" readonly />
+                            </div>
+
+
+
+                        </div>
+                        <!-- /Account -->
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h6>Address</h6>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="Name" class="form-label">Name</label>
+                                <input class="form-control" type="text" id="Name" name="name"
+                                    value="{{userData.address.name}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input class="form-control" type="number" id="phone" name="phone"
+                                    value="{{userData.address.phone}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="pincode" class="form-label">Pincode</label>
+                                <input class="form-control" type="number" id="pincode" name="pincode"
+                                    value="{{userData.address.pincode}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="locality" class="form-label">Locality</label>
+                                <input class="form-control" type="text" id="locality" name="locality"
+                                    value="{{userData.address.locality}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="area" class="form-label">Area/Street</label>
+                                <input class="form-control" type="text" id="area" name="area"
+                                    value="{{userData.address.area}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="city" class="form-label">City/District/town</label>
+                                <input class="form-control" type="text" id="city" name="city"
+                                    value="{{userData.address.city}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="state" class="form-label">State</label>
+                                <input class="form-control" type="text" id="state" name="state"
+                                    value="{{userData.address.state}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="landmark" class="form-label">Landmark</label>
+                                <input class="form-control" type="text" id="landmark" name="landmark"
+                                    value="{{userData.address.landmark}}" readonly />
+                            </div>
+                        </div>
+                        <!-- /Account -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- / Content -->
+    </div>
+</div>
+
+<script>
+    document.getElementById('profile').className = "dropdown-item active"
+</script>

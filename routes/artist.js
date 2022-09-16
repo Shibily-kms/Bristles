@@ -56,7 +56,7 @@ router.post('/sign-up', (req, res) => {
       req.session.error = "Email Id existed"
       res.redirect('/artist/sign-up')
     } else if (response) {
-      console.log(response);
+      
       req.session._BR_ARTIST_CHECK_ID = response.insertedId
       req.session._BR_ARTIST_CHECK = true
       res.redirect('/artist/sign-in')
@@ -120,7 +120,6 @@ router.get('/check-account', (req, res) => {
 router.get('/pending-list', verifyArtist, (req, res) => {
   let artist = req.session._BR_ARTIST
   artistHelper.getPendingList(artist.arId).then((productList) => {
-    console.log(productList);
     if (req.session.success) {
       res.render('artist/pending-list', { title: 'Pending List | Bristles', artist, productList, "success": req.session.success })
       req.session.success = false
@@ -257,7 +256,7 @@ router.get('/product-list/:prId/view', verifyArtist, (req, res) => {
 router.get('/product-list/:prId/delete', verifyArtist, (req, res) => {
   let prId = req.params.prId
   adminHelpers.deleteProduct(prId).then(() => {
-    req.session.success = "This Product Deleted"
+    req.session.success = "This Product deleted"
     res.redirect('/artist/product-list')
   })
 })

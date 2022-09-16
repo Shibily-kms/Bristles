@@ -139,7 +139,7 @@ module.exports = {
                         result.artist = artistDetails
                     })
                 }
-                console.log(result);
+               
                 if (result.status == "Rejected") {
                     result.reject = true
                 }

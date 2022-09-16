@@ -71,7 +71,8 @@ module.exports = {
     getArtist: (arId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId }).then((result) => {
-                try {
+                // try {
+                if (result) {
                     if (result.status == "Pending") {
                         result.pending = true
                     } else if (result.status == "Active") {
@@ -80,11 +81,13 @@ module.exports = {
                         result.rejected = true
                     }
                     resolve(result)
+                }else{
+                   
+                        resolve({ exception: true })
 
-                } catch (error) {
-                    console.log("Exp01");
-                    resolve({ exception: true })
                 }
+
+               
             })
         })
     },

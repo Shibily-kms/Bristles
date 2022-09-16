@@ -1,6 +1,6 @@
 const multer = require("multer")
 
-const storage = multer.diskStorage({
+const productStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/images/products')
     },
@@ -10,7 +10,18 @@ const storage = multer.diskStorage({
     }
 })
 
+const userStorage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/images/user')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + file.originalname
+        cb(null, uniqueSuffix)
+    }
+})
+
 module.exports = store = {
-    product : multer({ storage })
+    product: multer({ storage: productStorage }),
+    user: multer({ storage: userStorage }),
 
 }

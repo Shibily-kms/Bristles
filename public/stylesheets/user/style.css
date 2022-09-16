@@ -15,8 +15,8 @@
     flex-wrap: wrap;
 }
 
-.user-header .bottom{
-   
+.user-header .bottom {
+
     width: 100%;
     margin-bottom: 10px;
 }
@@ -42,12 +42,14 @@
     display: flex;
     align-items: center;
 }
-.user-header .left .items{
+
+.user-header .left .items {
     display: flex;
     align-items: center;
 }
-.user-header .left .items .search-icon, .user-header .bottom .search-icon{
-   font-size: 23px;
+
+.user-header .left .items .search-icon, .user-header .bottom .search-icon {
+    font-size: 23px;
 }
 
 .user-header .left .icon-div {
@@ -120,28 +122,30 @@
     align-items: center;
 }
 
-.card-body>h5{
-    color:rgb(0, 113, 148);
+.card-body>h5 {
+    color: rgb(0, 113, 148);
 }
-       
+
 
 .card-boarder .card-price :nth-child(2) {
- 
+
     margin-left: 3px;
-    text-decoration:line-through;
+    text-decoration: line-through;
 }
+
 .card-boarder .card-price :nth-child(3) {
     margin-left: 3px;
     color: green;
     font-size: 14px;
 }
+
 .card-boarder .card-price :nth-child(4) {
     font-weight: 400;
     font-size: 12px;
     color: green;
 }
 
-.card .heart-icon{
+.card .heart-icon {
     background-color: rgba(255, 255, 255, 0.562);
     color: white;
     /* color: red; */
@@ -163,19 +167,48 @@
 
 /* Search */
 /* Filter */
-.filter-logo{
+.filter-logo {
     font-size: 20px;
     font-weight: 500;
     color: rgb(0, 122, 223);
     display: flex;
     align-items: center;
 }
-.filter-logo i{
+
+.filter-logo i {
     font-size: 30px;
 }
 
 /* View Product*/
-.add-cart-button i{
+.add-cart-button i {
     font-size: 27px;
     margin-right: 10px;
+}
+
+/* Edit User */
+.camera-icon-div {
+    position: relative;
+}
+
+.camera-icon-div .camera-icon {
+    background-color: black;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: -10px;
+    bottom: -10px;
+    cursor: pointer;
+    border: 2px solid white ;
+}
+
+.camera-icon-div .camera-icon i {
+    color: white;
 }
