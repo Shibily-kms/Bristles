@@ -7,6 +7,7 @@ const store = require('../config/multer')
 const fs = require('fs');
 const path = require('path');
 const artistHelpers = require('../helpers/artist-helpers');
+const userHelper = require('../helpers/user-helpres')
 
 // Middleware
 let verifyAdmin = (req, res, next) => {
@@ -276,9 +277,25 @@ router.get('/user-list', verifyAdmin, (req, res) => {
   let admin = req.session._BR_ADMIN
   let CAT = req.session._BR_CAT
   adminHelpers.getAllUser().then((user) => {
-    res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT, user })
+    if (req.session.success) {
+      res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT, user, 'success': req.session.success })
+      req.session.success = false
+    } else {
+      res.render('admin/user-list', { title: "User List | Admin panel", admin, CAT, user })
+    }
   })
 })
+
+// Get One User
+router.get('/user-list/:urId/view', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let urId = req.params.urId
+  userHelper.getUser(urId).then((user) => {
+    res.render('admin/view-user', { title: "View User | Admin panel", admin, CAT, user })
+  })
+});
+
 
 // All Pending Artist
 router.get('/artist/new-account', verifyAdmin, (req, res) => {
@@ -349,14 +366,30 @@ router.get('/artist/:arId/account-reject', verifyAdmin, (req, res) => {
   })
 });
 
-// Delete Artist Account
-router.get('/artist/:arId/delete', verifyAdmin, (req, res) => {
+// Pending Artis Item
+router.get('/artist/:arId/pending-items', verifyAdmin, async (req, res) => {
   let arId = req.params.arId
-  adminHelpers.deleteArtist(arId).then(() => {
-    req.session.success = 'Account Deleted'
-    res.redirect('/admin/artist/all-artist')
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let artist = await artistHelpers.getArtist(arId)
+  artistHelpers.getPendingList(arId).then((products) => {
+    console.log(products);
+    res.render('admin/artist-pending-item', { title: "Pending List | Admin panel", admin, CAT, products, artist })
   })
-});
+})
+
+//  Artis Product Item
+router.get('/artist/:arId/products', verifyAdmin, async (req, res) => {
+  let arId = req.params.arId
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let artist = await artistHelpers.getArtist(arId)
+  artistHelpers.getAllProducts(arId).then((products) => {
+    console.log(products);
+    res.render('admin/artist-products-list', { title: "Product List | Admin panel", admin, CAT, products, artist })
+  })
+})
+
 
 // Pending Product List
 router.get('/pending-products/:_CAT', verifyAdmin, async (req, res) => {

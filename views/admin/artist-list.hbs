@@ -17,7 +17,7 @@
                             <th>Profile</th>
                             <th>FULL NAME</th>
                             <th>EMAIL ID</th>
-                            <th>STATUS</th>
+                            <th>STATUS</th> 
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -26,7 +26,7 @@
                         <tr>
                             <td></td>
                             <td>{{this.arId}}</td>
-                            <td><img class="table-list-image" src="/images/avatar/1.png" alt=""></td>
+                            <td><img class="table-list-image" src="/images/artist/{{this.image}}" alt="" onerror="this.onerror=null;callfun(this);"></td>
                             <td>{{this.firstName}} {{this.lastName}}</td>
                             <td>{{this.email}}</td>
                             <td > <span class="status-{{this.status}} status">{{this.status}}</span></td>
@@ -39,12 +39,7 @@
                                         </button>
                                     </a>
 
-                                    <a href="/admin/artist/{{this.arId}}/delete"
-                                        onclick="return confirm('Remove this artist?')">
-                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                            <span class="tf-icons bx bx-trash"></span>
-                                        </button>
-                                    </a>
+                     
                                 </span>
                             </td>
                         </tr>

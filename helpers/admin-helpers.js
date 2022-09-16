@@ -198,6 +198,9 @@ module.exports = {
             })
         })
     },
+    deleteUser:(urId)=>{
+
+    },
     // User End
 
     // Artist Start
@@ -241,17 +244,7 @@ module.exports = {
         })
     },
 
-    deleteArtist: (arId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
-                $set: {
-                    status: "Deleted"
-                }
-            }).then(() => {
-                resolve()
-            })
-        })
-    },
+    
 
     // Artist End
     // Pending Products Start

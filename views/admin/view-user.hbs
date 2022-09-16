@@ -2,96 +2,80 @@
 {{>admin-side}}
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
-        <h4 class="fw-bold  mb-4">{{artist.userName}}</h4>
+        <h4 class="fw-bold  mb-4">{{user.userName}}</h4>
 
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-pills flex-column flex-md-row mb-3">
-                    {{#if artist.active}}
+
                     <li class="nav-item">
-                        <a class="nav-link active" href="/admin/artist/{{artist.arId}}/view"><i class="bx bx-user me-1"></i>
+                        <a class="nav-link active" href="/admin/user/{{user.arId}}/view"><i class="bx bx-user me-1"></i>
                             Account</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/artist/{{artist.arId}}/pending-items"><i
-                                class="bx bx bxs-hourglass-top me-1"></i> Pending items</a>
+                        <a class="nav-link" href="/admin/user/{{user.arId}}/order"><i
+                                class="bx bx bxs-package me-1"></i> Orders</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/artist/{{artist.arId}}/products"><i class='bx bxs-image'></i>
-                            Products</a>
-                    </li>
-                    {{/if}}
-                    {{#if artist.pending}}
-                    <li class="nav-item">
-                        <a class=" btn btn-success " href="/admin/artist/{{artist.arId}}/account-approve"
-                            onclick="return confirm('Approve this Artist ?')"><i class="bx bx-check me-1"></i>
-                            Approve</a>
-                        <a class="btn btn-danger mx-1" href="/admin/artist/{{artist.arId}}/account-reject"
-                            onclick="return confirm('Reject this Artist ?')"><i class="bx bx-x me-1"></i> Reject</a>
-                    </li>
-                    {{/if}}
+
                 </ul>
-                {{#if artist.pending}}
-                <p class="alert alert-info "> <i class='bx bx-info-circle '></i> Contact Artist and Approve or Reject
-                    artist account</p>
-                {{/if}}
+
                 <div class="card mb-4">
                     <h5 class="card-header">Profile Details</h5>
                     <!-- Account -->
-                    {{#if artist.active}}
+
                     <div class="card-body">
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
-                            <img src="/images/artist/{{artist.image}}" alt="user-avatar" class="d-block rounded"
+                            <img src="/images/user/{{user.image}}" alt="user-avatar" class="d-block rounded"
                                 height="100" width="100" id="uploadedAvatar"
                                 onerror="this.onerror=null;callfun(this);" />
                             <div class="button-wrapper">
-                                <h5 class="text-dark mb-1 ">{{artist.firstName}} {{artist.lastName}}</h5>
-                                <p class="text-muted mb-1">AR ID : {{artist.arId}}</p>
+                                <h5 class="text-dark mb-1 ">{{user.firstName}} {{user.lastName}}</h5>
+                                <p class="text-muted mb-1">UR ID : {{user.urId}}</p>
                             </div>
                         </div>
                     </div>
                     <hr class="my-0" />
-                    {{/if}}
+
                     <div class="card-body">
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label for="firstName" class="form-label">First Name</label>
                                 <input class="form-control" type="text" id="firstName" name="firstName"
-                                    value="{{artist.firstName}}" readonly />
+                                    value="{{user.firstName}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="lastName" class="form-label">Last Name</label>
                                 <input class="form-control" type="text" id="lastName" name="lastName"
-                                    value="{{artist.lastName}}" readonly />
+                                    value="{{user.lastName}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="userName" class="form-label">User Name</label>
                                 <input class="form-control" type="text" id="userName" name="userName"
-                                    value="{{artist.userName}}" readonly />
+                                    value="{{user.userName}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="email" class="form-label">E-mail</label>
-                                <input class="form-control" type="email" id="email" name="email"
-                                    value="{{artist.email}}" readonly />
+                                <input class="form-control" type="email" id="email" name="email" value="{{user.email}}"
+                                    readonly />
                             </div>
-                            {{#if artist.active}}
+
                             <div class="mb-3 col-md-6">
                                 <label for="mobile" class="form-label">Mobile</label>
                                 <input type="number" class="form-control" id="mobile" name="mobile"
-                                    value="{{artist.mobile}}" readonly />
+                                    value="{{user.mobile}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="place" class="form-label">Place</label>
-                                <input type="text" class="form-control" id="place" name="place" value="{{artist.place}}"
+                                <input type="text" class="form-control" id="place" name="place" value="{{user.place}}"
                                     readonly />
                             </div>
 
 
-                            {{/if}}
+
                         </div>
                         <!-- /Account -->
                     </div>
-                    {{#if artist.active}}
+
                     <hr class="my-0" />
                     <div class="card-body">
                         <h6>Address</h6>
@@ -99,47 +83,47 @@
                             <div class="mb-3 col-md-6">
                                 <label for="Name" class="form-label">Name</label>
                                 <input class="form-control" type="text" id="Name" name="name"
-                                    value="{{artist.address.name}}" readonly />
+                                    value="{{user.address.name}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="phone" class="form-label">Phone Number</label>
                                 <input class="form-control" type="number" id="phone" name="phone"
-                                    value="{{artist.address.phone}}" readonly />
+                                    value="{{user.address.phone}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="pincode" class="form-label">Pincode</label>
                                 <input class="form-control" type="number" id="pincode" name="pincode"
-                                    value="{{artist.address.pincode}}" readonly />
+                                    value="{{user.address.pincode}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="locality" class="form-label">Locality</label>
                                 <input class="form-control" type="text" id="locality" name="locality"
-                                    value="{{artist.address.locality}}" readonly />
+                                    value="{{user.address.locality}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="area" class="form-label">Area/Street</label>
                                 <input class="form-control" type="text" id="area" name="area"
-                                    value="{{artist.address.area}}" readonly />
+                                    value="{{user.address.area}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="city" class="form-label">City/District/town</label>
                                 <input class="form-control" type="text" id="city" name="city"
-                                    value="{{artist.address.city}}" readonly />
+                                    value="{{user.address.city}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="state" class="form-label">State</label>
                                 <input class="form-control" type="text" id="state" name="state"
-                                    value="{{artist.address.state}}" readonly />
+                                    value="{{user.address.state}}" readonly />
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="landmark" class="form-label">Landmark</label>
                                 <input class="form-control" type="text" id="landmark" name="landmark"
-                                    value="{{artist.address.landmark}}" readonly />
+                                    value="{{user.address.landmark}}" readonly />
                             </div>
                         </div>
                         <!-- /Account -->
                     </div>
-                    {{/if}}
+
                 </div>
             </div>
         </div>
@@ -149,6 +133,6 @@
 
 
 <script>
-    document.getElementById('artist').classList += " active open"
+    document.getElementById('user').classList += " active open"
 
 </script>

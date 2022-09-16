@@ -1,0 +1,98 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        <h4 class="fw-bold  mb-4">{{artist.userName}}</h4>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="/admin/artist/{{artist.arId}}/view"><i class="bx bx-user me-1"></i>
+                            Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/artist/{{artist.arId}}/pending-items"><i
+                                class="bx bx bxs-hourglass-top me-1"></i> Pending items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/artist/{{artist.arId}}/products"><i class='bx bxs-image'></i>
+                            Products</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+                    <h5 class="card-header">Pending list</h5>
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            <img src="/images/artist/{{artist.image}}" alt="user-avatar" class="d-block rounded"
+                                height="100" width="100" id="uploadedAvatar"
+                                onerror="this.onerror=null;callfun(this);" />
+                            <div class="button-wrapper">
+                                <h5 class="text-dark mb-1 ">{{artist.firstName}} {{artist.lastName}}</h5>
+                                <p class="text-muted mb-1">AR ID : {{artist.arId}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover css-serial" id="table_id">
+                                <thead>
+                                    <tr>
+                                        <th>Sl No</th>
+                                        <th>PR ID</th>
+                                        <th>Title</th>
+                    <th>Category</th>
+                                        <th>Medium</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    {{#each products}}
+                                    <tr>
+                                        <td></td>
+                                        <td>{{this.prId}}</td>
+                                        <td>{{this.title}}</td>
+                                        <td>{{this.category}}</td>
+                                        <td>{{this.medium}}</td>
+                                        <td>₹ {{this.price}}</td>
+                                        <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
+                                        <td>
+                                            <span class="table-action-td">
+                                                <a href="/admin/pending-products/{{category}}/{{this.prId}}/view ">
+                                                    <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                                        <span class="tf-icons bx bxs-show"></span>
+                                                    </button>
+                                                </a>
+                                                
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /Account -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- / Content -->
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('artist').classList += " active open"
+
+</script>

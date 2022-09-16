@@ -5,11 +5,7 @@
         {{!-- Header --}}
         <h4 class="fw-bold  mb-4">User List</h4>
         <!-- Basic Layout -->   
-        <div class="pb-3 d-flex justify-content-end">
-            <a href="/admin/user-list/add-user">
-                <button type="button" class="btn btn-success"><i class='bx bx-plus-circle'></i> Add User</button>
-            </a>
-        </div>
+       
         <!-- Hoverable Table rows -->
         <div class="admin-table-div">
 
@@ -31,8 +27,8 @@
                         <tr>
                             <td></td>
                             <td>{{this.urId}}</td>
-                            <td></td>
-                            <td>{{this.firstName}} {{this.LastName}}</td>
+                            <td><img class="table-list-image" src="/images/user/{{this.image}}" alt="" onerror="this.onerror=null;callfun(this);"></td>
+                            <td>{{this.firstName}} {{this.lastName}}</td>
                             <td>{{this.email}}</td>
                             <td>UnBlock</td>
                             <td>
@@ -43,12 +39,7 @@
                                     </button>
                                 </a>
                                
-                                <a href="/admin/user-list/{{this.urId}}/delete"
-                                    onclick="return confirm('Are you remove this product?')">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                        <span class="tf-icons bx bx-trash"></span>
-                                    </button>
-                                </a>
+                             
                                  </span>
                             </td>
                         </tr>
