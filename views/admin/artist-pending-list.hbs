@@ -30,23 +30,26 @@
 
                             <td>
                                  <span class="table-action-td">
-                                <a href="/admin/artist/{{this.arId}}/view " title="view">
+                                <a href="/admin/artist/new-account/{{this.arId}}/view " title="view">
                                     <button type="button" class="btn rounded-pill btn-icon btn-dark">
                                         <span class="tf-icons bx bxs-show"></span>
                                     </button>
                                 </a>
+                                
                                 <a title="Active" href="/admin/artist/{{this.arId}}/account-approve"
                                     onclick="return confirm('Approve this Artist ?')">
                                     <button type="button" class="btn rounded-pill btn-icon btn-success">
                                         <span class="tf-icons bx bx-check"></span>
                                     </button>
                                 </a>
+                                {{#if this.pending}}
                                 <a title="Reject" href="/admin/artist/{{this.arId}}/account-reject"
                                     onclick="return confirm('Reject this Artist ?')">
                                     <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                         <span class="tf-icons bx bx-x"></span>
                                     </button>
                                 </a>
+                                {{/if}}
                                  </span>
                             </td>
                         </tr>

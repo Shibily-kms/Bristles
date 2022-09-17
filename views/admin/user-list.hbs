@@ -4,8 +4,8 @@
     <div class=" container-fluid top-page-padding">
         {{!-- Header --}}
         <h4 class="fw-bold  mb-4">User List</h4>
-        <!-- Basic Layout -->   
-       
+        <!-- Basic Layout -->
+
         <!-- Hoverable Table rows -->
         <div class="admin-table-div">
 
@@ -27,26 +27,46 @@
                         <tr>
                             <td></td>
                             <td>{{this.urId}}</td>
-                            <td><img class="table-list-image" src="/images/user/{{this.image}}" alt="" onerror="this.onerror=null;callfun(this);"></td>
+                            <td><img class="table-list-image" src="/images/user/{{this.image}}" alt=""
+                                    onerror="this.onerror=null;callfun(this);"></td>
                             <td>{{this.firstName}} {{this.lastName}}</td>
                             <td>{{this.email}}</td>
-                            <td>UnBlock</td>
+                            <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
                             <td>
-                                 <span class="table-action-td">
-                                <a href="/admin/user-list/{{this.urId}}/view ">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-dark">
-                                        <span class="tf-icons bx bxs-show"></span>
-                                    </button>
-                                </a>
-                               
-                             
-                                 </span>
+                                <span class="table-action-td">
+                                    <a href="/admin/user-list/{{this.urId}}/view " data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                        title="view user">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                            <span class="tf-icons bx bxs-show"></span>
+                                        </button>
+                                    </a>
+                                    {{#if this.active}}
+                                    <a href="/admin/user-list/{{this.urId}}/blocked " title="Block user"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" onclick="return confirm('Block this user account ?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bxs-user-x"></span>
+                                        </button>
+                                    </a>
+                                    {{/if}}
+                                    {{#if this.blocked}}
+                                    <a href="/admin/user-list/{{this.urId}}/active " title="Active user"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" onclick="return confirm('Active this user account ?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-success">
+                                            <span class="tf-icons bx bxs-user-check"></span>
+                                        </button>
+                                    </a>
+                                    {{/if}}
+                                </span>
                             </td>
                         </tr>
                         {{/each}}
 
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>

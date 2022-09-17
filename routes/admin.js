@@ -296,6 +296,14 @@ router.get('/user-list/:urId/view', verifyAdmin, (req, res) => {
   })
 });
 
+// Block and Acitve User
+router.get('/user-list/:urId/:status', verifyAdmin, (req, res) => {
+  adminHelpers.activeAndBlockUser(req.params.urId, req.params.status).then((response) => {
+    req.session.success = response.message
+    res.redirect('/admin/user-list')
+  })
+})
+
 
 // All Pending Artist
 router.get('/artist/new-account', verifyAdmin, (req, res) => {
@@ -313,6 +321,26 @@ router.get('/artist/new-account', verifyAdmin, (req, res) => {
     }
   })
 })
+
+// View One Pending Artist
+router.get('/artist/new-account/:arId/view', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  let arId = req.params.arId
+  artistHelpers.getArtist(arId).then((artist) => {
+    console.log(artist);
+    if (artist.exception) {
+      req.session.error = "Invalid Aritist Id"
+      res.render('admin/view-pending-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
+      req.session.error = false
+    } else if (req.session.success) {
+      res.render('admin/view-pending-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('admin/view-pending-artist', { title: "View Artist | Admin panel", admin, CAT, artist })
+    }
+  })
+});
 
 
 // All Artist
@@ -335,6 +363,7 @@ router.get('/artist/:arId/view', verifyAdmin, (req, res) => {
   let CAT = req.session._BR_CAT
   let arId = req.params.arId
   artistHelpers.getArtist(arId).then((artist) => {
+    
     if (artist.exception) {
       req.session.error = "Invalid Aritist Id"
       res.render('admin/view-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
@@ -348,12 +377,13 @@ router.get('/artist/:arId/view', verifyAdmin, (req, res) => {
   })
 });
 
+
 // Approve artist Account
 router.get('/artist/:arId/account-approve', verifyAdmin, (req, res) => {
   let arId = req.params.arId
   adminHelpers.approveArtist(arId).then(() => {
     req.session.success = 'Account approved'
-    res.redirect('/admin/artist/' + arId + '/view')
+    res.redirect('/admin/artist/new-account' + arId + '/view')
   })
 });
 
@@ -365,6 +395,15 @@ router.get('/artist/:arId/account-reject', verifyAdmin, (req, res) => {
     res.redirect('/admin/artist/new-account')
   })
 });
+
+// Block and Acitve Artist
+router.get('/artist/all-artist/:arId/:status', verifyAdmin, (req, res) => {
+  adminHelpers.activeAndBlockArtist(req.params.arId, req.params.status).then((response) => {
+    req.session.success = response.message
+    res.redirect('/admin/artist/all-artist')
+  })
+})
+
 
 // Pending Artis Item
 router.get('/artist/:arId/pending-items', verifyAdmin, async (req, res) => {

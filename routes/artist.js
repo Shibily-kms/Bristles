@@ -11,7 +11,14 @@ const { getOneProduct } = require('../helpers/admin-helpers');
 // middlewear
 let verifyArtist = (req, res, next) => {
   if (req.session._BR_ARTIST) {
-    next()
+    artistHelper.checkAccountActive(req.session._BR_ARTIST.arId).then((result) => {
+      if (result.activeErr) {
+        let artist = req.session._BR_ARTIST
+        res.render('artist/blocked-page', { title: 'Account Blocked | Bristles', artist, })
+      } else {
+        next()
+      }
+    })
   } else {
     res.redirect('/artist/sign-in')
   }
@@ -56,7 +63,7 @@ router.post('/sign-up', (req, res) => {
       req.session.error = "Email Id existed"
       res.redirect('/artist/sign-up')
     } else if (response) {
-      
+
       req.session._BR_ARTIST_CHECK_ID = response.insertedId
       req.session._BR_ARTIST_CHECK = true
       res.redirect('/artist/sign-in')
@@ -284,12 +291,12 @@ router.get('/profile/edit', verifyArtist, (req, res) => {
 
 router.post('/profile/edit', verifyArtist, store.artist.single('image'), (req, res) => {
   let image = null
-  if(req.file){
+  if (req.file) {
     image = req.file.filename
   }
   req.body.image = image
   artistHelper.editProfile(req.body).then((obj) => {
-    if(obj.deleteImage){
+    if (obj.deleteImage) {
       var Imagepath = path.join(__dirname, '../public/images/artist/' + obj.deleteImage)
       fs.unlink(Imagepath, function (err) {
         if (err)
@@ -305,25 +312,25 @@ router.post('/profile/edit', verifyArtist, store.artist.single('image'), (req, r
 
 
 // Chnage Password
-router.get('/change-password',verifyArtist,(req,res)=>{
+router.get('/change-password', verifyArtist, (req, res) => {
   let artist = req.session._BR_ARTIST
-  if(req.session.success){
-    res.render('artist/change-password',{title: 'Change Password | Bristles', artist,"success":req.session.success })
+  if (req.session.success) {
+    res.render('artist/change-password', { title: 'Change Password | Bristles', artist, "success": req.session.success })
     req.session.success = false
-  }else if(req.session.error){
-    res.render('artist/change-password',{title: 'Change Password | Bristles', artist,"error":req.session.error })
+  } else if (req.session.error) {
+    res.render('artist/change-password', { title: 'Change Password | Bristles', artist, "error": req.session.error })
     req.session.error = false
-  }else{
-    res.render('artist/change-password',{title: 'Change Password | Bristles', artist })
+  } else {
+    res.render('artist/change-password', { title: 'Change Password | Bristles', artist })
   }
 });
 
-router.post('/change-password',verifyArtist,(req,res)=>{
-  artistHelper.changePassword(req.body).then((response)=>{
-    if(response.passErr){
+router.post('/change-password', verifyArtist, (req, res) => {
+  artistHelper.changePassword(req.body).then((response) => {
+    if (response.passErr) {
       req.session.error = "Incorrect current password"
       res.redirect('/artist/change-password')
-    }else{
+    } else {
       req.session.success = "Password changed"
       res.redirect('/artist/change-password')
     }
@@ -332,25 +339,25 @@ router.post('/change-password',verifyArtist,(req,res)=>{
 
 // Change Email
 
-router.get('/change-email',verifyArtist,(req,res)=>{
+router.get('/change-email', verifyArtist, (req, res) => {
   let artist = req.session._BR_ARTIST
-  if(req.session.success){
-    res.render('artist/change-email',{title: 'Change Email | Bristles', artist,"success":req.session.success })
+  if (req.session.success) {
+    res.render('artist/change-email', { title: 'Change Email | Bristles', artist, "success": req.session.success })
     req.session.success = false
-  }else if(req.session.error){
-    res.render('artist/change-email',{title: 'Change Email | Bristles', artist,"error":req.session.error })
+  } else if (req.session.error) {
+    res.render('artist/change-email', { title: 'Change Email | Bristles', artist, "error": req.session.error })
     req.session.error = false
-  }else{
-    res.render('artist/change-email',{title: 'Change Email | Bristles', artist })
+  } else {
+    res.render('artist/change-email', { title: 'Change Email | Bristles', artist })
   }
 });
 
-router.post('/change-email',verifyArtist,(req,res)=>{
-  artistHelper.changeEmail(req.body).then((response)=>{
-    if(response.emailErr){
+router.post('/change-email', verifyArtist, (req, res) => {
+  artistHelper.changeEmail(req.body).then((response) => {
+    if (response.emailErr) {
       req.session.error = "This email already used"
       res.redirect('/artist/change-email')
-    }else{
+    } else {
       req.session._BR_ARTIST.email = response
       req.session.success = "Email changed"
       res.redirect('/artist/change-email')

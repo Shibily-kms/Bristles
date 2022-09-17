@@ -135,12 +135,12 @@ module.exports = {
                             image: artist.image,
                             rate: artist.rate,
                             rateCount: artist.rateCount,
-                            image : artist.image
+                            image: artist.image
                         }
                         result.artist = artistDetails
                     })
                 }
-               
+
                 if (result.status == "Rejected") {
                     result.reject = true
                 }
@@ -195,19 +195,51 @@ module.exports = {
     getAllUser: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).find().toArray().then((user) => {
+                for (let i = 0; i < user.length; i++) {
+                    if (user[i].status == "Active") {
+                        user[i].active = true
+                    } else if (user[i].status == "Blocked") {
+                        user[i].blocked = true
+                    }
+                }
                 resolve(user)
             })
         })
     },
-    deleteUser:(urId)=>{
-
+    activeAndBlockUser: (urId, status) => {
+        return new Promise((resolve, reject) => {
+            if (status == "blocked") {
+                db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                    $set: {
+                        status: "Blocked"
+                    }
+                }).then(() => {
+                    resolve({ message: "User account Blocked" })
+                })
+            } else if (status == "active") {
+                db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                    $set: {
+                        status: "Active"
+                    }
+                }).then(() => {
+                    resolve({ message: "User account Actived" })
+                })
+            }
+        })
     },
     // User End
 
     // Artist Start
     getAllPendingArtist: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).find({ status: "Pending" }).toArray().then((artist) => {
+            db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ["Pending","Rejected"] } }).toArray().then((artist) => {
+                for (let i = 0; i < artist.length; i++) {
+                    if (artist[i].status == "Pending") {
+                        artist[i].pending = true
+                    } else if (artist[i].status == "Rejected") {
+                        artist[i].rejected = true
+                    }
+                }
                 resolve(artist)
             })
         })
@@ -216,6 +248,13 @@ module.exports = {
     getAllArtist: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ["Active", "Blocked"] } }).toArray().then((artist) => {
+                for (let i = 0; i < artist.length; i++) {
+                    if (artist[i].status == "Active") {
+                        artist[i].active = true
+                    } else if (artist[i].status == "Blocked") {
+                        artist[i].blocked = true
+                    }
+                }
                 resolve(artist)
             })
         })
@@ -244,8 +283,29 @@ module.exports = {
             })
         })
     },
+    activeAndBlockArtist: (arId, status) => {
+        return new Promise((resolve, reject) => {
+            if (status == "blocked") {
+                db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                    $set: {
+                        status: "Blocked"
+                    }
+                }).then(() => {
+                    resolve({ message: "Artist account Blocked" })
+                })
+            } else if (status == "active") {
+                db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                    $set: {
+                        status: "Active"
+                    }
+                }).then(() => {
+                    resolve({ message: "Artist account Actived" })
+                })
+            }
+        })
+    },
 
-    
+
 
     // Artist End
     // Pending Products Start
@@ -262,26 +322,26 @@ module.exports = {
         })
     },
 
-    approveAndRejectProduct: (prId,option) => {
+    approveAndRejectProduct: (prId, option) => {
         return new Promise((resolve, reject) => {
-            if(option == "approve"){
+            if (option == "approve") {
                 db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
                     $set: {
                         status: "Approve"
                     }
                 }).then(() => {
-                    resolve({approve:true})
+                    resolve({ approve: true })
                 })
-            }else if(option == "reject"){
+            } else if (option == "reject") {
                 db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
                     $set: {
                         status: "Rejected"
                     }
                 }).then(() => {
-                    resolve({reject:true})
+                    resolve({ reject: true })
                 })
             }
-            
+
         })
     }
 

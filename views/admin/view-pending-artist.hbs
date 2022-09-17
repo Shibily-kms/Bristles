@@ -1,0 +1,65 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        <h4 class="fw-bold  mb-4">{{artist.userName}}</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class=" btn btn-success " href="/admin/artist/{{artist.arId}}/account-approve"
+                            onclick="return confirm('Approve this Artist ?')"><i class="bx bx-check me-1"></i>
+                            Approve</a>
+                        {{#if artist.pending}}
+                        <a class="btn btn-danger mx-1" href="/admin/artist/{{artist.arId}}/account-reject"
+                            onclick="return confirm('Reject this Artist ?')"><i class="bx bx-x me-1"></i> Reject</a>
+                            {{else}}
+                            <a class="btn  text-danger"><i class='bx bx-info-circle'></i> This Account was
+                        <strong>Rejected</strong></a>
+                        {{/if}}
+                    </li>
+
+                </ul>
+
+                <p class="alert alert-info "> <i class='bx bx-info-circle '></i> Contact Artist and Approve or Reject
+                    artist account</p>
+
+                <div class="card mb-4">
+                    <h5 class="card-header">Profile Details</h5>
+                    <!-- Account -->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input class="form-control" type="text" id="firstName" name="firstName"
+                                    value="{{artist.firstName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input class="form-control" type="text" id="lastName" name="lastName"
+                                    value="{{artist.lastName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="userName" class="form-label">User Name</label>
+                                <input class="form-control" type="text" id="userName" name="userName"
+                                    value="{{artist.userName}}" readonly />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input class="form-control" type="email" id="email" name="email"
+                                    value="{{artist.email}}" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('artist').classList += " active open"
+    document.getElementById('artistNot').classList += " active"
+</script>

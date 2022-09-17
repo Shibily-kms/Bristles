@@ -23,6 +23,7 @@ module.exports = {
                             randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
                         }
                         body.urId = "UR" + randomString
+                        body.status = "Active"
                     }
                     body.password = await bcrypt.hash(body.password, 10)
                     db.get().collection(collection.USER_COLLECTION).insertOne(body).then((result) => {
@@ -48,6 +49,17 @@ module.exports = {
                     })
                 } else {
                     resolve({ emailError: true })
+                }
+            })
+        })
+    },
+    checkAccountActive: (urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).findOne({ urId, status: "Active" }).then((result) => {
+                if (result) {
+                    resolve(result)
+                } else {
+                    resolve({ activeErr: true })
                 }
             })
         })
@@ -223,6 +235,16 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ urId }).then((result) => {
                 delete result.password;
+                if (result) {
+                    if (result.status == "Active") {
+                        result.active = true
+                    } else if (result.status == "Blocked") {
+                        result.blocked = true
+                    }
+                    resolve(result)
+                } else {
+                    resolve({ exception: true })
+                }
                 resolve(result)
             })
         })
@@ -258,18 +280,18 @@ module.exports = {
                         image: body.image
                     }
                 }).then(() => {
-                    let obj= {
+                    let obj = {
                         firstName: body.firstName,
                         lastName: body.lastName,
                         userName: body.userName,
-                        email : user.email,
+                        email: user.email,
                         mobile: body.mobile,
                         place: body.place,
                         image: body.image,
-                        urId : user.urId,
-                        deleteImage : image
+                        urId: user.urId,
+                        deleteImage: image
                     }
-                    resolve(obj)    
+                    resolve(obj)
                 })
             })
 
@@ -299,22 +321,22 @@ module.exports = {
         })
     },
 
-    changeEmail:(body)=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.USER_COLLECTION).findOne({email:body.email}).then((user)=>{
-                if(user){
-                    resolve({emailErr:true})
-                }else{
-                    db.get().collection(collection.USER_COLLECTION).updateOne({urId:body.urId},{
-                        $set:{
-                            email : body.email
+    changeEmail: (body) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).findOne({ email: body.email }).then((user) => {
+                if (user) {
+                    resolve({ emailErr: true })
+                } else {
+                    db.get().collection(collection.USER_COLLECTION).updateOne({ urId: body.urId }, {
+                        $set: {
+                            email: body.email
                         }
-                    }).then(()=>{
+                    }).then(() => {
                         resolve(body.email)
                     })
                 }
             })
-         })
+        })
     }
     // User About End
 

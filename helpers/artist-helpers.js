@@ -65,13 +65,24 @@ module.exports = {
             })
         })
     },
+    checkAccountActive: (arId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId, status: "Active" }).then((result) => {
+                if (result) {
+                    resolve(result)
+                } else {
+                    resolve({ activeErr: true })
+                }
+            })
+        })
+    },
     // Sign End
 
     // Artist About Start
     getArtist: (arId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId }).then((result) => {
-                // try {
+                
                 if (result) {
                     if (result.status == "Pending") {
                         result.pending = true
@@ -79,6 +90,8 @@ module.exports = {
                         result.active = true
                     } else if (result.status == "Rejected") {
                         result.rejected = true
+                    }else if(result.status == "Blocked"){
+                        result.blocked = true
                     }
                     resolve(result)
                 } else {

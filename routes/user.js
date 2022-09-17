@@ -10,7 +10,14 @@ const path = require('path');
 // middlewear
 let verifyUser = (req, res, next) => {
   if (req.session._BR_USER) {
-    next()
+    userHelper.checkAccountActive(req.session._BR_USER.urId).then((result)=>{
+      if(result.activeErr){
+        let user = req.session._BR_USER
+        res.render('user/blocked-page',{ title: 'Account Blocked | Bristles', user,})
+      }else{
+        next()
+      }
+    })
   } else {
     res.redirect('/sign-in')
   }
