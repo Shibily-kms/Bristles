@@ -26,7 +26,7 @@ function searchProduct() {
         }
     }
     mainDiv.innerHTML = null
-    if (searchResult.length == 0) {
+    if (searchResult.length == 0 || value1 == '' && value2 == '') {
         mainDiv.innerHTML = `<div class="check-account container">
         <div class="box-boreder">
             <div>
@@ -175,6 +175,7 @@ function createThumb(productOne) {
     boarderDiv.className = 'col-sm-6 col-md-4 col-lg-4 mb-4'
     aTag.className = 'text-secondary'
     aTag.href = '/list/' + productOne.category + '/' + productOne.prId + '/view'
+    aTag.target = '_blank'
     cardDiv.className = 'card h-100'
     imageTage.className = "card-img-top"
     imageTage.src = "/images/products/" + productOne.image[0]
