@@ -41,8 +41,9 @@ router.get('/', async (req, res) => {
   let user = req.session._BR_USER
   let category = await adminHelpers.getAllCategory()
   let latestProducts = await userHelper.getLatestProducts()
+  let carousel = await adminHelpers.getCarousel()
 
-  res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts });
+  res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel });
 });
 
 

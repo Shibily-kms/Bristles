@@ -232,7 +232,7 @@ module.exports = {
     // Artist Start
     getAllPendingArtist: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ["Pending","Rejected"] } }).toArray().then((artist) => {
+            db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ["Pending", "Rejected"] } }).toArray().then((artist) => {
                 for (let i = 0; i < artist.length; i++) {
                     if (artist[i].status == "Pending") {
                         artist[i].pending = true
@@ -343,9 +343,50 @@ module.exports = {
             }
 
         })
-    }
+    },
 
     // Pending Products End
+    // Carousel Start
+    getCarousel: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CAROUSEL_COLLECTION).find().toArray().then((result) => {
+                resolve(result)
+            })
+        })
+    },
+
+    addCarousel: (body) => {
+        return new Promise((resolve, reject) => {
+            // Create Random Id
+            create_random_id(5)
+            function create_random_id(sting_length) {
+                var randomString = '';
+                var numbers = '123456789'
+                for (var i, i = 0; i < sting_length; i++) {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                }
+                body.crId = "CR" + randomString
+            }
+            db.get().collection(collection.CAROUSEL_COLLECTION).insertOne(body).then(() => {
+                resolve()
+            })
+        })
+    },
+
+    deleteCarousel:(crId)=>{
+        return new Promise((resolve, reject) => { 
+            let image = null
+            db.get().collection(collection.CAROUSEL_COLLECTION).findOne({crId}).then((result)=>{
+                if(result){
+                    image = result.image
+                    db.get().collection(collection.CAROUSEL_COLLECTION).deleteOne({crId}).then(()=>{
+                        resolve(image)
+                    })
+                }
+            })
+         })
+    }
+    // Carousel End
 
 
 

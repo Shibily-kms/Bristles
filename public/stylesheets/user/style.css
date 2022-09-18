@@ -79,6 +79,7 @@
     .user-page {
         margin-top: 56px;
     }
+
     .user-search-page {
         margin-top: 105px;
     }
@@ -209,7 +210,7 @@
     right: -10px;
     bottom: -10px;
     cursor: pointer;
-    border: 2px solid white ;
+    border: 2px solid white;
 }
 
 .camera-icon-div .camera-icon i {
@@ -217,20 +218,74 @@
 }
 
 /* Footer */
-.footer .icon-div{
+.footer .icon-div {
     display: flex;
     height: 100%;
     align-items: center;
-   
+
 }
-.footer .icon-div h3{
+
+.footer .icon-div h3 {
     color: white;
     margin: 0;
     margin-left: 10px;
-    
+
 }
-.footer .icon{
-        width: 35px;
-        height: 35px;
-        
+
+.footer .icon {
+    width: 35px;
+    height: 35px;
+
+}
+
+
+/* Carousel */
+.carousel-div>div {
+    position: relative;
+    margin-top: 20px;
+}
+
+.carousel-div>div>img {
+    width: 100%;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    -webkit-box-shadow: 2px 0px 34px -10px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 0px 34px -10px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 0px 34px -10px rgba(0, 0, 0, 0.75);
+}
+
+.carousel-div>div>.icon {
+    background-color: red;
+    font-size: 25px;
+    position: absolute;
+    top: -10px;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+
+}
+
+.carousel-div>div>.icon>i {
+    color: white;
+    font-size: 25px;
+}
+
+.add-carousel{
+    display: flex;
+    align-items: center;
+}
+.add-carousel p{
+    margin: 0;
+    margin-right: 10px;
 }

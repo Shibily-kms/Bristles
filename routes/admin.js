@@ -328,7 +328,7 @@ router.get('/artist/new-account/:arId/view', verifyAdmin, (req, res) => {
   let CAT = req.session._BR_CAT
   let arId = req.params.arId
   artistHelpers.getArtist(arId).then((artist) => {
-   
+
     if (artist.exception) {
       req.session.error = "Invalid Aritist Id"
       res.render('admin/view-pending-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
@@ -363,7 +363,7 @@ router.get('/artist/:arId/view', verifyAdmin, (req, res) => {
   let CAT = req.session._BR_CAT
   let arId = req.params.arId
   artistHelpers.getArtist(arId).then((artist) => {
-    
+
     if (artist.exception) {
       req.session.error = "Invalid Aritist Id"
       res.render('admin/view-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
@@ -412,7 +412,7 @@ router.get('/artist/:arId/pending-items', verifyAdmin, async (req, res) => {
   let CAT = req.session._BR_CAT
   let artist = await artistHelpers.getArtist(arId)
   artistHelpers.getPendingList(arId).then((products) => {
-   
+
     res.render('admin/artist-pending-item', { title: "Pending List | Admin panel", admin, CAT, products, artist })
   })
 })
@@ -424,7 +424,7 @@ router.get('/artist/:arId/products', verifyAdmin, async (req, res) => {
   let CAT = req.session._BR_CAT
   let artist = await artistHelpers.getArtist(arId)
   artistHelpers.getAllProducts(arId).then((products) => {
-   
+
     res.render('admin/artist-products-list', { title: "Product List | Admin panel", admin, CAT, products, artist })
   })
 })
@@ -474,6 +474,46 @@ router.get('/pending-products/:NOW_CAT/:prId/:choose', verifyAdmin, (req, res) =
       req.session.success = "This Product Rejected"
       res.redirect('/admin/pending-products/' + NOW_CAT)
     }
+  })
+})
+
+// Carousel
+router.get('/carousel', verifyAdmin, (req, res) => {
+  let admin = req.session._BR_ADMIN
+  let CAT = req.session._BR_CAT
+  adminHelpers.getCarousel().then((carousel) => {
+    if (req.session.success) {
+      res.render('admin/carousel', { title: "View product | Admin panel", admin, CAT, carousel, "success": req.session.success })
+      req.session.success = false
+    } else {
+      res.render('admin/carousel', { title: "View product | Admin panel", admin, CAT, carousel })
+    }
+  })
+})
+
+router.post('/carousel/add-image', verifyAdmin, store.carousel.single('image'), (req, res) => {
+  let image = null
+  if (req.file) {
+    image = req.file.filename
+  }
+  req.body.image = image
+  adminHelpers.addCarousel(req.body).then(() => {
+    req.session.success = "New carousel created"
+    res.redirect('/admin/carousel');
+  })
+})
+
+router.get('/carousel-delete/:crId', verifyAdmin, (req, res) => {
+  adminHelpers.deleteCarousel(req.params.crId).then((image) => {
+    if (image) {
+      var Imagepath = path.join(__dirname, '../public/images/carousel/' + image)
+      fs.unlink(Imagepath, function (err) {
+        if (err)
+          return err;
+      });
+    }
+    req.session.success = "Carousel Removed from Database"
+    res.redirect('/admin/carousel')
   })
 })
 

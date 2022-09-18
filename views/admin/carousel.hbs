@@ -1,0 +1,54 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{#if carousel}}
+        <div class="d-flex justify-content-end add-carousel ">
+            <p class="">Add new Carousel : </p>
+            <button class="btn btn-dark me-2" onclick="chooseSlider()"><i class='bx bxs-camera-plus'></i></button>
+            <form action="/admin/carousel/add-image" method="post" enctype="multipart/form-data">
+                <input type="file" name="image" hidden id="inputChoose" required>
+                <button type="submit" class="btn btn-success ">Submit</button>
+            </form>
+        </div>
+        {{/if}}
+        <div class="row carousel-div">
+
+            {{#if carousel}}
+            {{#each carousel}}
+            <div class="col-sm-12 col-md-6 col-lg-4 ">
+                <img src="/images/carousel/{{this.image}}" alt="carousel">
+                <p class="text-center mt-2">{{this.crId}}</p>
+                <a onclick="return confirm ('Delete this carousel ?')" href="/admin/carousel-delete/{{this.crId}}"
+                    class="icon">
+                    <i class='bx bx-x'></i>
+                </a>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="check-account container">
+                <div class="box-boreder">
+                    <div>
+                        <i style="font-size: 105px;" class="bx bx bxs-carousel mb-5"></i>
+                        <p class="">Add new Carousel : </p>
+                        <div class="d-flex justify-content-center add-carousel ">
+                            <button class="btn btn-dark me-2" onclick="chooseSlider()"><i
+                                    class='bx bxs-camera-plus'></i></button>
+                            <form action="/admin/carousel/add-image" method="post" enctype="multipart/form-data">
+                                <input type="file" name="image" hidden id="inputChoose" required>
+                                <button type="submit" class="btn btn-success ">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+        </div>
+    </div>
+</div>
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('carousel').classList += " active"
+</script>
