@@ -89,7 +89,7 @@ module.exports = {
 
     getAllProduct: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find().toArray().then((produt) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({status:"Approve",delete:false}).toArray().then((produt) => {
                 resolve(produt)
             })
         })
@@ -104,131 +104,6 @@ module.exports = {
         })
     },
     // Product End
-
-    // Filter Start
-    filterProduct: (category, medium, surface, quality) => {
-
-        return new Promise(async (resolve, reject) => {
-            let response = []
-            let categoryList = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
-            let optionList = optionHelpers
-            // let FullProduct = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-
-
-
-
-
-            // if (typeof category == "string") {
-            //     tickCategory(category)
-            //     // category = [category]
-            // } else if (typeof category == "object") {
-            //     for (let i = 0; i < category.length; i++) {
-            //         tickCategory(category[i])
-            //     }
-            //     // category = Object.values(category)
-            // } else {
-            //     // category = []
-            // }
-
-            // if (typeof medium == "string") {
-            //     tickMedium(medium)
-            //     medium = [medium]
-            // } else if (typeof medium == "object") {
-            //     for (let i = 0; i < medium.length; i++) {
-            //         tickMedium(medium[i])
-            //         medium = Object.values(medium)
-            //     }
-            // } else {
-            //     medium = []
-            // }
-            // if (typeof surface == "string") {
-            //     tickSurface(surface)
-            // } else if (typeof surface == "object") {
-            //     for (let i = 0; i < surface.length; i++) {
-            //         tickSurface(surface[i])
-
-            //     }
-            // }
-            // if (typeof quality == "string") {
-            //     tickQuality(quality)
-            // } else if (typeof quality == "object") {
-            //     for (let i = 0; i < quality.length; i++) {
-            //         tickQuality(quality[i])
-
-            //     }
-            // }
-            // // Tick Funcitons Start
-            // function tickCategory(item) {
-            //     for (let i = 0; i < categoryList.length; i++) {
-            //         if (categoryList[i].title == item) {
-            //             categoryList[i].tick = true
-            //         }
-
-
-            //     }
-            //     return;
-            // }
-            // function tickMedium(item) {
-            //     for (let i = 0; i < optionList.medium.length; i++) {
-            //         if (optionList.medium[i].name == item) {
-            //             optionList.medium[i].tick = true
-            //         }
-            //     }
-            //     return;
-            // }
-            // function tickSurface(item) {
-            //     for (let i = 0; i < optionList.surface.length; i++) {
-            //         if (optionList.surface[i].name == item) {
-            //             optionList.surface[i].tick = true
-            //         }
-            //     }
-            //     return;
-            // }
-            // function tickQuality(item) {
-            //     for (let i = 0; i < optionList.quality.length; i++) {
-            //         if (optionList.quality[i].name == item) {
-            //             optionList.quality[i].tick = true
-            //         }
-            //     }
-            //     return;
-            // }
-
-            response.categoryList = categoryList
-            response.optionList = optionList
-            // Tick Functions End
-
-            // let filter = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: { $in: category },medium:{$in : medium} }).toArray()
-
-            // response.product = filter
-            resolve(response)
-
-
-        })
-    },
-    // Filter End
-
-    // Search Start
-    searchProduct: (question) => {
-        return new Promise(async (resolve, reject) => {
-            let searchResult = []
-            if (question == '') {
-                resolve(searchResult)
-            } else {
-                let product = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-                let searchPattern = new RegExp('(\\w*' + question + '\\w*)', 'gi');
-                for (let i = 0; i < product.length; i++) {
-                    let check = product[i].title.match(searchPattern)
-                    if (check) {
-                        searchResult.push(product[i])
-                    }
-                }
-                resolve(searchResult)
-            }
-        })
-    },
-
-    // Search End
-
 
     // User About Start
     getUser: (urId) => {

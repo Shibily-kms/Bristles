@@ -150,7 +150,7 @@ module.exports = {
     },
 
     changePassword: (body) => {
-        console.log(body,'bdy');
+       
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
                 if (artist) {
@@ -175,7 +175,7 @@ module.exports = {
 
     
     changeEmail:(body)=>{
-        console.log(body);
+     
         return new Promise((resolve, reject) => { 
             db.get().collection(collection.ARTIST_COLLECTION).findOne({email:body.email}).then((artist)=>{
                 if(artist){

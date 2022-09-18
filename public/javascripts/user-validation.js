@@ -75,7 +75,7 @@ document.getElementById('cEyeIcon').addEventListener('click', (event) => {
 // User Address Validation
 
 function userProfileEditForm() {
-    console.log("HI");
+    
 
     let firstname = document.getElementById('firstName')
     let lastname = document.getElementById('lastName')
@@ -154,7 +154,7 @@ function userProfileEditForm() {
 
 // View Image Choose input
 function viewProfile(event) {
-    console.log(event);
+   
     if (event.target.files && event.target.files[0]) {
         let one = document.getElementById('uploadedProfile')
         one.src = URL.createObjectURL(event.target.files[0])

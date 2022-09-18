@@ -328,7 +328,7 @@ router.get('/artist/new-account/:arId/view', verifyAdmin, (req, res) => {
   let CAT = req.session._BR_CAT
   let arId = req.params.arId
   artistHelpers.getArtist(arId).then((artist) => {
-    console.log(artist);
+   
     if (artist.exception) {
       req.session.error = "Invalid Aritist Id"
       res.render('admin/view-pending-artist', { title: "View Artist | Admin panel", admin, CAT, artist, "error": req.session.error })
@@ -412,7 +412,7 @@ router.get('/artist/:arId/pending-items', verifyAdmin, async (req, res) => {
   let CAT = req.session._BR_CAT
   let artist = await artistHelpers.getArtist(arId)
   artistHelpers.getPendingList(arId).then((products) => {
-    console.log(products);
+   
     res.render('admin/artist-pending-item', { title: "Pending List | Admin panel", admin, CAT, products, artist })
   })
 })
@@ -424,7 +424,7 @@ router.get('/artist/:arId/products', verifyAdmin, async (req, res) => {
   let CAT = req.session._BR_CAT
   let artist = await artistHelpers.getArtist(arId)
   artistHelpers.getAllProducts(arId).then((products) => {
-    console.log(products);
+   
     res.render('admin/artist-products-list', { title: "Product List | Admin panel", admin, CAT, products, artist })
   })
 })

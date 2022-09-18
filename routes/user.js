@@ -5,16 +5,17 @@ const adminHelpers = require('../helpers/admin-helpers');
 const store = require('../config/multer')
 const fs = require('fs');
 const path = require('path');
+const optionHelper = require('../helpers/option-helper');
 // const optionHelpers = require('../helpers/option-helper');
 
 // middlewear
 let verifyUser = (req, res, next) => {
   if (req.session._BR_USER) {
-    userHelper.checkAccountActive(req.session._BR_USER.urId).then((result)=>{
-      if(result.activeErr){
+    userHelper.checkAccountActive(req.session._BR_USER.urId).then((result) => {
+      if (result.activeErr) {
         let user = req.session._BR_USER
-        res.render('user/blocked-page',{ title: 'Account Blocked | Bristles', user,})
-      }else{
+        res.render('user/blocked-page', { title: 'Account Blocked | Bristles', user, })
+      } else {
         next()
       }
     })
@@ -40,7 +41,7 @@ router.get('/', async (req, res) => {
   let user = req.session._BR_USER
   let category = await adminHelpers.getAllCategory()
   let latestProducts = await userHelper.getLatestProducts()
-  console.log(req.session._BR_USER);
+
   res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts });
 });
 
@@ -127,21 +128,16 @@ router.get('/list/:NOW_CAT/:prId/view', (req, res) => {
 // Search
 router.get('/search', async (req, res) => {
   let user = req.session._BR_USER
-  let question = req.query.q
-  let category = req.query.category
-  let medium = req.query.medium
-  let surface = req.query.surface
-  let quality = req.query.quality
-
-  let product = await userHelper.searchProduct(question)
-  userHelper.filterProduct(category, medium, surface, quality).then(async (response) => {
-    let categoryList = response.categoryList
-    let optionList = response.optionList
-    // let product = response.product
-    res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, product, question, user })
-
-  })
+  let categoryList = await adminHelpers.getAllCategory()
+  let optionList = optionHelper
+  res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, user })
 });
+
+router.post('/get-all-product', (req, res) => {
+  userHelper.getAllProduct().then((product) => {
+    res.json(product)
+  })
+})
 
 
 // User Profile
@@ -168,12 +164,12 @@ router.get('/profile/edit', verifyUser, (req, res) => {
 router.post('/profile/edit', verifyUser, store.user.single('image'), (req, res) => {
 
   let image = null
-  if(req.file){
+  if (req.file) {
     image = req.file.filename
   }
   req.body.image = image
   userHelper.editProfile(req.body).then((obj) => {
-    if(obj.deleteImage){
+    if (obj.deleteImage) {
       var Imagepath = path.join(__dirname, '../public/images/user/' + obj.deleteImage)
       fs.unlink(Imagepath, function (err) {
         if (err)
@@ -188,26 +184,26 @@ router.post('/profile/edit', verifyUser, store.user.single('image'), (req, res) 
 });
 
 // Chnage Password
-router.get('/profile/change-password',verifyUser,(req,res)=>{
+router.get('/profile/change-password', verifyUser, (req, res) => {
   let user = req.session._BR_USER
-  if(req.session.success){
-    res.render('user/change-password',{title: 'Change Password | Bristles', user,"success":req.session.success })
+  if (req.session.success) {
+    res.render('user/change-password', { title: 'Change Password | Bristles', user, "success": req.session.success })
     req.session.success = false
-  }else if(req.session.error){
-    res.render('user/change-password',{title: 'Change Password | Bristles', user,"error":req.session.error })
+  } else if (req.session.error) {
+    res.render('user/change-password', { title: 'Change Password | Bristles', user, "error": req.session.error })
     req.session.error = false
-  }else{
-    res.render('user/change-password',{title: 'Change Password | Bristles', user })
+  } else {
+    res.render('user/change-password', { title: 'Change Password | Bristles', user })
   }
 });
 
-router.post('/profile/change-password',verifyUser,(req,res)=>{
-  console.log(req.body);
-  userHelper.changePassword(req.body).then((response)=>{
-    if(response.passErr){
+router.post('/profile/change-password', verifyUser, (req, res) => {
+
+  userHelper.changePassword(req.body).then((response) => {
+    if (response.passErr) {
       req.session.error = "Incorrect current password"
       res.redirect('/profile/change-password')
-    }else{
+    } else {
       req.session.success = "Password changed"
       res.redirect('/profile/change-password')
     }
@@ -216,25 +212,25 @@ router.post('/profile/change-password',verifyUser,(req,res)=>{
 
 // Change Email
 
-router.get('/profile/change-email',verifyUser,(req,res)=>{
+router.get('/profile/change-email', verifyUser, (req, res) => {
   let user = req.session._BR_USER
-  if(req.session.success){
-    res.render('user/change-email',{title: 'Change Email | Bristles', user,"success":req.session.success })
+  if (req.session.success) {
+    res.render('user/change-email', { title: 'Change Email | Bristles', user, "success": req.session.success })
     req.session.success = false
-  }else if(req.session.error){
-    res.render('user/change-email',{title: 'Change Email | Bristles', user,"error":req.session.error })
+  } else if (req.session.error) {
+    res.render('user/change-email', { title: 'Change Email | Bristles', user, "error": req.session.error })
     req.session.error = false
-  }else{
-    res.render('user/change-email',{title: 'Change Email | Bristles', user })
+  } else {
+    res.render('user/change-email', { title: 'Change Email | Bristles', user })
   }
 });
 
-router.post('/profile/change-email',verifyUser,(req,res)=>{
-  userHelper.changeEmail(req.body).then((response)=>{
-    if(response.emailErr){
+router.post('/profile/change-email', verifyUser, (req, res) => {
+  userHelper.changeEmail(req.body).then((response) => {
+    if (response.emailErr) {
       req.session.error = "This email already used"
       res.redirect('/profile/change-email')
-    }else{
+    } else {
       req.session._BR_USER.email = response
       req.session.success = "Email changed"
       res.redirect('/profile/change-email')
