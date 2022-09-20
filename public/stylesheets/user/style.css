@@ -62,11 +62,24 @@
     color: white;
     margin-right: 10px;
     margin-left: 10px;
+    position: relative;
 
 }
 
 .user-header .left .icon-div i {
     font-size: 30px;
+}
+
+.user-header .left .icon-div .cart-count {
+    background-color: rgb(0, 167, 0);
+    position: absolute;
+    padding: 0px 5px 0px 5px;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    left: 25px;
 }
 
 /* User Page Commen */
@@ -281,11 +294,20 @@
     font-size: 25px;
 }
 
-.add-carousel{
+.add-carousel {
     display: flex;
     align-items: center;
 }
-.add-carousel p{
+
+.add-carousel p {
     margin: 0;
     margin-right: 10px;
+}
+
+
+/* Cart */
+.sticky-cart {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 70px;
 }

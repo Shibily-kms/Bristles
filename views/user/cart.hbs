@@ -1,0 +1,132 @@
+{{>user-top}}
+
+<div class="container user-page mb-5">
+    {{#if products}}
+    <h4 class="fw-bold  mb-3 pt-4">Cart</h4>
+    <div class="row">
+        <div class="col-lg-8 ">
+            {{!-- <h5 id="cart-count-page" class="m-0">Total 0 Items</h5> --}}
+            <div class="row">
+                {{#each products}}
+                <div class="col-12 p-0 pe-lg-3 ">
+                    <div class="card my-2">
+                        <div class="row p-1">
+                            <div class="col-3">
+                                <img class="card-img card-img-left" style="border-radius: 10px;"
+                                    src="/images/products/{{this.cartItems.image.[0]}}" alt="Card image" />
+                            </div>
+                            <div class="col-9">
+                                <div class="card-body p-1" style="">
+                                    <a href="/list/{{this.cartItems.category}}/{{this.cartItems.prId}}/view"
+                                        target="_blank">
+                                        <h5 class="card-title">{{this.cartItems.title}}_{{this.cartItems.prId}}</h5>
+                                    </a>
+                                    <p class="card-text text-secondary">{{this.cartItems.category}} _
+                                        {{this.cartItems.medium}} _ {{this.cartItems.quality}}<br>
+                                        {{#if this.cartItems.arId}}
+                                        Artist ID : {{this.cartItems.arId}}
+                                        {{else}}
+                                        Seller : Bristles Company
+                                        {{/if}}
+                                    </p>
+                                    {{!-- <p class="card-text">Seller name</p> --}}
+                                    <div class="card-price mt-2 d-flex align-items-center ">
+                                        <h4 class="text-dark m-0 me-1">₹ {{this.cartItems.price}}</h4>
+                                        <h6 class="m-0 me-1">₹4000</h6>
+                                        <i class='bx bxs-offer'></i>
+                                        <h6 class="m-0 me-1"> 25% off</h6>
+                                    </div>
+                                    <div class="d-flex mt-2 ">
+                                        <a class="btn btn-sm btn-dark text-white d-flex me-1 "
+                                            href="/list/{{this.cartItems.category}}/{{this.cartItems.prId}}/view"
+                                            target="_blank"><i class='bx bx-show-alt me-0 me-sm-1'></i>
+                                            <span class="d-none d-sm-block">View</span></a>
+                                        <a class="btn btn-sm btn-success text-white d-flex me-1 "><i
+                                                class='bx bx-purchase-tag-alt me-0 me-sm-1'></i>
+                                            <span class="d-none d-sm-block">Buy now</span></a>
+                                        <button class="btn btn-sm btn-danger text-white d-flex me-1"
+                                            onclick="removeProduct('{{this.cartItems.prId}}')"><i
+                                                class='bx bx-trash me-0 me-sm-1'></i>
+                                            <span class="d-none d-sm-block">Remove</span></button>
+                                    </div>
+                                    {{!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                    </p> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+
+            </div>
+        </div>
+
+        <div class=" col-lg-4 mt-2">
+            <div class="row">
+                <div class="col-12 col-md-5 col-lg-12 p-0 order-1 order-md-2 order-lg-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>PRICE DETAILES</h6>
+                            <hr>
+                            <div class="d-flex justify-content-between text-dark">
+                                <p>Price (<span id="cart-count-page">0</span> Items)</p>
+                                <strong class="text-bold">₹{{total}}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between text-dark">
+                                <p>Discount</p>
+                                <strong class="" style="color: rgb(0, 182, 0);">-₹0</strong>
+                            </div>
+                            <div class="d-flex justify-content-between text-dark">
+                                <p>Delivery Charge</p>
+                                <p class="" style="color: rgb(0, 182, 0);">FREE</p>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between text-dark">
+                                <h6 class="text-dark m-0">Total Amount</h6>
+                                <h5 class="text-dark m-0">₹{{total}}</h5>
+                            </div>
+                            <hr>
+                            <p style="color: rgb(0, 182, 0);">You will save ₹0.00 on this order</p>
+                            <a href="" class="btn btn-warning w-100">PLACE ORDER</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-7 col-lg-12 mt-lg-2 p-0 ps-md-1 ps-lg-0 mt-2 
+                    mt-md-0 order-2 order-md-1 pe-md-2 pe-lg-0">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6>ACCESS COUPEN</h6>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Coupen Code"
+                                    aria-label="Coupen Code" aria-describedby="button-addon2" />
+                                <button class="btn btn-warning" type="button" id="button-addon2">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card ">
+                        <div class="card-body">
+                            <p class="m-0 text-center "><i class='bx bxs-lock-alt mb-2'></i> <br>Safe and Secure
+                                Payments. Easy
+                                returns. <br>100% Authentic products.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="check-account">
+        <div class="box-boreder ">
+            <div>
+                <img class="" src="/images/icon/cart-empty.png" alt="">
+                <h4 class="mt-3">Your cart is empty!<br>
+                    <P class="mt-3">Add items to it now.</P>
+                    <a href="/" class="btn btn-primary mt-3">Shop Now</a>
+                </h4>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+</div>

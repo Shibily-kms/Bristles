@@ -91,8 +91,16 @@ router.post('/sign-in', (req, res) => {
       req.session.error = "Incorrect password"
       res.redirect('/sign-in')
     } else if (data) {
-      req.session._BR_USER = data
-      res.redirect('/');
+      if (req.session._BR_TOKEN) {
+        userHelper.checkGuestCast(data.urId, req.session._BR_TOKEN).then(() => {
+          req.session._BR_TOKEN = false
+          req.session._BR_USER = data
+          res.redirect('/');
+        })
+      } else {
+        req.session._BR_USER = data
+        res.redirect('/');
+      }
     }
   })
 });
@@ -237,7 +245,68 @@ router.post('/profile/change-email', verifyUser, (req, res) => {
       res.redirect('/profile/change-email')
     }
   })
+});
+   
+// Add to cart
+router.post('/add-to-cart', verifyTokenOrUser, async (req, res) => {
+  let result = null
+  if (req.session._BR_TOKEN) {
+    result = await userHelper.addToCart(req.session._BR_TOKEN, req.body)
+  } else {
+    result = await userHelper.addToCart(req.session._BR_USER.urId, req.body)
+  }
+  res.json(result)
+});
+
+// Get Cart Count 
+router.post('/cart-count', verifyTokenOrUser, async (req, res) => {
+  let result = null
+  if (req.session._BR_TOKEN) {
+    result = await userHelper.getCartCount(req.session._BR_TOKEN)
+  } else {
+    result = await userHelper.getCartCount(req.session._BR_USER.urId)
+  }
+  res.json(result)
+});
+
+// Cart
+router.get('/cart', async (req, res) => {
+  let urId = null
+  let user = req.session._BR_USER
+  if (req.session._BR_TOKEN) {
+    urId = req.session._BR_TOKEN
+  } else if (user) {
+    urId = user.urId
+  }
+
+  let products = await userHelper.getCartProduct(urId)
+  let total = 0
+  for (let i = 0; i < products.length; i++) {
+    total = total + Number(products[i].cartItems.price)
+  }
+
+  if (req.session.success) {
+    res.render('user/cart', { title: 'Cart | Bristles', user, products, total, "success": req.session.success })
+    req.session.success = false
+  } else {
+    res.render('user/cart', { title: 'Cart | Bristles', user, products, total })
+  }
+});
+
+router.post('/remove-from-cart', verifyTokenOrUser, (req, res) => {
+  let urId = null
+  let user = req.session._BR_USER
+  if (req.session._BR_TOKEN) {
+    urId = req.session._BR_TOKEN
+  } else if (user) {
+    urId = user.urId
+  }
+  userHelper.removeProductFromCart(req.body.prId, urId).then((result) => {
+    req.session.success = "Removed form Cart"
+    res.json(result)
+  })
 })
+
 
 
 

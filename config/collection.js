@@ -3,5 +3,6 @@ module.exports= {
     ARTIST_COLLECTION :"artist",
     CATEGORY_COLLECTION : "category",
     PRODUCT_COLLECTION:"product",
-    CAROUSEL_COLLECTION : 'carousel'
+    CAROUSEL_COLLECTION : 'carousel',
+    CART_COLLECTION : 'cart'
 }

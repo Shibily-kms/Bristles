@@ -64,11 +64,11 @@
             </div>
             {{/if}}
             <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
-            <a href="">
-                <button type="button" class="btn btn-lg btn-success mb-3 add-cart-button">
+            {{!-- <a href=""> --}}
+                <button type="button" class="btn btn-lg btn-success mb-3 add-cart-button" onclick="addToCart('{{product.prId}}')">
                     <i class='bx bx-cart-alt'></i> Add to Cart
                 </button>
-            </a>
+            {{!-- </a> --}}
             <h6 class="sub-head">Specification</h6>
             <hr>
             <div class="product-list-admin pb-4">

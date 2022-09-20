@@ -4,6 +4,8 @@ const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 const optionHelpers = require('../helpers/option-helper');
 const { resolve } = require('promise');
+const { Collection } = require('mongo');
+const { response } = require('express');
 
 module.exports = {
     // User Sign Start
@@ -89,7 +91,7 @@ module.exports = {
 
     getAllProduct: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({status:"Approve",delete:false}).toArray().then((produt) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ status: "Approve", delete: false }).toArray().then((produt) => {
                 resolve(produt)
             })
         })
@@ -212,7 +214,125 @@ module.exports = {
                 }
             })
         })
-    }
+    },
     // User About End
+
+    // Cart Start
+    addToCart: (urId, body) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION).findOne({ urId }).then(async (cart) => {
+                if (cart) {
+                    let status = await db.get().collection(collection.CART_COLLECTION).findOne({ urId, list: { $in: [body.prId] } })
+                    if (status) {
+                        resolve({ alreadyErr: true })
+                    } else {
+                        db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
+                            $push: {
+                                list: body.prId
+                            }
+                        }).then((response) => {
+                            resolve(response)
+                        })
+                    }
+
+                } else {
+                    db.get().collection(collection.CART_COLLECTION).insertOne({ urId, list: [body.prId] }).then((response) => {
+                        resolve(response)
+                    })
+                }
+            })
+        })
+    },
+
+    getCartCount: (urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION).findOne({ urId }).then((result) => {
+                if (result) {
+                    resolve(result.list.length)
+                } else {
+                    let count = 0
+                    resolve(count)
+                }
+            })
+        })
+    },
+
+    getCartProduct: (urId) => {
+        return new Promise(async (resolve, reject) => {
+            let cartItem = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match: { urId: urId }
+                },
+                {
+                    $unwind: "$list"
+                },
+                {
+                    $project: {
+                        item: "$list",
+                        _id: false
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'item',
+                        foreignField: 'prId',
+                        as: 'cartItems'
+                    }
+                },
+                {
+                    $project: {
+                        cartItems: { $arrayElemAt: ['$cartItems', 0] }
+                    }
+                }
+
+
+
+            ]).toArray()
+            resolve(cartItem);
+        })
+    },
+
+    removeProductFromCart: (prId, urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
+                $pull: {
+                    list: prId
+                }
+            }).then((result) => {
+                resolve(result)
+            })
+        })
+    },
+
+    checkGuestCast: (urId, token) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION).findOne({ urId }).then(async (result) => {
+                if (result) {
+                    let tokenCart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId: token })
+                    await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
+                        $addToSet: {
+                            list: {
+                                $each: tokenCart.list
+                            }
+                        }
+                    }).then(() => {
+                        db.get().collection(collection.CART_COLLECTION).deleteOne({ urId: token }).then(() => {
+                            resolve()
+                        })
+                    })
+                } else {
+                    db.get().collection(collection.CART_COLLECTION).updateOne({ urId: token }, {
+                        $set: {
+                            urId: urId
+                        }
+                    }).then(() => {
+                        resolve()
+                    })
+                }
+            })
+        })
+    }
+    // Cart End
 
 }
