@@ -107,6 +107,10 @@ module.exports = {
                 body.delete = false,
                     body.status = 'Approve'
             }
+            body.percentage = null
+            if (body.ogPrice) {
+                body.percentage = Math.round((body.price / body.ogPrice) * 100)
+            }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body).then(() => {
                 resolve()
             })
@@ -135,7 +139,7 @@ module.exports = {
                             image: artist.image,
                             rate: artist.rate,
                             rateCount: artist.rateCount,
-                            image: artist.image
+                            image: artist.image,
                         }
                         result.artist = artistDetails
                     })
@@ -159,6 +163,10 @@ module.exports = {
                 } else {
                     images = product.image
                 }
+                let percentage = false
+                if (body.ogPrice) {
+                    percentage = 100 - (Math.round((body.price / body.ogPrice) * 100))
+                }
 
                 db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: body.prId }, {
                     $set: {
@@ -168,7 +176,9 @@ module.exports = {
                         surface: body.surface,
                         quality: body.quality,
                         image: body.image,
-                        price: parseInt(body.price)
+                        price: parseInt(body.price),
+                        ogPrice: parseInt(body.ogPrice),
+                        percentage
                     }
                 }).then(() => {
                     resolve(images)
@@ -373,18 +383,18 @@ module.exports = {
         })
     },
 
-    deleteCarousel:(crId)=>{
-        return new Promise((resolve, reject) => { 
+    deleteCarousel: (crId) => {
+        return new Promise((resolve, reject) => {
             let image = null
-            db.get().collection(collection.CAROUSEL_COLLECTION).findOne({crId}).then((result)=>{
-                if(result){
+            db.get().collection(collection.CAROUSEL_COLLECTION).findOne({ crId }).then((result) => {
+                if (result) {
                     image = result.image
-                    db.get().collection(collection.CAROUSEL_COLLECTION).deleteOne({crId}).then(()=>{
+                    db.get().collection(collection.CAROUSEL_COLLECTION).deleteOne({ crId }).then(() => {
                         resolve(image)
                     })
                 }
             })
-         })
+        })
     }
     // Carousel End
 

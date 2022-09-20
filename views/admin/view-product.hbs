@@ -40,7 +40,8 @@
                 <a href="/admin/artist/{{product.artist.arId}}/view">
                     <div class="artist">
                         <div class="section-one">
-                            <img src="/images/artist/{{product.artist.image}}" onerror="this.onerror=null;callfun(this);" alt="artist_avatar">
+                            <img src="/images/artist/{{product.artist.image}}"
+                                onerror="this.onerror=null;callfun(this);" alt="artist_avatar">
                             <div class="details">
                                 <h4>{{product.artist.name}}</h4>
                                 <p>Kerala, India - ({{product.artist.arId}})</p>
@@ -66,7 +67,15 @@
 
                 </div>
                 {{/if}}
-                <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
+                <div class="d-flex align-items-center mt-3 mb-3">
+                    <h3 class="price m-0 me-2">₹ {{product.price}}</h3>
+                    {{#if product.ogPrice}}
+                    <h5 class="m-0 text-decoration-line-through">₹ {{product.ogPrice}}</h5>
+                     <i class='bx bxs-offer ms-2 text-success'></i>
+                     <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
+                     {{/if}}
+                </div>
+                
                 <h6 class="sub-head">Specification</h6>
                 <hr>
                 <div class="product-list-admin pb-4">
@@ -170,10 +179,10 @@
     check = "pro" + check
     document.getElementById(check).classList += " active"
 
-     // Image Null Avatar
+    // Image Null Avatar
     function callfun(obj) {
-    var noimg = "/images/avatar/avatar3.png";
-    obj.src = noimg;
+        var noimg = "/images/avatar/avatar3.png";
+        obj.src = noimg;
     }
 </script>
 

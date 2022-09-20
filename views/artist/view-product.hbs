@@ -37,7 +37,14 @@
                 <h3 class="">{{product.title}}_{{product.prId}}_{{product.size}}</h3>
                 <h5>Orginal Size : {{product.size}}</h5>
 
-                <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
+                <div class="d-flex align-items-center mt-3 mb-3">
+                    <h3 class="price m-0 me-2">₹ {{product.price}}</h3>
+                    {{#if product.ogPrice}}
+                    <h5 class="m-0 text-decoration-line-through">₹ {{product.ogPrice}}</h5>
+                    <i class='bx bxs-offer ms-2 text-success'></i>
+                    <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
+                    {{/if}}
+                </div>
                 <h6 class="sub-head">Specification</h6>
                 <hr>
                 <div class="product-list-admin pb-4">
@@ -51,10 +58,10 @@
                     </div>
                     <div class="col row">
                         <div class="col-4">
-                            <p>Availability</p>
+                            <p>Status</p>
                         </div>
                         <div class="col-8">
-                            <p>: In Stoke</p>
+                            <p>: <span class="status status-{{product.status}}">{{product.status}}</span></p>
                         </div>
                     </div>
                     <div class="col row">

@@ -74,9 +74,11 @@
                         </div>
                         <div class="card-price mt-2">
                             <h4 class="text-dark">₹ {{this.price}}</h4>
-                            <h6>₹4000</h6>
+                            {{#if this.ogPrice}}
+                            <h6>₹{{this.ogPrice}}</h6>
                             <i class='bx bxs-offer'></i>
-                            <h6> 25% off</h6>
+                            <h6> {{this.percentage}}% off</h6>
+                            {{/if}}
                         </div>
                         <small>Free delivery</small>
                     </div>

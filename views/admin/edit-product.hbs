@@ -89,6 +89,11 @@
                                     value="{{product.price}}" name="price" required placeholder="₹ 000.00" />
                             </div>
                             <div class="mb-3">
+                                <label class="form-label" for="basic-default-company">Original Price</label>
+                                <input type="number" class="form-control" id="basic-default-company"
+                                    value="{{product.ogPrice}}" name="ogPrice" required placeholder="₹ 000.00" />
+                            </div>
+                            <div class="mb-3">
                                 <lable class="form-label" for="basic-default-message">Description</label>
                                     <textarea id="basic-default-message" class="form-control" style="description"
                                         placeholder="About paint" name="description">{{product.description}}</textarea>

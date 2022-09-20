@@ -246,7 +246,7 @@ router.post('/profile/change-email', verifyUser, (req, res) => {
     }
   })
 });
-   
+
 // Add to cart
 router.post('/add-to-cart', verifyTokenOrUser, async (req, res) => {
   let result = null
@@ -281,15 +281,22 @@ router.get('/cart', async (req, res) => {
 
   let products = await userHelper.getCartProduct(urId)
   let total = 0
+  let discount = 0
   for (let i = 0; i < products.length; i++) {
     total = total + Number(products[i].cartItems.price)
   }
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].cartItems.ogPrice) {
+      discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+    }
+  }
+ 
 
   if (req.session.success) {
-    res.render('user/cart', { title: 'Cart | Bristles', user, products, total, "success": req.session.success })
+    res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, "success": req.session.success })
     req.session.success = false
   } else {
-    res.render('user/cart', { title: 'Cart | Bristles', user, products, total })
+    res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount })
   }
 });
 

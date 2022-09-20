@@ -189,9 +189,11 @@ function createThumb(productOne) {
     priceDiv.className = "card-price mt-2"
     h4Tag.className = 'text-dark'
     h4Tag.innerHTML = '₹ ' + productOne.price
-    h6One.innerHTML = '₹ 4000'
-    ofrIcon.className = 'bx bxs-offer'
-    h6Two.innerHTML = '25% off'
+    if(productOne.ogPrice){
+        h6Two.innerHTML = productOne.percentage+ '% off'
+        h6One.innerHTML = '₹ ' + productOne.ogPrice
+        ofrIcon.className = 'bx bxs-offer'
+    }
     smallTag.innerHTML = 'Free delivery'
 
     // Align Tag
