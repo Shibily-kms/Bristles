@@ -5,7 +5,7 @@ const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
 module.exports = {
-    
+
     // OverView Start
     getOverView: (req, res) => {
         let admin = req.session._BR_ADMIN
@@ -324,6 +324,54 @@ module.exports = {
         })
     },
     // Category End
+
+    // Coupon Start
+    getAllCoupon: (req, res) => {
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        adminHelpers.getAllCoupon().then((coupon) => {
+            if (req.session.success) {
+                res.render('admin/coupon-list', { title: "Coupon List | Admin panel", admin, CAT, coupon, "success": req.session.success })
+                req.session.success = false
+            } else {
+                res.render('admin/coupon-list', { title: "Coupon List | Admin panel", admin, CAT, coupon })
+            }
+
+        })
+    },
+    getAddCoupon: (req, res) => {
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        res.render('admin/add-coupon', { title: "Add Coupon | Admin panel", admin, CAT })
+    },
+    postAddCoupon: (req,res)=>{
+        adminHelpers.addCoupon(req.body).then(()=>{
+            req.session.success = 'New Coupon Added'
+            res.redirect('/admin/coupon')
+        })
+    },
+    getEditCoupon:(req,res)=>{
+        let cpCode = req.params.cpCode
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        adminHelpers.getOneCoupon(cpCode).then((coupon)=>{
+            res.render('admin/edit-coupon',{ title: "Edit Coupon | Admin panel", admin, CAT,coupon })
+        })
+    },
+    postEditCoupon:(req,res)=>{
+        adminHelpers.editCoupon(req.body).then(()=>{
+            req.session.success = 'Coupon Edited'
+            res.redirect('/admin/coupon')
+        })
+    },
+    deleteCoupon:(req,res)=>{
+        let cpCode = req.params.cpCode
+        adminHelpers.deleteCoupon(cpCode).then(()=>{
+            req.session.success = 'Coupon Deleted'
+            res.redirect('/admin/coupon')
+        })
+    },
+    // Coupon End
 
     // Artist New Start
     getPendigArtistList: (req, res) => {

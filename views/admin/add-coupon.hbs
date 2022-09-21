@@ -1,0 +1,45 @@
+{{>admin-top}}
+{{>admin-side}}
+
+
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">Add Coupon</h4>
+
+        <!-- Basic Layout -->
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-sm-8">
+                <div class="form-background  mb-4">
+
+
+                    <div class="card-body">
+                        <form action="/admin/coupon/add" method="post">
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-fullname">Discount Price</label>
+                                <input type="text" class="form-control" name="value" placeholder="0.00"
+                                    required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="basic-default-fullname">Validity</label>
+                                <input type="date" class="form-control" name="validity" placeholder=""
+                                    required />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+</div>
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('coupon').classList += " active"
+</script>

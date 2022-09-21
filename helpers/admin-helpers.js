@@ -395,8 +395,63 @@ module.exports = {
                 }
             })
         })
-    }
+    },
     // Carousel End
+
+    // Coupon Start
+    getAllCoupon: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).find({ used: false }).toArray().then((coupon) => {
+                resolve(coupon)
+            })
+        })
+    },
+    addCoupon: (body) => {
+        return new Promise((resolve, reject) => {
+            create_random_id(8)
+            function create_random_id(sting_length) {
+                var randomString = '';
+                var numbers = '123456789ABCDEFGHLJKLMNPQRSTUVWXYZ'
+                for (var i, i = 0; i < sting_length; i++) {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                }
+                body.cpCode = randomString
+                body.used = false
+                body.value = Number(body.value)
+                db.get().collection(collection.COUPON_COLLECTION).insertOne(body).then(() => {
+                    resolve()
+                })
+            }
+        })
+    },
+    getOneCoupon: (cpCode) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).findOne({ cpCode }).then((coupon) => {
+                resolve(coupon)
+            })
+        })
+    },
+    editCoupon: (body) => {
+        console.log(body);
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCode: body.cpCode }, {
+                $set: {
+                    value: body.value,
+                    validity: body.validity
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+    deleteCoupon:(cpCode)=>{
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.COUPON_COLLECTION).deleteOne({cpCode}).then(()=>{
+                resolve()
+            })
+         })
+    },
+    // Coupon End
 
 
 

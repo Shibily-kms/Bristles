@@ -1,0 +1,69 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">Coupon List</h4>
+        <!-- Basic Layout -->
+        <div class="pb-3 d-flex justify-content-end">
+            <a href="/admin/coupon/add">
+                <button type="button" class="btn btn-success"><i class='bx bx-plus-circle'></i> Add Coupon</button>
+            </a>
+        </div>
+        <!-- Hoverable Table rows -->
+        <div class="admin-table-div">
+
+            <div class="table-responsive">
+                <table class="table table-hover css-serial" id="table_id">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Coupon Code</th>
+                            <th>Discount Price</th>
+                            <th>Validity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {{#each coupon}}
+                        <tr>
+                            <td></td>
+                            <td>{{this.cpCode}}</td>
+                            <td>{{this.value}}</td>
+                            <td>{{this.validity}}</td>
+                            {{!-- <td>Active</td> --}}
+                            <td>
+                                <span class="table-action-td">
+                                    <a href="/admin/coupon/{{this.cpCode}}/edit ">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-primary">
+                                            <span class="tf-icons bx bxs-edit-alt"></span>
+                                        </button>
+                                    </a>
+                                    <a href="/admin/coupon/{{this.cpCode}}/delete"
+                                        onclick="return confirm('Are you remove this category?')">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--/ Hoverable Table rows -->
+
+
+
+
+    </div>
+</div>
+</div>
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('coupon').classList += " active"
+</script>

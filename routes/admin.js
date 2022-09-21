@@ -111,9 +111,12 @@ router.get('/carousel', verifyAdmin, adminController.getCarousel)
 router.post('/carousel/add-image', verifyAdmin, store.carousel.single('image'), adminController.addCarousel)
 router.get('/carousel-delete/:crId', verifyAdmin, adminController.deleteCarousel)
 
-
-
-
-
+// Coupon
+router.get('/coupon',verifyAdmin,adminController.getAllCoupon)
+router.get('/coupon/add',verifyAdmin,adminController.getAddCoupon)
+router.post('/coupon/add',verifyAdmin,adminController.postAddCoupon)
+router.get('/coupon/:cpCode/edit',verifyAdmin,adminController.getEditCoupon)
+router.post('/coupon/edit',verifyAdmin,adminController.postEditCoupon)
+router.get('/coupon/:cpCode/delete',verifyAdmin,adminController.deleteCoupon)
 
 module.exports = router;
