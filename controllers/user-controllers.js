@@ -3,6 +3,8 @@ const adminHelpers = require('../helpers/admin-helpers');
 const fs = require('fs');
 const path = require('path');
 const optionHelper = require('../helpers/option-helper');
+const { resolve } = require('path');
+
 module.exports = {
 
     // Home Page Start
@@ -205,7 +207,39 @@ module.exports = {
             }
         })
     },
-    // Profiel End
+    getAlladdress: (req, res) => {
+        let user = req.session._BR_USER
+        userHelper.getAlladdress(user.urId).then((address) => {
+            if (req.session.success) {
+                res.render('user/address', { title: 'Mangae Address | Bristles', user, address, 'success': req.session.success })
+                req.session.success = false
+            } else {
+                res.render('user/address', { title: 'Mangae Address | Bristles', user, address })
+            }
+        })
+    },
+    postAddAddress: (req, res) => {
+        userHelper.addNewAddress(req.body, req.session._BR_USER.urId).then(() => {
+            res.redirect('/address')
+        })
+    },
+    postEditAddress: (req, res) => {
+        let adId = req.params.adId
+        let user = req.session._BR_USER
+        userHelper.updateAddress(req.body, adId, user.urId).then(() => {
+            req.session.success = "Address updated"
+            res.redirect('/address')
+        })
+    },
+    deleteAddress: (req, res) => {
+        let adId = req.params.adId
+        let user = req.session._BR_USER
+        userHelper.deleteAddress(adId, user.urId).then(() => {
+            req.session.success = "Address Deleted"
+            res.redirect('/address')
+        })
+    },
+    // Profile End
 
     // Cart Start
     getCartCount: async (req, res) => {
@@ -217,6 +251,7 @@ module.exports = {
         }
         res.json(result)
     },
+
     getCart: async (req, res) => {
         let urId = null
         let user = req.session._BR_USER
@@ -243,6 +278,7 @@ module.exports = {
             res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount })
         }
     },
+
     removeFromCart: (req, res) => {
         let urId = null
         let user = req.session._BR_USER
@@ -257,5 +293,23 @@ module.exports = {
         })
     },
     // Cart End
+
+    // CheckOut Start
+    getCheckOut: async (req, res) => {
+        let user = req.session._BR_USER
+        let products = await userHelper.getCartProduct(user.urId)
+        let total = 0
+        let discount = 0
+        for (let i = 0; i < products.length; i++) {
+            total = total + Number(products[i].cartItems.price)
+        }
+        for (let i = 0; i < products.length; i++) {
+            if (products[i].cartItems.ogPrice) {
+                discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+            }
+        }
+
+    },
+    // CheckOut End
 
 }

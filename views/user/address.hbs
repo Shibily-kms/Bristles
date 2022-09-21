@@ -1,0 +1,181 @@
+{{>user-top}}
+<div class="container user-page">
+    <div class=" flex-grow-1 container-p-y">
+        <h4 class="fw-bold  mb-4">Account</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile"><i class='bx bxs-user me-1'></i>
+                            Profile</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link active" href="/address"><i class='bx bxs-map'></i> Manage Addresses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/whish-list"><i class='bx bxs-heart'></i> Whish list</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order"><i class='bx bxs-package'></i> Orders</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+
+                    <!-- Account -->
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            <img src="/images/user/{{user.image}}" alt="user-avatar" class="d-block rounded"
+                                height="100" onerror="this.onerror=null;callfun(this);" width="100"
+                                id="uploadedAvatar" />
+                            <div class="button-wrapper">
+
+
+                                <h5 class="text-dark mb-1 ">{{user.firstName}} {{user.lastName}}</h5>
+                                <p class="text-muted mb-1">UR ID : {{user.urId}}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+
+                    <div class="card-body accordion accordion-without-arrow ">
+                        <div class=" border border-secondary rounded-3 mb-2">
+                            <div class="p-1">
+                                <h6 class="m-0 text-primary accordion-button collapsed" data-bs-toggle="collapse"
+                                    data-bs-target="#accordionIcon-5" aria-controls="accordionIcon-5"><i
+                                        class='bx bx-plus'></i> Add New Address</h6>
+                            </div>
+                            <form action="/add-address" id="accordionIcon-5" class="accordion-collapse collapse"
+                                method="post" data-bs-parent="#accordionIcon">
+                                <div class="row px-3 ">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="Name" class="form-label">Name</label>
+                                        <input class="form-control" type="text" id="Name" name="name" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input class="form-control" type="number" id="phone" name="phone" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        <input class="form-control" type="number" id="pincode" name="pincode" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="locality" class="form-label">Locality</label>
+                                        <input class="form-control" type="text" id="locality" name="locality" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="area" class="form-label">Area/Street</label>
+                                        <input class="form-control" type="text" id="area" name="area" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="city" class="form-label">City/District/town</label>
+                                        <input class="form-control" type="text" id="city" name="city" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="state" class="form-label">State</label>
+                                        <input class="form-control" type="text" id="state" name="state" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="landmark" class="form-label">Landmark</label>
+                                        <input class="form-control" type="text" id="landmark" name="landmark" />
+                                    </div>
+                                    <div class="mb-3 d-flex justify-content-end col-12 ">
+                                        <button type="reset"
+                                            class="btn btn-secondary col-md-3 col-sm-5 col-6 me-1">Reset</button>
+                                        <button type="submit"
+                                            class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        {{#each address.addresses}}
+                        <div class=" border border-secondary rounded-3 mb-2">
+
+                            <div class=" m-0 p-3 d-flex justify-content-between">
+                                <div>
+
+                                    <p class=" m-0"><strong>{{this.name}} - {{this.phone}}</strong> {{#if
+                                        this.current}}<span class="text-white bg-warning px-1 rounded-1"> Current
+                                        </span>{{/if}}</p>
+                                    <p class="m-0">{{this.locality}}, {{this.area}}, {{this.city}}, -{{this.pincode}},
+                                        {{this.state}}
+                                </div>
+                                </p>
+                                <div class="d-flex" style="height: 28px;">
+                                    <div class=" m-0 text-white bg-primary rounded-3 p-1  collapsed "
+                                        data-bs-toggle="collapse" data-bs-target="#accordionIcon-{{@key}}"
+                                        aria-controls="accordionIcon-{{@key}}"><i class='bx bxs-edit-alt'></i> </div>
+                                    <a href="/delete-address/{{this.adId}}"
+                                        onclick="return confirm('Delete this address');"
+                                        class="m-0 text-white bg-danger rounded-3 p-1 ms-1"><i class='bx bx-x'></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <form action="/edit-address/{{this.adId}}" method="post" id="accordionIcon-{{@key}}"
+                                class="accordion-collapse collapse" data-bs-parent="#accordionIcon">
+                                <div class="row px-3 ">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="Name" class="form-label">Name</label>
+                                        <input class="form-control" type="text" id="Name" value="{{this.name}}"
+                                            name="name" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input class="form-control" type="number" id="phone" value="{{this.phone}}"
+                                            name="phone" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        <input class="form-control" type="number" id="pincode" value="{{this.pincode}}"
+                                            name="pincode" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="locality" class="form-label">Locality</label>
+                                        <input class="form-control" type="text" id="locality" value="{{this.locality}}"
+                                            name="locality" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="area" class="form-label">Area/Street</label>
+                                        <input class="form-control" type="text" id="area" value="{{this.area}}"
+                                            name="area" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="city" class="form-label">City/District/town</label>
+                                        <input class="form-control" type="text" id="city" value="{{this.city}}"
+                                            name="city" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="state" class="form-label">State</label>
+                                        <input class="form-control" type="text" id="state" value="{{this.state}}"
+                                            name="state" />
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label for="landmark" class="form-label">Landmark</label>
+                                        <input class="form-control" type="text" id="landmark" value="{{this.landmark}}"
+                                            name="landmark" />
+                                    </div>
+                                    <div class="mb-3 d-flex justify-content-end col-12 ">
+
+                                        <button type="submit"
+                                            class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{{>footer}}
+<script>
+    document.getElementById('profile').className = "dropdown-item active"
+</script>

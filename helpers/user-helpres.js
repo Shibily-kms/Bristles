@@ -58,6 +58,7 @@ module.exports = {
     checkAccountActive: (urId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ urId, status: "Active" }).then((result) => {
+
                 if (result) {
                     resolve(result)
                 } else {
@@ -136,16 +137,7 @@ module.exports = {
                 } else {
                     image = user.image
                 }
-                let obj = {
-                    name: body.name,
-                    phone: body.phone,
-                    pincode: body.pincode,
-                    locality: body.locality,
-                    area: body.area,
-                    city: body.city,
-                    state: body.state,
-                    landmark: body.landmark
-                }
+
                 db.get().collection(collection.USER_COLLECTION).updateOne({ urId: body.urId }, {
                     $set: {
                         firstName: body.firstName,
@@ -153,7 +145,6 @@ module.exports = {
                         userName: body.userName,
                         mobile: body.mobile,
                         place: body.place,
-                        address: obj,
                         image: body.image
                     }
                 }).then(() => {
@@ -212,6 +203,79 @@ module.exports = {
                         resolve(body.email)
                     })
                 }
+            })
+        })
+    },
+
+    getAlladdress: (urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).findOne({ urId }).then((result) => {
+                let address = []
+                address.addresses = result.addresses
+                address.current = result.currentAddress
+                address.addresses = address.addresses.slice(-4);
+                for (let i = 0; i < address.addresses.length; i++) {
+                    if (address.addresses[i].adId == address.current) {
+                        address.addresses[i].current = true
+                    }
+                }
+                resolve(address)
+                console.log(address);
+            })
+        })
+    },
+    addNewAddress: (body, urId) => {
+        return new Promise((resolve, reject) => {
+            // Create Random Id
+            create_random_id(5)
+            function create_random_id(sting_length) {
+                var randomString = '';
+                var numbers = '123456789'
+                for (var i, i = 0; i < sting_length; i++) {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                }
+                body.adId = "AD" + randomString
+            }
+            db.get().collection(collection.USER_COLLECTION).update({ urId }, {
+                $push: {
+                    addresses: body
+                },
+                $set: {
+                    currentAddress: body.adId
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+    updateAddress: (body, adId, urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).updateOne({ urId, "addresses.adId": adId }, {
+                $set: {
+                    "addresses.$.name": body.name,
+                    "addresses.$.phone": body.phone,
+                    "addresses.$.pincode": body.pincode,
+                    "addresses.$.locality": body.locality,
+                    "addresses.$.area": body.area,
+                    "addresses.$.city": body.city,
+                    "addresses.$.state": body.state,
+                    "addresses.$.landmark": body.landmark
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+    deleteAddress: (adId, urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                $pull: {
+                    addresses: {
+                        adId
+                    }
+                }
+            }).then(() => {
+                resolve()
             })
         })
     },

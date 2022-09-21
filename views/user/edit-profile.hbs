@@ -11,12 +11,13 @@
                             Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/whish-list"><i
-                                class='bx bxs-heart'></i> Whish list</a>
+                        <a class="nav-link" href="/address"><i class='bx bxs-map'></i> Manage Addresses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/order"><i
-                                class='bx bxs-package'></i> Orders</a>
+                        <a class="nav-link" href="/whish-list"><i class='bx bxs-heart'></i> Whish list</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order"><i class='bx bxs-package'></i> Orders</a>
                     </li>
 
                 </ul>
@@ -99,77 +100,27 @@
                             </div>
                             <!-- /Account -->
                         </div>
-                        <hr class="my-0" />
-                        <div class="card-body">
-                            <h6>Address</h6>
-                            <div class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label for="Name" class="form-label">Name</label>
-                                    <input class="form-control" type="text" id="Name" name="name"
-                                        value="{{userData.address.name}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="phone" class="form-label">Phone Number</label>
-                                    <input class="form-control" type="number" id="phone" name="phone"
-                                        value="{{userData.address.phone}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="pincode" class="form-label">Pincode</label>
-                                    <input class="form-control" type="number" id="pincode" name="pincode"
-                                        value="{{userData.address.pincode}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="locality" class="form-label">Locality</label>
-                                    <input class="form-control" type="text" id="locality" name="locality"
-                                        value="{{userData.address.locality}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="area" class="form-label">Area/Street</label>
-                                    <input class="form-control" type="text" id="area" name="area"
-                                        value="{{userData.address.area}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="city" class="form-label">City/District/town</label>
-                                    <input class="form-control" type="text" id="city" name="city"
-                                        value="{{userData.address.city}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="state" class="form-label">State</label>
-                                    <input class="form-control" type="text" id="state" name="state"
-                                        value="{{userData.address.state}}" />
-                                </div>
-                                <div class="mb-3 col-md-6">
-                                    <label for="landmark" class="form-label">Landmark</label>
-                                    <input class="form-control" type="text" id="landmark" name="landmark"
-                                        value="{{userData.address.landmark}}" />
-                                </div>
-
-
-
-                                <div class="mb-3 d-flex justify-content-end col-12 ">
-                                    <a href="/profile/edit"
-                                        class="btn btn-secondary col-md-3 col-sm-5 col-6 me-1">Reset</a>
-                                    <button type="submit"
-                                        class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
-                                </div>
-
-                            </div>
-                            <!-- /Account -->
+                        <div class="mb-3 d-flex justify-content-end col-12 ">
+                            <a href="/profile/edit" class="btn btn-secondary col-md-3 col-sm-5 col-6 me-1">Reset</a>
+                            <button type="submit" class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
                         </div>
                     </form>
 
                 </div>
+                <!-- /Account -->
             </div>
+
         </div>
-        <!-- / Content -->
     </div>
 </div>
+<!-- / Content -->
+
 {{>footer}}
 <script>
-   
+
     document.getElementById('profile').className = "dropdown-item active"
 
 
-   
+
 
 </script>

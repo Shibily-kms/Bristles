@@ -7,6 +7,7 @@ const userController = require('../controllers/user-controllers')
 // middlewear
 let verifyUser = (req, res, next) => {
   if (req.session._BR_USER) {
+    console.log('hi');
     userHelper.checkAccountActive(req.session._BR_USER.urId).then((result) => {
       if (result.activeErr) {
         let user = req.session._BR_USER
@@ -56,7 +57,6 @@ router.get('/list/:NOW_CAT/:prId/view', userController.viewProduct)
 router.get('/search', userController.getSearchPage);
 router.post('/get-all-product', userController.getAllProdutInSearch)
 
-
 // User Profile
 router.get('/profile', verifyUser, userController.getProfile)
 
@@ -69,9 +69,14 @@ router.get('/profile/change-password', verifyUser, userController.getChangePassw
 router.post('/profile/change-password', verifyUser, userController.postChangePassword)
 
 // Change Email
-
 router.get('/profile/change-email', verifyUser, userController.getChangeEmail);
 router.post('/profile/change-email', verifyUser, userController.postChangeEmail);
+
+// Address
+router.get('/address',verifyUser,userController.getAlladdress)
+router.post('/add-address',verifyUser,userController.postAddAddress);
+router.post('/edit-address/:adId',verifyUser,userController.postEditAddress);
+router.get('/delete-address/:adId',verifyUser,userController.deleteAddress)
 
 // Add to cart
 router.post('/add-to-cart', verifyTokenOrUser,userController.addToCart);
@@ -81,7 +86,10 @@ router.post('/cart-count', verifyTokenOrUser, userController.getCartCount);
 
 // Cart
 router.get('/cart', userController.getCart);
-router.post('/remove-from-cart', verifyTokenOrUser, )
+router.post('/remove-from-cart', verifyTokenOrUser, userController.removeFromCart)
+
+// CheckOut 
+router.get('checkout',verifyUser,userController.getCheckOut)
 
 
 
