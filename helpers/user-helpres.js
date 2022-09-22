@@ -261,8 +261,8 @@ module.exports = {
                     "addresses.$.state": body.state,
                     "addresses.$.landmark": body.landmark
                 }
-            }).then(() => {
-                resolve()
+            }).then((response) => {
+                resolve(response)
             })
         })
     },
@@ -275,7 +275,7 @@ module.exports = {
                     }
                 }
             }).then(() => {
-                resolve()
+                resolve({ status: true })
             })
         })
     },
@@ -396,7 +396,124 @@ module.exports = {
                 }
             })
         })
-    }
+    },
     // Cart End
+
+    // CheckOut start
+    changeCurrentAddress: (adId, urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                $set: {
+                    currentAddress: adId
+                }
+            }).then((response) => {
+                resolve(response)
+            })
+        })
+    },
+    checkCouponCode: (body) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).findOne({ cpCode: body.cpCode, used: false }).then((result) => {
+                if (result) {
+                    // Check validity
+                    var d = new Date();
+                    let str = d.toJSON().slice(0, 10);
+                    if (str >= result.validity) {
+                        resolve({ expired: true })
+                    } else {
+                        resolve(result)
+                    }
+                    console.log(str);
+                } else {
+                    resolve({ notAvailable: true })
+                }
+            })
+        })
+    },
+    orderAccessing: (body, urId) => {
+        return new Promise(async (resolve, reject) => {
+            let obj = {}
+            // Create Random Id
+            create_random_id(8)
+            function create_random_id(sting_length) {
+                var randomString = '';
+                var numbers = '123456789ABCDEFGHJKLMNOPQRSTUVWXYZ'
+                for (var i, i = 0; i < sting_length; i++) {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                }
+                obj.orId = "OR_" + randomString
+            }
+            obj.urId = urId
+            obj.methord = body.methord == 'payment=COD' ? 'COD' : "online"
+            obj.amount = Number(body.amount)
+            obj.status = obj.methord == "COD" ? "Placed" : "Pending"
+            obj.date = new Date()
+            obj.products = []
+            obj.address = null
+            // Product
+            if (body.prId) {
+                obj.products.push(body.prId)
+            } else {
+                let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
+                obj.products = cart.list
+
+            }
+            // Address
+            let address = await db.get().collection(collection.USER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        urId
+                    }
+                },
+                {
+                    $project: {
+                        urId: true,
+                        addresses: {
+                            $filter: {
+                                input: "$addresses",
+                                as: 'out',
+                                cond: {
+                                    $eq: ['$$out.adId', "$currentAddress"]
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            ]).toArray()
+            obj.address = address[0].addresses[0]
+            await db.get().collection(collection.ORDER_COLLECTION).insertOne(obj).then((response) => {
+                response.methord = obj.methord
+                response.products = obj.products
+                resolve(response)
+            })
+        })
+    },
+    afterOreder: (response, urId, cpCod) => {
+        return new Promise(async (resolve, reject) => {
+            for (let i = 0; i < response.products.length; i++) {
+                await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: response.products[i] }, {
+                    $set: {
+                        status: "Ordered"
+                    }
+                })
+                await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
+                    $pull: {
+                        list: response.products[i]
+                    }
+                })
+            }
+            if (!cpCod == '') {
+                await db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCod }, {
+                    $set: {
+                        user: true
+                    }
+                })
+            }
+            resolve(urId)
+        })
+    }
+    // CheckOut End
 
 }

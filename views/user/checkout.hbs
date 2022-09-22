@@ -2,11 +2,144 @@
 
 <div class="container user-page mb-5">
     {{#if products}}
-    <h4 class="fw-bold  mb-3 pt-4">Cart</h4>
-    <div class="row">
-        <div class="col-lg-8 ">
-            {{!-- <h5 id="cart-count-page" class="m-0">Total 0 Items</h5> --}}
+    <h4 class="fw-bold  mb-3 pt-4">Checkout</h4>
+    <div class="row ">
+        <div class="col-lg-8 mt-3">
+            <h5 class="m-0 mb-2">Delivery Address</h5>
+            <div class="row p-0 pe-lg-3 ">
+                <div class="card-body accordion accordion-without-arrow p-2 bg-white rounded-3">
+                    <div class=" border border-secondary rounded-3 ">
+                        <div class="p-1">
+                            <h6 class="m-0 text-primary accordion-button collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#accordionIcon-5" aria-controls="accordionIcon-5"><i
+                                    class='bx bx-plus'></i> Add New Address</h6>
+                        </div>
+                        <form action="/add-address" id="accordionIcon-5" class="accordion-collapse collapse"
+                            method="post" data-bs-parent="#accordionIcon">
+                            <div class="row px-3 ">
+                                <div class="mb-3 col-md-6">
+                                    <label for="Name" class="form-label">Name</label>
+                                    <input class="form-control" type="text" id="Name" required name="name" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input class="form-control" type="number" id="phone" required name="phone" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="pincode" class="form-label">Pincode</label>
+                                    <input class="form-control" type="number" id="pincode" required name="pincode" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="locality" class="form-label">Locality</label>
+                                    <input class="form-control" type="text" id="locality" required name="locality" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="area" class="form-label">Area/Street</label>
+                                    <input class="form-control" type="text" id="area" required name="area" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="city" class="form-label">City/District/town</label>
+                                    <input class="form-control" type="text" id="city" required name="city" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="state" class="form-label">State</label>
+                                    <input class="form-control" type="text" id="state" required name="state" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="landmark" class="form-label">Landmark</label>
+                                    <input class="form-control" type="text" id="landmark" required name="landmark" />
+                                </div>
+                                <div class="mb-3 d-flex justify-content-end col-12 ">
+                                    <button type="reset"
+                                        class="btn btn-secondary col-md-3 col-sm-5 col-6 me-1">Reset</button>
+                                    <button type="submit"
+                                        class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {{#each address.addresses}}
+                    <div class=" border border-secondary rounded-3 mt-2">
+                        <div class=" m-0 p-3 d-flex justify-content-between">
+                            <div class="d-flex">
+                                <input class="me-2" {{#if this.current}}checked{{/if}} id="selectedAdId" type="radio"
+                                    name="selectedAdId" onchange="changeCurrentAddress('{{this.adId}}')">
+                                <div>
+                                    <p class=" m-0"><strong>{{this.name}} - {{this.phone}}</strong> {{#if
+                                        this.current}}<span class="text-white bg-secondary px-1 rounded-1"> work
+                                        </span>{{/if}}</p>
+                                    <p class="m-0">{{this.locality}}, {{this.area}}, {{this.city}}, - {{this.pincode}},
+                                        {{this.state}} </p>
+                                </div>
+                            </div>
+                            {{#if this.current}}
+                            <div class="d-flex" style="height: 28px;">
+                                <div class=" m-0 text-white bg-primary rounded-3 p-1  collapsed cursor-pointer "
+                                    data-bs-toggle="collapse" data-bs-target="#accordionIcon-{{@key}}"
+                                    aria-controls="accordionIcon-{{@key}}"><i class='bx bxs-edit-alt'></i> </div>
+                                <a onclick="deleteAddress('{{this.adId}}')"
+                                    class="m-0 text-white bg-danger rounded-3 p-1 ms-1 cursor-pointer"><i
+                                        class='bx bx-x'></i>
+                                </a>
+                            </div>
+                            {{/if}}
+                        </div>
+                        <form action="/edit-address/{{this.adId}}" method="post" id="accordionIcon-{{@key}}"
+                            class="accordion-collapse collapse" data-bs-parent="#accordionIcon">
+                            <div class="row px-3 ">
+                                <div class="mb-3 col-md-6">
+                                    <label for="Name" class="form-label">Name</label>
+                                    <input class="form-control" type="text" id="Name" value="{{this.name}}"
+                                        name="name" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input class="form-control" type="number" id="phone" value="{{this.phone}}"
+                                        name="phone" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="pincode" class="form-label">Pincode</label>
+                                    <input class="form-control" type="number" id="pincode" value="{{this.pincode}}"
+                                        name="pincode" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="locality" class="form-label">Locality</label>
+                                    <input class="form-control" type="text" id="locality" value="{{this.locality}}"
+                                        name="locality" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="area" class="form-label">Area/Street</label>
+                                    <input class="form-control" type="text" id="area" value="{{this.area}}"
+                                        name="area" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="city" class="form-label">City/District/town</label>
+                                    <input class="form-control" type="text" id="city" value="{{this.city}}"
+                                        name="city" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="state" class="form-label">State</label>
+                                    <input class="form-control" type="text" id="state" value="{{this.state}}"
+                                        name="state" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="landmark" class="form-label">Landmark</label>
+                                    <input class="form-control" type="text" id="landmark" value="{{this.landmark}}"
+                                        name="landmark" />
+                                </div>
+                                <div class="mb-3 d-flex justify-content-end col-12 ">
+
+                                    <button type="submit"
+                                        class="btn btn-primary col-md-3 col-sm-5 col-6">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
             <div class="row">
+                <h5 class="m-0 mt-4 mb-2">Order Summery</h5>
                 {{#each products}}
                 <div class="col-12 p-0 pe-lg-3 ">
                     <div class="card my-2">
@@ -40,13 +173,6 @@
                                         {{/if}}
                                     </div>
                                     <div class="d-flex mt-2 ">
-                                        <a class="btn btn-sm btn-dark text-white d-flex me-1 "
-                                            href="/list/{{this.cartItems.category}}/{{this.cartItems.prId}}/view"
-                                            target="_blank"><i class='bx bx-show-alt me-0 me-sm-1'></i>
-                                            <span class="d-none d-sm-block">View</span></a>
-                                        <a class="btn btn-sm btn-success text-white d-flex me-1 "><i
-                                                class='bx bx-purchase-tag-alt me-0 me-sm-1'></i>
-                                            <span class="d-none d-sm-block">Buy now</span></a>
                                         <button class="btn btn-sm btn-danger text-white d-flex me-1"
                                             onclick="removeProduct('{{this.cartItems.prId}}')"><i
                                                 class='bx bx-trash me-0 me-sm-1'></i>
@@ -73,11 +199,15 @@
                             <hr>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Price (<span id="cart-count-page">0</span> Items)</p>
-                                <strong class="text-bold">₹{{total}}</strong>
+                                <p><strong class="text-bold">₹{{total}}</strong></p>
                             </div>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Discount</p>
                                 <strong class="" style="color: rgb(0, 182, 0);">-₹{{discount}}</strong>
+                            </div>
+                            <div class="d-none justify-content-between text-dark" id="couponDiv">
+                                <p>Coupon offer</p>
+                                <strong class="" id="couponValue" style="color: rgb(0, 182, 0);">0</strong>
                             </div>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Delivery Charge</p>
@@ -86,11 +216,16 @@
                             <hr>
                             <div class="d-flex justify-content-between text-dark">
                                 <h6 class="text-dark m-0">Total Amount</h6>
-                                <h5 class="text-dark m-0">₹{{total}}</h5>
+                                <div class="d-flex">
+                                    <h5 class="text-dark m-0">₹</h5>
+                                    <h5 class="text-dark m-0" id="totalPrice">{{total}}</h5>
+                                </div>
                             </div>
                             <hr>
-                            <p style="color: rgb(0, 182, 0);">You will save ₹{{discount}}.00 on this order</p>
-                            <a href="" class="btn btn-warning w-100">PLACE ORDER</a>
+                            <p style="color: rgb(0, 182, 0); " class="m-0">You will save ₹<span
+                                    id="discoundPrice">{{discount}}</span>.00 on this order
+                            </p>
+                            {{!-- <a href="" class="btn btn-warning w-100">PLACE ORDER</a> --}}
                         </div>
                     </div>
                 </div>
@@ -98,16 +233,38 @@
                     mt-md-0 order-2 order-md-1 pe-md-2 pe-lg-0">
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h6>ACCESS COUPEN</h6>
+                            <h6>ACCESS COUPON</h6>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Coupen Code"
-                                    aria-label="Coupen Code" aria-describedby="button-addon2" />
-                                <button class="btn btn-warning" type="button" id="button-addon2">Submit</button>
+                                <input id="couponInput" type="text" class="form-control" placeholder="Coupon Code"
+                                    aria-label="Coupon Code" aria-describedby="button-addon2" />
+                                <button onclick="checkCouponCode()" class="btn btn-warning" type="button"
+                                    id="button-addon2">Submit</button>
+                            </div>
+                            <small class="text-danger" style="display:none" id="couponAlert"><i
+                                    class='bx bxs-info-circle'></i> Error </small>
+                        </div>
+                    </div>
+                    <div class="col-12  p-0 order-1 order-md-2 order-lg-1">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6>PAYMENT OPTIONS</h6>
+                                <hr>
+                                <form action="/order" method="post" id="payment">
+                                    <div class="d-flex  text-dark">
+                                        <input type="radio" id="cod" name="payment" value="COD" required>
+                                        <label class="ms-3" for="cod">COD</label>
+                                    </div>
+                                    <div class="d-flex  text-dark mt-3">
+                                        <input type="radio" id="online" name="payment" value="online">
+                                        <label class="ms-3" for="online">ONLINE PAYMENT</label>
+                                    </div>
+                                    <button  class="btn btn-warning w-100 mt-3">CHECK OUT</button>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card ">
+                    <div class="card mt-2">
                         <div class="card-body">
                             <p class="m-0 text-center "><i class='bx bxs-lock-alt mb-2'></i> <br>Safe and Secure
                                 Payments. Easy
@@ -133,3 +290,5 @@
     {{/if}}
 
 </div>
+
+

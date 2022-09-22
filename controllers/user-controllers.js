@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const optionHelper = require('../helpers/option-helper');
 const { resolve } = require('path');
+const { response } = require('express');
 
 module.exports = {
 
@@ -219,6 +220,7 @@ module.exports = {
         })
     },
     postAddAddress: (req, res) => {
+        console.log('iam coming');
         userHelper.addNewAddress(req.body, req.session._BR_USER.urId).then(() => {
             res.redirect('/address')
         })
@@ -226,17 +228,16 @@ module.exports = {
     postEditAddress: (req, res) => {
         let adId = req.params.adId
         let user = req.session._BR_USER
-        userHelper.updateAddress(req.body, adId, user.urId).then(() => {
-            req.session.success = "Address updated"
-            res.redirect('/address')
+        userHelper.updateAddress(req.body, adId, user.urId).then((response) => {
+            // req.session.success = "Address updated"
+            res.json(response)
         })
     },
     deleteAddress: (req, res) => {
-        let adId = req.params.adId
         let user = req.session._BR_USER
-        userHelper.deleteAddress(adId, user.urId).then(() => {
-            req.session.success = "Address Deleted"
-            res.redirect('/address')
+        userHelper.deleteAddress(req.body.adId, user.urId).then((response) => {
+            // req.session.success = "Address Deleted"
+            res.json(response)
         })
     },
     // Profile End
@@ -298,6 +299,7 @@ module.exports = {
     getCheckOut: async (req, res) => {
         let user = req.session._BR_USER
         let products = await userHelper.getCartProduct(user.urId)
+        let address = await userHelper.getAlladdress(user.urId)
         let total = 0
         let discount = 0
         for (let i = 0; i < products.length; i++) {
@@ -308,8 +310,40 @@ module.exports = {
                 discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
             }
         }
+        res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address })
 
     },
+    changeCurrentAddress: (req, res) => {
+        userHelper.changeCurrentAddress(req.body.adId, req.session._BR_USER.urId).then((response) => {
+            res.json(response)
+        })
+    },
+    checkCouponCode: (req, res) => {
+        userHelper.checkCouponCode(req.body).then((response) => {
+            res.json(response)
+        })
+    },
     // CheckOut End
+
+    // Order Start
+    postOrder: (req, res) => {
+        let user = req.session._BR_USER
+        userHelper.orderAccessing(req.body, user.urId).then((response) => {
+            console.log(response,'response');
+            if (response.methord == "COD") {
+                userHelper.afterOreder(response,user.urId,req.body.cpCod).then((urId) => {
+                    res.json(urId)
+                })
+            } else if (response.methord == 'online') {
+                console.log('online payment');
+            }
+        })
+    },
+    successOrder: (req, res) => {
+        let user = req.session._BR_USER
+        res.render('user/success-order', { title: 'Order Success | Bristles', user, })
+    }
+    // Order End
+
 
 }

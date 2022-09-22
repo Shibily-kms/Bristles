@@ -73,13 +73,13 @@ router.get('/profile/change-email', verifyUser, userController.getChangeEmail);
 router.post('/profile/change-email', verifyUser, userController.postChangeEmail);
 
 // Address
-router.get('/address',verifyUser,userController.getAlladdress)
-router.post('/add-address',verifyUser,userController.postAddAddress);
-router.post('/edit-address/:adId',verifyUser,userController.postEditAddress);
-router.get('/delete-address/:adId',verifyUser,userController.deleteAddress)
+router.get('/address', verifyUser, userController.getAlladdress)
+router.post('/add-address', verifyUser, userController.postAddAddress);
+router.post('/edit-address/:adId', verifyUser, userController.postEditAddress);
+router.post('/delete-address', verifyUser, userController.deleteAddress)
 
 // Add to cart
-router.post('/add-to-cart', verifyTokenOrUser,userController.addToCart);
+router.post('/add-to-cart', verifyTokenOrUser, userController.addToCart);
 
 // Get Cart Count 
 router.post('/cart-count', verifyTokenOrUser, userController.getCartCount);
@@ -89,9 +89,13 @@ router.get('/cart', userController.getCart);
 router.post('/remove-from-cart', verifyTokenOrUser, userController.removeFromCart)
 
 // CheckOut 
-router.get('checkout',verifyUser,userController.getCheckOut)
+router.get('/checkout', verifyUser, userController.getCheckOut);
+router.post('/change-current-address',verifyUser,userController.changeCurrentAddress);
+router.post('/checkCoupon',verifyUser,userController.checkCouponCode)
+router.post('/order',verifyUser,userController.postOrder)
 
-
+// Order
+router.get('/checkout/payment/success',verifyUser,userController.successOrder)
 
 
 module.exports = router;

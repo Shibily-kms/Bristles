@@ -54,35 +54,38 @@
                                 <div class="row px-3 ">
                                     <div class="mb-3 col-md-6">
                                         <label for="Name" class="form-label">Name</label>
-                                        <input class="form-control" type="text" id="Name" name="name" />
+                                        <input class="form-control" type="text" id="Name" required name="name" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="phone" class="form-label">Phone Number</label>
-                                        <input class="form-control" type="number" id="phone" name="phone" />
+                                        <input class="form-control" type="number" id="phone" required name="phone" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="pincode" class="form-label">Pincode</label>
-                                        <input class="form-control" type="number" id="pincode" name="pincode" />
+                                        <input class="form-control" type="number" id="pincode" required
+                                            name="pincode" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="locality" class="form-label">Locality</label>
-                                        <input class="form-control" type="text" id="locality" name="locality" />
+                                        <input class="form-control" type="text" id="locality" required
+                                            name="locality" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="area" class="form-label">Area/Street</label>
-                                        <input class="form-control" type="text" id="area" name="area" />
+                                        <input class="form-control" type="text" id="area" required name="area" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="city" class="form-label">City/District/town</label>
-                                        <input class="form-control" type="text" id="city" name="city" />
+                                        <input class="form-control" type="text" id="city" required name="city" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="state" class="form-label">State</label>
-                                        <input class="form-control" type="text" id="state" name="state" />
+                                        <input class="form-control" type="text" id="state" required name="state" />
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label for="landmark" class="form-label">Landmark</label>
-                                        <input class="form-control" type="text" id="landmark" name="landmark" />
+                                        <input class="form-control" type="text" id="landmark" required
+                                            name="landmark" />
                                     </div>
                                     <div class="mb-3 d-flex justify-content-end col-12 ">
                                         <button type="reset"
@@ -110,8 +113,7 @@
                                     <div class=" m-0 text-white bg-primary rounded-3 p-1  collapsed "
                                         data-bs-toggle="collapse" data-bs-target="#accordionIcon-{{@key}}"
                                         aria-controls="accordionIcon-{{@key}}"><i class='bx bxs-edit-alt'></i> </div>
-                                    <a href="/delete-address/{{this.adId}}"
-                                        onclick="return confirm('Delete this address');"
+                                    <a onclick="deleteAddress('{{this.adId}}')"
                                         class="m-0 text-white bg-danger rounded-3 p-1 ms-1"><i class='bx bx-x'></i>
                                     </a>
                                 </div>
@@ -178,4 +180,8 @@
 {{>footer}}
 <script>
     document.getElementById('profile').className = "dropdown-item active"
+</script>
+
+<script>
+  
 </script>
