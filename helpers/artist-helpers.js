@@ -237,8 +237,8 @@ module.exports = {
                 if (result.status == "Pending") {
                     result.pending = true
                 } else if (result.status == "Rejected") {
-                    reject.rejected = true
-                }
+                    result.rejected = true
+                } 
                 resolve(result)
             })
         })
@@ -287,7 +287,7 @@ module.exports = {
 
     getAllProducts: (arId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve"] } }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve","Ordered"] } }).toArray().then((result) => {
                 for (let i = 0; i < result.length; i++) {
                     if (result[i].status == "Ordered") {
                         result[i].order = true

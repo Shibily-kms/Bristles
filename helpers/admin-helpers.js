@@ -147,6 +147,10 @@ module.exports = {
 
                 if (result.status == "Rejected") {
                     result.reject = true
+                } else if(result.status == "Approve"){
+                    result.status = "In"
+                }else if(result.status == "Ordered"){
+                    result.status = 'Out'
                 }
                 resolve(result)
             })

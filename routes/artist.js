@@ -1,5 +1,4 @@
 const express = require('express');
-const adminHelpers = require('../helpers/admin-helpers');
 const router = express.Router();
 const store = require('../config/multer')
 const artistHelper = require('../helpers/artist-helpers');

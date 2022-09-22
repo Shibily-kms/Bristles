@@ -71,11 +71,11 @@
                     <h3 class="price m-0 me-2">₹ {{product.price}}</h3>
                     {{#if product.ogPrice}}
                     <h5 class="m-0 text-decoration-line-through">₹ {{product.ogPrice}}</h5>
-                     <i class='bx bxs-offer ms-2 text-success'></i>
-                     <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
-                     {{/if}}
+                    <i class='bx bxs-offer ms-2 text-success'></i>
+                    <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
+                    {{/if}}
                 </div>
-                
+
                 <h6 class="sub-head">Specification</h6>
                 <hr>
                 <div class="product-list-admin pb-4">
@@ -92,7 +92,7 @@
                             <p>Availability</p>
                         </div>
                         <div class="col-8">
-                            <p>: In Stoke</p>
+                            <p>: <span class="status status-{{product.status}}">{{product.status}} Stoke</span> </p>
                         </div>
                     </div>
                     <div class="col row">

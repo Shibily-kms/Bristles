@@ -27,7 +27,7 @@
                             <td>{{this.title}}</td>
                             <td>{{this.category}}</td>
                             <td>₹ {{this.price}}</td>
-                            <td><span class="status status-{{this.status}}" >{{this.status}}</span></td>
+                            <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
                             <td>
                                 <span class="table-action-td">
                                     <a href="/artist/product-list/{{this.prId}}/view ">
@@ -35,13 +35,21 @@
                                             <span class="tf-icons bx bxs-show"></span>
                                         </button>
                                     </a>
-                                   
+                                    {{#if this.order}}
+                                    <a href="">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-info"
+                                            title="View Status">
+                                            <span class="tf-icons bx bx-trip"></span>
+                                        </button>
+                                    </a>
+                                    {{else}}
                                     <a href="/artist/product-list/{{this.prId}}/delete"
                                         onclick="return confirm('Are you remove this product?')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-trash"></span>
                                         </button>
                                     </a>
+                                    {{/if}}
                                 </span>
                             </td>
                         </tr>

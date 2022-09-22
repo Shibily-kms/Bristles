@@ -91,7 +91,6 @@ module.exports = {
         let NOW_CAT = req.params.NOW_CAT
         let prId = req.params.prId
         adminHelpers.getOneProduct(prId).then((product) => {
-
             res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT, user })
         })
 

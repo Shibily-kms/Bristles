@@ -23,7 +23,7 @@ a {
   padding: 2px 10px;
 }
 
-.status-Active , .status-Approve {
+.status-Active , .status-Approve, .status-In {
   background-color: rgb(157, 255, 157);
   color: rgb(0, 165, 0);
   border-color: rgb(0, 165, 0);
@@ -34,12 +34,16 @@ a {
   color: rgb(36, 36, 36);
   border-color: rgb(36, 36, 36);
 }
-.status-Rejected, .status-Blocked {
+.status-Rejected, .status-Blocked, .status-Out {
   background-color: rgb(255, 204, 204);
   color: rgb(206, 0, 0);
   border-color: rgb(206, 0, 0);
 }
-
+.status-Ordered {
+  background-color: rgb(194, 232, 255);
+  color: rgb(0, 110, 173);
+  border-color: rgb(0, 110, 173);
+}
 
 /* Admin Slide header */
 #admin-header {

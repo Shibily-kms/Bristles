@@ -1,5 +1,6 @@
 const artistHelper = require('../helpers/artist-helpers');
 const optionHelpers = require('../helpers/option-helper');
+const adminHelpers = require('../helpers/admin-helpers');
 const fs = require('fs');
 const path = require('path');
 
