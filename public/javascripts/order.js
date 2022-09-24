@@ -23,3 +23,21 @@ $("#payment").submit(function (e) {
     });
 
 });
+
+// User Cancel Order
+
+function cancelUserOrder(orId){ 
+    let alert = confirm('Cancel this Order ?');
+    if(alert){
+        $.ajax({
+            type: "POST",
+            url: '/order/cancel/',
+            data: {
+               orId
+            },
+            success: function (response) {
+                location.reload()
+            }
+        });
+    }
+}

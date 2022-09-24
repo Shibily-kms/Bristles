@@ -328,9 +328,9 @@ module.exports = {
     postOrder: (req, res) => {
         let user = req.session._BR_USER
         userHelper.orderAccessing(req.body, user.urId).then((response) => {
-            console.log(response,'response');
+            console.log(response, 'response');
             if (response.methord == "COD") {
-                userHelper.afterOreder(response,user.urId,req.body.cpCod).then((urId) => {
+                userHelper.afterOreder(response, user.urId, req.body.cpCod).then((urId) => {
                     res.json(urId)
                 })
             } else if (response.methord == 'online') {
@@ -341,6 +341,28 @@ module.exports = {
     successOrder: (req, res) => {
         let user = req.session._BR_USER
         res.render('user/success-order', { title: 'Order Success | Bristles', user, })
+    },
+    getOrder: (req, res) => {
+        let user = req.session._BR_USER
+        userHelper.getAllOrder(user.urId).then((order) => {
+            res.render('user/order-list', { title: 'Order List | Bristles', user, order })
+        })
+    },
+    getOneOrder: (req, res) => {
+        let orId = req.query.orId
+        let urId = req.query.urId
+        let prId = req.query.prId
+        let user = req.session._BR_USER
+        userHelper.getOneOrder(urId, orId, prId).then((order) => {
+            console.log(order);
+            res.render('user/view-one-order', { title: 'View Order | Bristles', user, order })
+        })
+    },
+    getCancelOrder: (req, res) => {
+        let orId = req.body.orId
+        userHelper.cancelOrder(orId).then((response) => {
+            res.json(response)
+        })
     }
     // Order End
 

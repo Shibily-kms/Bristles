@@ -7,7 +7,6 @@ const userController = require('../controllers/user-controllers')
 // middlewear
 let verifyUser = (req, res, next) => {
   if (req.session._BR_USER) {
-    console.log('hi');
     userHelper.checkAccountActive(req.session._BR_USER.urId).then((result) => {
       if (result.activeErr) {
         let user = req.session._BR_USER
@@ -95,7 +94,10 @@ router.post('/checkCoupon',verifyUser,userController.checkCouponCode)
 router.post('/order',verifyUser,userController.postOrder)
 
 // Order
-router.get('/checkout/payment/success',verifyUser,userController.successOrder)
+router.get('/checkout/payment/success',verifyUser,userController.successOrder);
+router.get('/order',verifyUser,userController.getOrder)
+router.get('/order/details',verifyUser,userController.getOneOrder);
+router.post('/order/cancel',verifyUser,userController.getCancelOrder)
 
 
 module.exports = router;

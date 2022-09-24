@@ -3,10 +3,8 @@ const collection = require('../config/collection')
 const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 const optionHelpers = require('../helpers/option-helper');
-const { resolve } = require('promise');
-const { Collection } = require('mongo');
+const helpFunctions = require('../helpers/help-fuctions');
 const { response } = require('express');
-
 module.exports = {
     // User Sign Start
     doSignUp: (body) => {
@@ -448,6 +446,7 @@ module.exports = {
             obj.amount = Number(body.amount)
             obj.status = obj.methord == "COD" ? "Placed" : "Pending"
             obj.date = new Date()
+            obj.deliveryDate = new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000))
             obj.products = []
             obj.address = null
             // Product
@@ -513,7 +512,130 @@ module.exports = {
             }
             resolve(urId)
         })
-    }
+    },
     // CheckOut End
+
+    // Order Start
+    getAllOrder: (urId) => {
+        return new Promise(async (resolve, reject) => {
+
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $unwind: "$products"
+                },
+                {
+                    $project: {
+                        orId: 1, urId: 1, status: 1, date: 1, deliveryDate: 1, products: 1, cancelDate: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: "products",
+                        foreignField: "prId",
+                        as: 'productDetails'
+                    }
+                },
+                {
+                    $project: {
+                        orId: 1, urId: 1, status: 1,
+                        date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
+                        deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
+                        cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                        prId: { $first: '$productDetails.prId' },
+                        title: { $first: '$productDetails.title' },
+                        image: { $first: '$productDetails.image' },
+                        size: { $first: '$productDetails.size' },
+                        price: { $first: '$productDetails.price' },
+                    }
+                }
+            ]).sort({date : -1}).toArray()
+
+            for (let i = 0; i < orders.length; i++) {
+                if (orders[i].status == "Cancelled") {
+                    orders[i].message = "As per your requist, Your order has been " + orders[i].status
+                    orders[i].cancelled = true
+                } else {
+                    orders[i].message = "Your order has been " + orders[i].status
+                }
+            }
+       
+            console.log(orders,'hiiaa');
+            resolve(orders.sort((a, b) => b - a))
+        })
+    },
+    getOneOrder: (urId, orId, prId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        orId
+                    }
+                },
+                {
+                    $unwind: "$products"
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: "products",
+                        foreignField: "prId",
+                        as: 'productDetails'
+                    }
+                },
+                {
+                    $project: {
+                        orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
+                        date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
+                        deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
+                        cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                        prId: { $first: '$productDetails.prId' },
+                        title: { $first: '$productDetails.title' },
+                        image: { $first: '$productDetails.image' },
+                        size: { $first: '$productDetails.size' },
+                        price: { $first: '$productDetails.price' },
+                        category: { $first: '$productDetails.category' },
+                        medium: { $first: '$productDetails.medium' },
+                        description: { $first: '$productDetails.description' },
+                        show: { $eq: [{ $first: '$productDetails.prId' }, prId] },
+                        Placed: { $eq: ["$status", "Placed"] },
+                        Pending: { $eq: ["$status", "Pending"] },
+                        Shipped: { $eq: ["$status", "Shipped"] },
+                        OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
+                        Delivered: { $eq: ["$status", "Delivered"] },
+                        Cancelled: { $eq: ["$status", "Cancelled"] },
+                    }
+                }
+            ]).toArray().then((order) => {
+                resolve(order)
+            })
+        })
+    },
+    cancelOrder: (orId) => {
+        console.log(orId, 'hi');
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).findOne({ orId }).then((order) => {
+                if (order) {
+                    for (let i = 0; i < order.products.length; i++) {
+                        db.get().collection(collection.PRODUCT_COLLECTION).updateMany({ prId: order.products[i] },
+                            {
+                                $set: {
+                                    status: 'Approve'
+                                }
+                            })
+                    }
+                    db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId }, {
+                        $set: {
+                            status: 'Cancelled',
+                            cancelDate: new Date()
+                        }
+                    }).then((response) => {
+                        resolve(response)
+                    })
+                }
+            })
+        })
+    }
+    // Order End
 
 }

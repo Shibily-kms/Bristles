@@ -34,7 +34,7 @@ a {
   color: rgb(36, 36, 36);
   border-color: rgb(36, 36, 36);
 }
-.status-Rejected, .status-Blocked, .status-Out {
+.status-Rejected, .status-Blocked, .status-Out , .status-Cancelled {
   background-color: rgb(255, 204, 204);
   color: rgb(206, 0, 0);
   border-color: rgb(206, 0, 0);
@@ -43,6 +43,11 @@ a {
   background-color: rgb(194, 232, 255);
   color: rgb(0, 110, 173);
   border-color: rgb(0, 110, 173);
+}
+.status-Placed {
+  background-color: rgb(246, 200, 255);
+  color: rgb(144, 0, 173);
+  border-color: rgb(144, 0, 173);
 }
 
 /* Admin Slide header */
