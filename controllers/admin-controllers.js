@@ -4,6 +4,7 @@ const artistHelpers = require('../helpers/artist-helpers');
 const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
+const { response } = require('express');
 module.exports = {
 
     // OverView Start
@@ -344,29 +345,29 @@ module.exports = {
         let CAT = req.session._BR_CAT
         res.render('admin/add-coupon', { title: "Add Coupon | Admin panel", admin, CAT })
     },
-    postAddCoupon: (req,res)=>{
-        adminHelpers.addCoupon(req.body).then(()=>{
+    postAddCoupon: (req, res) => {
+        adminHelpers.addCoupon(req.body).then(() => {
             req.session.success = 'New Coupon Added'
             res.redirect('/admin/coupon')
         })
     },
-    getEditCoupon:(req,res)=>{
+    getEditCoupon: (req, res) => {
         let cpCode = req.params.cpCode
         let admin = req.session._BR_ADMIN
         let CAT = req.session._BR_CAT
-        adminHelpers.getOneCoupon(cpCode).then((coupon)=>{
-            res.render('admin/edit-coupon',{ title: "Edit Coupon | Admin panel", admin, CAT,coupon })
+        adminHelpers.getOneCoupon(cpCode).then((coupon) => {
+            res.render('admin/edit-coupon', { title: "Edit Coupon | Admin panel", admin, CAT, coupon })
         })
     },
-    postEditCoupon:(req,res)=>{
-        adminHelpers.editCoupon(req.body).then(()=>{
+    postEditCoupon: (req, res) => {
+        adminHelpers.editCoupon(req.body).then(() => {
             req.session.success = 'Coupon Edited'
             res.redirect('/admin/coupon')
         })
     },
-    deleteCoupon:(req,res)=>{
+    deleteCoupon: (req, res) => {
         let cpCode = req.params.cpCode
-        adminHelpers.deleteCoupon(cpCode).then(()=>{
+        adminHelpers.deleteCoupon(cpCode).then(() => {
             req.session.success = 'Coupon Deleted'
             res.redirect('/admin/coupon')
         })
@@ -510,6 +511,30 @@ module.exports = {
         })
     },
     // User End
+
+    // Order Start
+    getAllOrder: (req, res) => {
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        adminHelpers.getAllOrder().then((order) => {
+            res.render('admin/order-list', { title: "Order List | Admin panel", admin, CAT, order })
+        })
+    },
+    getOneOrder: (req, res) => {
+        let orId = req.query.orId
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        adminHelpers.getOneOrder(orId).then((order) => {
+            res.render('admin/view-order', { title: "View Order | Admin panel", admin, CAT, order })
+        })
+    },
+    changeOrderStatus:(req,res)=>{
+        console.log(req.body,'h');
+        adminHelpers.changeOrderStatus(req.body).then((response)=>{
+            res.json(response)
+        })
+    }
+    // Order End
 
 
 }

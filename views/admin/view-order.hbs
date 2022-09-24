@@ -1,0 +1,189 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">{{order.[0].orId}}</h4>
+        <!-- Basic Layout -->
+
+        <!-- Hoverable Table rows -->
+
+        <div class="">
+            {{#if order}}
+            <div class="card p-3 mb-3">
+                <div class="row">
+                    <div class="col-md-8 col-sm-6 col-7">
+                        <p class="fw-bold text-dark">Delivery address</p>
+                        <p class="fw-bold text-dark">{{order.[0].address.name}}_{{order.[0].urId}}</p>
+                        <p class="text-dark">{{order.[0].email}}<br>{{order.[0].address.landmark}},
+                            {{order.[0].address.locality}},
+                            {{order.[0].address.area}}, {{order.[0].address.city}}
+                            -{{order.[0].address.pincode}} <br>
+                            {{order.[0].address.state}}
+                        </p>
+                        <p class="fw-bold text-dark m-0">Mobile Number</p>
+                        <p class=" text-dark">{{order.[0].address.phone}}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-5">
+                        <h6 class=" text-end text-dark">Total Amount <br> ₹ {{order.[0].amount}}.00</h6>
+                        {{#if order.[0].Cancelled }}
+                        <p class=" text-end text-dark">Cancelled on {{order.[0].cancelDate}}
+                        </p>
+                        {{else}}
+                        <p class=" text-end text-dark">Delivery expected by {{order.[0].deliveryDate}}
+                        </p>
+                        {{/if}}
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="card p-3 mb-3">
+                <div class="row">
+                    <div class="col-12 col-md-5">
+                        {{!-- Table --}}
+                        <div class="card p-3" style="background-color:rgb(213, 255, 255) ;">
+                            {{#if order.[0].Cancelled}}
+                            <div class="d-flex justify-content-center align-items-center" style="height: 90px;" >
+                                <div>
+                                    <p class="text-center text-danger"><i class='bx bxs-check-circle mb-1' style="font-size: 25px;"></i><br>
+                                    This Product Cancelled on {{order.[0].cancelDate}}</p>
+                                </div>
+                            </div>
+                            {{else}}{{#if order.[0].Delivered}}
+                            <div class="d-flex justify-content-center align-items-center" style="height: 90px;">
+                                <div>
+                                    <p class="text-center text-success"><i class='bx bxs-check-circle mb-1' style="font-size: 25px;"></i><br>
+                                    This Product delivered on {{order.[0].deliveryDate}}</p>
+                                </div>
+                            </div>
+                            {{else}}
+                            <form action="">
+                                <p class="fw-bold text-dark m-0 mb-2">Change Status</p>
+                                <div class="my-2 text-dark">
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Placed"
+                                    {{#if order.[0].Placed}} checked {{/if}}>
+                                    <label class="ml-1" for="">Placed</label>
+                                </div>
+                                <div class="my-2 text-dark">
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Shipped"
+                                    {{#if order.[0].Shipped}} checked {{/if}}>
+                                    <label for="">Shipped</label>
+                                </div>
+                                <div class="my-2 text-dark">
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="OutForDelivery"
+                                    {{#if order.[0].OutForDelivery}} checked {{/if}}>
+                                    <label for="">Out For Delivery</label>
+                                </div>
+                                <div class="my-2 text-dark">
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Delivered"
+                                    {{#if order.[0].Delivered}} checked {{/if}}>
+                                    <label for="">Delivered</label>
+                                </div>
+                            </form>
+                            {{/if}}{{/if}}
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-7">
+                        <div class="row">
+                            <div class="col-12 col-md-10 hh-grayBox pt45 pb20 w-100">
+                                <div class="row justify-content-between aligh-items-center ">
+                                    {{#if order.[0].Cancelled}}
+                                    <div class="order-cancel  completed ">
+                                        <span class="is-complete"></span>
+                                        <p>Ordered<br><span>{{order.[0].date}}</span></p>
+                                    </div>
+                                    <div class="order-cancel cancelled">
+                                        <span class="is-complete"></span>
+                                        <p>Cancelled<br><span>{{order.[0].cancelDate}}</span></p>
+                                    </div>
+                                    {{else}}
+                                    <div class="order-tracking {{#if order.[0].Placed}} completed {{/if}}
+                                                {{#if order.[0].Shipped}} completed {{/if}} {{#if order.[0].OutForDelivery}}
+                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}} 
+                                                 {{#if order.[0].Cancelled}} completed {{/if}}">
+                                        <span class="is-complete"></span>
+                                        <p>Ordered<br><span>{{order.[0].date}}</span></p>
+                                    </div>
+                                    <div class="order-tracking 
+                                                {{#if order.[0].Shipped}} completed {{/if}} {{#if order.[0].OutForDelivery}}
+                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}}">
+                                        <span class="is-complete"></span>
+                                        <p>Shipped</p>
+                                    </div>
+                                    <div class="order-tracking {{#if order.[0].OutForDelivery}}
+                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}}">
+                                        <span class="is-complete"></span>
+                                        <p>Out for delivery</p>
+                                    </div>
+                                    <div class="order-tracking {{#if order.[0].Delivered}} completed {{/if}}">
+                                        <span class="is-complete"></span>
+                                        <p>Delivered<br><span>{{order.[0].deliveryDate}}</span></p>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="card p-3 mb-3">
+                <div>
+                    <p class="fw-bold text-dark">{{ order.[0].length}} Items in this Order</p>
+                </div>
+                <hr class="my-0" />
+                <div class="row mt-3">
+                    {{#each order}}
+                    <div class="col-12 col-md-6 mb-3">
+                        <a href="/admin/products/{{this.category}}/{{this.prId}}/view" target="_blank"
+                            class="text-dark">
+                            <div class="d-flex">
+                                <img class="order-list-image" src="/images/products/{{this.prImage.[0]}}" alt="">
+                                <div class="d-none d-sm-block">
+                                    <h6 class="m-0 mb-2  text-dark">
+                                        {{this.title}}_{{this.prId}}_{{this.size}}
+                                    </h6>
+                                    <p class="m-1 ">PR ID : {{this.prId}}</p>
+                                    <p class="m-1 ">Category : {{this.category}}</p>
+                                    <p class="m-1 ">Medium : {{this.medium}}</p>
+                                  
+                                    <p class="m-1 ">{{this.description}}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {{/each}}
+                </div>
+            </div>
+
+
+        </div>
+        {{else}}
+        <div class="d-flex justify-content-center">
+
+            <div>
+                <div style="width: 100%; " class="d-flex justify-content-center">
+                    <img style="width: 100px;" src="/images/icon/order-list.png" alt="">
+                </div>
+                <h4 class="mt-3">Request is not valid</h4>
+                <a href="/order" class="btn btn-primary w-100">Go to My Orders</a></h4>
+            </div>
+
+        </div>
+        {{/if}}
+
+
+    </div>
+</div>
+</div>
+
+
+
+<script>
+    document.getElementById('order').classList += " active"
+</script>

@@ -489,7 +489,7 @@ module.exports = {
             })
         })
     },
-    afterOreder: (response, urId, cpCod) => {
+    afterOreder: (response, urId, cpCode) => {
         return new Promise(async (resolve, reject) => {
             for (let i = 0; i < response.products.length; i++) {
                 await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: response.products[i] }, {
@@ -503,13 +503,13 @@ module.exports = {
                     }
                 })
             }
-            if (!cpCod == '') {
-                await db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCod }, {
-                    $set: {
-                        user: true
-                    }
-                })
-            }
+            console.log(cpCode);
+            await db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCode }, {
+                $set: {
+                    used: true
+                }
+            })
+
             resolve(urId)
         })
     },
@@ -549,7 +549,7 @@ module.exports = {
                         price: { $first: '$productDetails.price' },
                     }
                 }
-            ]).sort({date : -1}).toArray()
+            ]).sort({ date: -1 }).toArray()
 
             for (let i = 0; i < orders.length; i++) {
                 if (orders[i].status == "Cancelled") {
@@ -559,8 +559,8 @@ module.exports = {
                     orders[i].message = "Your order has been " + orders[i].status
                 }
             }
-       
-            console.log(orders,'hiiaa');
+
+            console.log(orders, 'hiiaa');
             resolve(orders.sort((a, b) => b - a))
         })
     },

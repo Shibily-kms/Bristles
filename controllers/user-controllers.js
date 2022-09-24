@@ -328,9 +328,9 @@ module.exports = {
     postOrder: (req, res) => {
         let user = req.session._BR_USER
         userHelper.orderAccessing(req.body, user.urId).then((response) => {
-            console.log(response, 'response');
+           
             if (response.methord == "COD") {
-                userHelper.afterOreder(response, user.urId, req.body.cpCod).then((urId) => {
+                userHelper.afterOreder(response, user.urId, req.body.cpCode).then((urId) => {
                     res.json(urId)
                 })
             } else if (response.methord == 'online') {

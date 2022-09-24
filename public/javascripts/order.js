@@ -13,9 +13,9 @@ $("#payment").submit(function (e) {
         url: actionUrl,
         data: {
             methord: form.serialize(), // serializes the form's elements.
-            amount ,
-            cpCode : couponCode,
-            prId 
+            amount,
+            cpCode: couponCode,
+            prId
         },
         success: function (urId) {
             location.replace('/checkout/payment/success')
@@ -26,18 +26,34 @@ $("#payment").submit(function (e) {
 
 // User Cancel Order
 
-function cancelUserOrder(orId){ 
+function cancelUserOrder(orId) {
     let alert = confirm('Cancel this Order ?');
-    if(alert){
+    if (alert) {
         $.ajax({
             type: "POST",
             url: '/order/cancel/',
             data: {
-               orId
+                orId
             },
             success: function (response) {
                 location.reload()
             }
         });
     }
+}
+
+// Admin Change Order Status
+function changeStatus(value,orId) {
+    console.log(value,orId);
+    $.ajax({
+        type: "POST",
+        url: '/admin/order-list/change-order-status',
+        data: {
+            status : value,
+            orId 
+        },
+        success: function (response) {
+            location.reload()
+        }
+    });
 }

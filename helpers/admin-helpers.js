@@ -1,5 +1,6 @@
 const db = require('../config/connection')
-const collection = require('../config/collection')
+const collection = require('../config/collection');
+const { response } = require('express');
 const ObjectId = require('mongodb').ObjectId;
 
 
@@ -147,9 +148,9 @@ module.exports = {
 
                 if (result.status == "Rejected") {
                     result.reject = true
-                } else if(result.status == "Approve"){
+                } else if (result.status == "Approve") {
                     result.status = "In"
-                }else if(result.status == "Ordered"){
+                } else if (result.status == "Ordered") {
                     result.status = 'Out'
                 }
                 resolve(result)
@@ -448,14 +449,101 @@ module.exports = {
             })
         })
     },
-    deleteCoupon:(cpCode)=>{
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.COUPON_COLLECTION).deleteOne({cpCode}).then(()=>{
+    deleteCoupon: (cpCode) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COUPON_COLLECTION).deleteOne({ cpCode }).then(() => {
                 resolve()
             })
-         })
+        })
     },
     // Coupon End
+
+    // Order Start
+    getAllOrder: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $project: {
+                        orId: 1, urId: 1, methord: 1, amount: 1, status: 1,
+                        date: { $dateToString: { format: "%d-%m-%Y", date: "$date", timezone: "+05:30" } },
+                    }
+                }
+            ]).sort({ date: -1 }).toArray().then((order) => {
+                resolve(order)
+            })
+        })
+    },
+    getOneOrder: (orId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        orId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.USER_COLLECTION,
+                        localField: "urId",
+                        foreignField: "urId",
+                        as: 'user'
+                    }
+                },
+                {
+                    $unwind: "$products"
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: "products",
+                        foreignField: "prId",
+                        as: 'productDetails'
+                    }
+                },
+                {
+                    $project: {
+                        orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
+                        date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
+                        deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
+                        cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                        prId: { $first: '$productDetails.prId' },
+                        title: { $first: '$productDetails.title' },
+                        prImage: { $first: '$productDetails.image' },
+                        size: { $first: '$productDetails.size' },
+                        price: { $first: '$productDetails.price' },
+                        category: { $first: '$productDetails.category' },
+                        medium: { $first: '$productDetails.medium' },
+                        description: { $first: '$productDetails.description' },
+                        Placed: { $eq: ["$status", "Placed"] },
+                        Pending: { $eq: ["$status", "Pending"] },
+                        Shipped: { $eq: ["$status", "Shipped"] },
+                        OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
+                        Delivered: { $eq: ["$status", "Delivered"] },
+                        Cancelled: { $eq: ["$status", "Cancelled"] },
+                        firstName : { $first: '$user.firstName' },
+                        lastName : { $first: '$user.lastName' },
+                        email : { $first: '$user.email' }
+                    }
+                }
+            ]).toArray().then((order) => {
+                order[0].length = order.length
+                resolve(order)
+            })
+        })
+    },
+    changeOrderStatus:(body)=>{
+        console.log(body);
+        return new Promise((resolve, reject) => { 
+            db.get().collection(collection.ORDER_COLLECTION).updateOne({orId : body.orId},{
+                $set:{
+                    status : body.status
+                }
+            }).then((response)=>{
+                resolve(response)
+            })
+         })
+    }
+    // Order End
 
 
 

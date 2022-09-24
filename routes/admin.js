@@ -119,4 +119,10 @@ router.get('/coupon/:cpCode/edit',verifyAdmin,adminController.getEditCoupon)
 router.post('/coupon/edit',verifyAdmin,adminController.postEditCoupon)
 router.get('/coupon/:cpCode/delete',verifyAdmin,adminController.deleteCoupon)
 
+// Order
+router.get('/order-list',verifyAdmin,adminController.getAllOrder)
+router.get('/order-list/details',verifyAdmin,adminController.getOneOrder)
+router.post('/order-list/change-order-status',verifyAdmin,adminController.changeOrderStatus)
+
+
 module.exports = router;
