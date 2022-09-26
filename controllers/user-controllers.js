@@ -324,13 +324,11 @@ module.exports = {
     verifyPayment: (req, res) => {
         userHelper.verifyPayment(req.body).then(() => {
             userHelper.changePaymentStatus(req.body).then(() => {
-                userHelper.afterOreder(req.body['order[products][]'], req.body['order[urId]'], req.body['order[cpCode]']).then(() => {
-                    delete req.body['order[products][]']
-                    delete req.body['order[cpCode]']
-                    userHelper.savePaymentDetails(req.body).then(() => {
-                        res.json({ status: true })
-                    })
+
+                userHelper.savePaymentDetails(req.body).then(() => {
+                    res.json({ status: true })
                 })
+
             })
         }).catch((err) => {
             res.json({ status: false, errMag: err })
@@ -342,19 +340,18 @@ module.exports = {
     postOrder: (req, res) => {
         let user = req.session._BR_USER
 
-        userHelper.orderAccessing(req.body, user.urId).then((response) => {
+        userHelper.orderAccessing(req.body, user.urId).then(async (response) => {
             if (response.methord == "COD") {
                 userHelper.afterOreder(response.products, user.urId, req.body.cpCode).then(() => {
                     res.json({ codSuccess: true })
                 })
             } else if (response.methord == 'online') {
-                userHelper.generateRazorpay(response.orId, response.amount).then((generateResponse) => {
+                await userHelper.afterOreder(response.products, user.urId, req.body.cpCode)
+                await userHelper.generateRazorpay(response.orId, response.amount).then((generateResponse) => {
                     generateResponse.name = response.name
-                    generateResponse.email = response.email
+                    generateResponse.email = user.email
                     generateResponse.phone = response.phone
                     generateResponse.urId = user.urId
-                    generateResponse.cpCode = req.body.cpCode
-                    generateResponse.products = response.products
                     res.json(generateResponse)
                 })
             }
@@ -372,6 +369,7 @@ module.exports = {
     getOrder: (req, res) => {
         let user = req.session._BR_USER
         userHelper.getAllOrder(user.urId).then((order) => {
+            console.log(order);
             res.render('user/order-list', { title: 'Order List | Bristles', user, order })
         })
     },
@@ -388,6 +386,16 @@ module.exports = {
         let orId = req.body.orId
         userHelper.cancelOrder(orId).then((response) => {
             res.json(response)
+        })
+    },
+    pendingPaymentCall: (req, res) => {
+        let user = req.session._BR_USER
+        userHelper.generateRazorpay(req.body.orId, req.body.amount).then((generateResponse) => {
+            generateResponse.name = req.body.name
+            generateResponse.email = user.email
+            generateResponse.phone = req.body.phone
+            generateResponse.urId = user.urId
+            res.json(generateResponse)
         })
     }
     // Order End

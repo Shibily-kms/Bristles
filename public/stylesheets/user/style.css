@@ -528,3 +528,7 @@
     left: 5px;
     opacity: 1;
 }
+
+.Pending{
+    background-color: rgb(255, 249, 199);
+}

@@ -101,6 +101,13 @@
                                     <div class="row">
                                         <div class="col-12 col-md-10 hh-grayBox pt45 pb20 w-100">
                                             <div class="row justify-content-between aligh-items-center ">
+                                                {{#if Pending}}
+                                                <p class="text-center">Your Order is Pending ..!<br>
+                                                    <button class="btn btn-primary mt-2"
+                                                        onclick="pendingPayment('{{this.orId}}','{{this.amount}}','{{this.address.name}}','{{this.address.phone}}')">Pay
+                                                        Now</button>
+                                                </p>
+                                                {{else}}
                                                 {{#if this.Cancelled}}
                                                 <div class="order-cancel  completed ">
                                                     <span class="is-complete"></span>
@@ -133,7 +140,7 @@
                                                     <span class="is-complete"></span>
                                                     <p>Delivered<br><span>{{this.deliveryDate}}</span></p>
                                                 </div>
-                                                {{/if}}
+                                                {{/if}} {{/if}}
                                             </div>
                                         </div>
                                     </div>
@@ -203,8 +210,21 @@
 {{>footer}}
 <script>
     document.getElementById('order').className = "dropdown-item active"
-</script>
 
-<script>
 
+    // Pnding Payment
+    function pendingPayment(orId, amount, name, phone) {
+        $.ajax({
+            url: '/pending-payment',
+            data: {
+                orId,
+                amount, name, phone
+            },
+            method: 'post',
+            success: (response) => {
+                console.log('here')
+                razorepayPayment(response)
+            }
+        })
+    }
 </script>

@@ -482,14 +482,6 @@ module.exports = {
                         }
 
                     }
-                },
-                {
-                    $lookup: {
-                        from: collection.USER_COLLECTION,
-                        localField: 'urId',
-                        foreignField: 'urId',
-                        as: 'user'
-                    }
                 }
 
             ]).toArray()
@@ -502,14 +494,17 @@ module.exports = {
                 response.orId = obj.orId
                 response.amount = Number(obj.amount)
                 response.name = obj.address.name
-                response.email = address[0].user[0].email
+             
                 response.phone = obj.address.phone
 
                 resolve(response)
             })
         })
     },
-    afterOreder: (products, urId, cpCode) => {
+    afterOreder: (product, urId, cpCode) => {
+        let products = []
+        typeof product == 'string' ? products.push(product) : products = product
+
         return new Promise(async (resolve, reject) => {
             for (let i = 0; i < products.length; i++) {
                 // change product Status
@@ -577,6 +572,8 @@ module.exports = {
                 if (orders[i].status == "Cancelled") {
                     orders[i].message = "As per your requist, Your order has been " + orders[i].status
                     orders[i].cancelled = true
+                } else if (orders[i].status == "Pending") {
+                    orders[i].message = "Your order has been " + orders[i].status + ', Pay now !'
                 } else {
                     orders[i].message = "Your order has been " + orders[i].status
                 }

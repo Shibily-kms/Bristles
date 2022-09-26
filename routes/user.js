@@ -99,7 +99,8 @@ router.get('/checkout/payment/success', verifyUser, userController.successOrder)
 router.get('/checkout/payment/failed', verifyUser, userController.failedOrder)
 router.get('/order', verifyUser, userController.getOrder)
 router.get('/order/details', verifyUser, userController.getOneOrder);
-router.post('/order/cancel', verifyUser, userController.getCancelOrder)
+router.post('/order/cancel', verifyUser, userController.getCancelOrder);
+router.post('/pending-payment',verifyUser,userController.pendingPaymentCall)
 
 
 module.exports = router;

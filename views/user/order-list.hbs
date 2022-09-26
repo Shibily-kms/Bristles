@@ -46,7 +46,7 @@
                         {{#each order}}
                         <a href="/order/details?urId={{this.urId}}&orId={{this.orId}}&prId={{this.prId}}"
                             class="text-dark ">
-                            <div class="card p-1 mb-2">
+                            <div class="card p-1 mb-2 {{this.status}}">
                                 <div class="row pe-2">
                                     <div class="col-3 col-sm-6 col-md-5">
                                         <div class="d-flex">
