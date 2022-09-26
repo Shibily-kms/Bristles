@@ -3,6 +3,7 @@ const collection = require('../config/collection')
 const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const help = require('../helpers/help-fuctions')
 
 module.exports = {
     // Sign Start
@@ -82,7 +83,7 @@ module.exports = {
     getArtist: (arId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId }).then((result) => {
-                
+
                 if (result) {
                     if (result.status == "Pending") {
                         result.pending = true
@@ -90,7 +91,7 @@ module.exports = {
                         result.active = true
                     } else if (result.status == "Rejected") {
                         result.rejected = true
-                    }else if(result.status == "Blocked"){
+                    } else if (result.status == "Blocked") {
                         result.blocked = true
                     }
                     resolve(result)
@@ -131,18 +132,18 @@ module.exports = {
                         image: body.image
                     }
                 }).then(() => {
-                    let obj= {
+                    let obj = {
                         firstName: body.firstName,
                         lastName: body.lastName,
                         userName: body.userName,
-                        email : artist.email,
+                        email: artist.email,
                         mobile: body.mobile,
                         place: body.place,
                         image: body.image,
-                        arId : artist.arId,
-                        deleteImage : image
+                        arId: artist.arId,
+                        deleteImage: image
                     }
-                    resolve(obj)    
+                    resolve(obj)
                 })
             })
 
@@ -150,7 +151,7 @@ module.exports = {
     },
 
     changePassword: (body) => {
-       
+
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
                 if (artist) {
@@ -173,24 +174,24 @@ module.exports = {
         })
     },
 
-    
-    changeEmail:(body)=>{
-     
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({email:body.email}).then((artist)=>{
-                if(artist){
-                    resolve({emailErr:true})
-                }else{
-                    db.get().collection(collection.ARTIST_COLLECTION).updateOne({arId:body.arId},{
-                        $set:{
-                            email : body.email
+
+    changeEmail: (body) => {
+
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email }).then((artist) => {
+                if (artist) {
+                    resolve({ emailErr: true })
+                } else {
+                    db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId: body.arId }, {
+                        $set: {
+                            email: body.email
                         }
-                    }).then(()=>{
+                    }).then(() => {
                         resolve(body.email)
                     })
                 }
             })
-         })
+        })
     },
 
     // Artist About End
@@ -238,7 +239,7 @@ module.exports = {
                     result.pending = true
                 } else if (result.status == "Rejected") {
                     result.rejected = true
-                } 
+                }
                 resolve(result)
             })
         })
@@ -287,7 +288,7 @@ module.exports = {
 
     getAllProducts: (arId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve","Ordered"] } }).toArray().then((result) => {
+            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve", "Ordered"] } }).toArray().then((result) => {
                 for (let i = 0; i < result.length; i++) {
                     if (result[i].status == "Ordered") {
                         result[i].order = true
@@ -295,6 +296,33 @@ module.exports = {
                 }
                 resolve(result)
             })
+        })
+    },
+    getOrderStatus: (prId) => {
+        return new Promise(async (resolve, reject) => {
+            let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId, status: "Ordered" })
+            let status = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        products: {
+                            $in: [prId]
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        orId: 1, methord: 1, status: 1, deliveryDate: 1
+                    }
+                }
+            ]).toArray()
+            console.log(status);
+            if (status.length > 0) {
+                product.orId = status[0].orId
+                product.methord = status[0].methord
+                product.status = status[0].status
+                product.date = help.dateWithMonth(status[0].deliveryDate)
+            }
+            resolve(product)
         })
     },
     // Product End

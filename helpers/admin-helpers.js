@@ -521,14 +521,15 @@ module.exports = {
                         Cancelled: { $eq: ["$status", "Cancelled"] },
                         firstName: { $first: '$user.firstName' },
                         lastName: { $first: '$user.lastName' },
-                        email: { $first: '$user.email' }
+                        email: { $first: '$user.email' },
+                        Online: { $eq: ['$methord', 'online'] }
                     }
                 }
             ]).toArray().then((order) => {
-                order[0].length = order.length
+                order[0].length = typeof order == "object" ? order.length : 0
                 resolve(order)
-            })
-        })
+            }) 
+        }) 
     },
     changeOrderStatus: (body) => {
         return new Promise((resolve, reject) => {
@@ -540,8 +541,23 @@ module.exports = {
                 resolve(response)
             })
         })
-    }
+    },
     // Order End
+
+    // Payment Start
+    getOnePaymentDetails: (orId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.PAYMENT_COLLECTION).findOne({ orderReceipt: orId }).then((details) => {
+                if(details){
+                    details.orderAmount = parseInt(details.orderAmount) / 100
+                    details.orderAmountPaid = details.orderAmountPaid == '0' ? 0 : parseInt(details.orderAmountPaid) / 100
+                    details.orderAmountDue = parseInt(details.orderAmountDue) / 100
+                }
+                resolve(details)
+            })
+        })
+    }
+    // Payment End
 
 
 

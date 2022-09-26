@@ -300,6 +300,14 @@ module.exports = {
             res.redirect('/artist/product-list')
         })
     },
+    orderStatus:(req,res)=>{
+        let prId = req.params.prId
+        let artist = req.session._BR_ARTIST
+        artistHelper.getOrderStatus(prId).then((product)=>{
+            console.log(product);
+            res.render('artist/view-order-status',{ title: 'Order Status | Bristles', artist,product})
+        })
+    }
     // Prodcut End
 
 

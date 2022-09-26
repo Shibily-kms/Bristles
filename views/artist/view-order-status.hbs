@@ -1,0 +1,46 @@
+{{>artist-side}}
+{{>artist-top}}
+
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{#if product}}
+        <div class="row justify-content-center px-3">
+            <div class="card col-12 col-sm-8 col-md-6 col-lg-5">
+                <div class="card-body product-add-admin">
+                        <div class="image-div">
+                            <img id="image-show-0" src="/images/products/{{product.image.[0]}}" style="" class="large-image" alt="">
+                        </div>
+                        <h5 class="text-center m-1">{{product.title}}</h5>
+                        <p class="text-center m-1">{{product.category}} | {{product.prId}}</p>
+                        <p class="text-center fw-bold">₹ {{product.price}}.00</p>
+                        <hr>
+                        <p class="text-center m-1">{{product.orId}} | {{product.methord}}</p>
+                        <p class="text-center mt-2"><span class="status status-{{product.status}}">{{product.status}}</span></p>
+                        <p class="text-center m-1">{{product.date}}</p>
+                        
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{else}}
+         <div class="d-flex justify-content-center">
+
+            <div>
+                <div style="width: 100%; " class="d-flex justify-content-center">
+                    <img style="width: 100px;" src="/images/icon/blocked.png" alt="">
+                </div>
+                <h4 class="mt-3">Request is not valid</h4>
+                <a href="/artist/product-list/" class="btn btn-primary w-100">Go to Product list</a></h4>
+            </div>
+
+        </div>
+        {{/if}}
+
+    </div>
+</div>
+</div>
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('product').classList += " active"
+</script>

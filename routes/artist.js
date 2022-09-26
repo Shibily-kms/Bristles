@@ -75,6 +75,7 @@ router.get('/product-list', verifyArtist, artistController.getProductList)
 
 // View  Product
 router.get('/product-list/:prId/view', verifyArtist, artistController.veiwProduct);
+router.get('/product-list/:prId/order-status',verifyArtist,artistController.orderStatus)
 
 // Delete Product
 router.get('/product-list/:prId/delete', verifyArtist, artistController.deleteProduct);

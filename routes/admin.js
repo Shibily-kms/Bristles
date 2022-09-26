@@ -124,5 +124,7 @@ router.get('/order-list',verifyAdmin,adminController.getAllOrder)
 router.get('/order-list/details',verifyAdmin,adminController.getOneOrder)
 router.post('/order-list/change-order-status',verifyAdmin,adminController.changeOrderStatus)
 
+// Payment
+router.get('/payment/details',verifyAdmin,adminController.getOnePaymentDetails)   
 
 module.exports = router;

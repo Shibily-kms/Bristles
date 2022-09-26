@@ -705,15 +705,11 @@ module.exports = {
                 razorpayOrderId: body['payment[razorpay_order_id]'],
                 razorpaySignature: body['payment[razorpay_signature]'],
                 orderId: body['order[id]'],
-                orderEntity: body['order[entity]'],
                 orderAmount: body['order[amount]'],
                 orderAmountPaid: body['order[amount_paid]'],
-                orderAmount_due: body['order[amount_due]'],
+                orderAmountDue: body['order[amount_due]'],
                 orderCurrency: body['order[currency]'],
                 orderReceipt: body['order[receipt]'],
-                orderStatus: body['order[status]'],
-                orderAttempts: body['order[attempts]'],
-                orderReatedAt: body['order[created_at]'],
                 orderUrId: body['order[urId]'],
             }
             db.get().collection(collection.PAYMENT_COLLECTION).insertOne(obj).then(() => {

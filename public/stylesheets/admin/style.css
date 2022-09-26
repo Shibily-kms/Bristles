@@ -142,6 +142,17 @@
     padding: 0 3px 0 3px;
     margin-bottom: 5px;
 }
+.product-add-admin .large-image {
+    width: 40%;
+    height: auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    padding: 0 3px 0 3px;
+    margin-bottom: 5px;
+}
 
 .product-add-admin .image-add-button {
     width: 24%;

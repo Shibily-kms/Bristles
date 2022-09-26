@@ -1,0 +1,52 @@
+{{>admin-top}}
+{{>admin-side}}
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Header --}}
+        <h4 class="fw-bold  mb-4">{{order.[0].orId}}</h4>
+        <!-- Basic Layout -->
+
+        <!-- Hoverable Table rows -->
+
+        <div class="">
+            {{#if details}}
+            <div class="card p-3 mb-3">
+                <div class="row">
+                    <div class="col-md-8 col-sm-6 col-7">
+                        <p class="fw-bold text-dark">Payment Details</p>
+                        <p class="text-dark m-1">Payment Id : {{details.razorpayPaymentId}}</p>
+                        <p class="text-dark m-1">Order Id : {{details.razorpayOrderId}}</p>
+                        <p class="text-dark m-1">Order Id : {{details.razorpayOrderId}}</p>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-5">
+                        <h6 class=" text-end text-dark m-1">Amount : ₹ {{details.orderAmount}}.00</h6>
+                        <p class=" text-end text-success m-1">Paid : ₹ {{details.orderAmountPaid}} </p>
+                        <p class=" text-end text-danger m-1">Due : ₹ {{details.orderAmountDue}} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="d-flex justify-content-center">
+
+            <div>
+                <div style="width: 100%; " class="d-flex justify-content-center">
+                    <img style="width: 100px;" src="/images/icon/blocked.png" alt="">
+                </div>
+                <h4 class="mt-3">Request is not valid</h4>
+                <a href="/order" class="btn btn-primary w-100">Go to My Orders</a></h4>
+            </div>
+
+        </div>
+        {{/if}}
+
+
+    </div>
+</div>
+</div>
+
+
+
+<script>
+    document.getElementById('order').classList += " active"
+</script>
