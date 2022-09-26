@@ -6,5 +6,6 @@ module.exports= {
     CAROUSEL_COLLECTION : 'carousel',
     CART_COLLECTION : 'cart',
     COUPON_COLLECTION : 'coupon',
-    ORDER_COLLECTION : 'order'
+    ORDER_COLLECTION : 'order',
+    PAYMENT_COLLECTION : 'payment'
 }

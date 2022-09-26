@@ -89,15 +89,17 @@ router.post('/remove-from-cart', verifyTokenOrUser, userController.removeFromCar
 
 // CheckOut 
 router.get('/checkout', verifyUser, userController.getCheckOut);
-router.post('/change-current-address',verifyUser,userController.changeCurrentAddress);
-router.post('/checkCoupon',verifyUser,userController.checkCouponCode)
-router.post('/order',verifyUser,userController.postOrder)
+router.post('/change-current-address', verifyUser, userController.changeCurrentAddress);
+router.post('/checkCoupon', verifyUser, userController.checkCouponCode)
+router.post('/order', verifyUser, userController.postOrder);
+router.post('/verify-payment', verifyUser, userController.verifyPayment)
 
 // Order
-router.get('/checkout/payment/success',verifyUser,userController.successOrder);
-router.get('/order',verifyUser,userController.getOrder)
-router.get('/order/details',verifyUser,userController.getOneOrder);
-router.post('/order/cancel',verifyUser,userController.getCancelOrder)
+router.get('/checkout/payment/success', verifyUser, userController.successOrder);
+router.get('/checkout/payment/failed', verifyUser, userController.failedOrder)
+router.get('/order', verifyUser, userController.getOrder)
+router.get('/order/details', verifyUser, userController.getOneOrder);
+router.post('/order/cancel', verifyUser, userController.getCancelOrder)
 
 
 module.exports = router;

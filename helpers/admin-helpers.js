@@ -437,7 +437,6 @@ module.exports = {
         })
     },
     editCoupon: (body) => {
-        console.log(body);
         return new Promise((resolve, reject) => {
             db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCode: body.cpCode }, {
                 $set: {
@@ -520,9 +519,9 @@ module.exports = {
                         OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
                         Delivered: { $eq: ["$status", "Delivered"] },
                         Cancelled: { $eq: ["$status", "Cancelled"] },
-                        firstName : { $first: '$user.firstName' },
-                        lastName : { $first: '$user.lastName' },
-                        email : { $first: '$user.email' }
+                        firstName: { $first: '$user.firstName' },
+                        lastName: { $first: '$user.lastName' },
+                        email: { $first: '$user.email' }
                     }
                 }
             ]).toArray().then((order) => {
@@ -531,17 +530,16 @@ module.exports = {
             })
         })
     },
-    changeOrderStatus:(body)=>{
-        console.log(body);
-        return new Promise((resolve, reject) => { 
-            db.get().collection(collection.ORDER_COLLECTION).updateOne({orId : body.orId},{
-                $set:{
-                    status : body.status
+    changeOrderStatus: (body) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
+                $set: {
+                    status: body.status
                 }
-            }).then((response)=>{
+            }).then((response) => {
                 resolve(response)
             })
-         })
+        })
     }
     // Order End
 

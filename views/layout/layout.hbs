@@ -45,14 +45,15 @@
   <link rel='stylesheet' href='/stylesheets/artist/style.css' />
 
 
- {{!-- ajax and jqury Table --}}
+  {{!-- ajax and jqury Table --}}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
   <script type="text/javascript" charset="utf8"
     src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
-
+  {{!-- Razore Pay --}}
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
 </head>
@@ -61,22 +62,22 @@
 
   {{{body}}}
 
-  
-{{!-- Alert --}}
-{{#if success}}
-<div class=" admin-alert">
-  <div class="alert alert-success alert-dismissible" role="alert">{{success}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+  {{!-- Alert --}}
+  {{#if success}}
+  <div class=" admin-alert">
+    <div class="alert alert-success alert-dismissible" role="alert">{{success}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
-</div>
-{{/if}}
-{{#if error}}
-<div class=" admin-alert">
-  <div class="alert alert-danger alert-dismissible" role="alert">{{error}}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  {{/if}}
+  {{#if error}}
+  <div class=" admin-alert">
+    <div class="alert alert-danger alert-dismissible" role="alert">{{error}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
-</div>
-{{/if}}
+  {{/if}}
   {{!-- {{>yes-or-no}} --}}
   {{!-- JavaScripts --}}
   <script src="/javascripts/user-validation.js"></script>
@@ -99,7 +100,11 @@
   <!-- Main JS -->
   <script src="/assets/js/main.js"></script>
 
-  
+  {{!-- Razore Pay --}}
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
 </body>
 
 </html>

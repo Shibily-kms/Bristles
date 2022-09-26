@@ -529,7 +529,6 @@ module.exports = {
         })
     },
     changeOrderStatus:(req,res)=>{
-        console.log(req.body,'h');
         adminHelpers.changeOrderStatus(req.body).then((response)=>{
             res.json(response)
         })

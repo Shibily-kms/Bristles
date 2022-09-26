@@ -219,7 +219,6 @@ module.exports = {
         })
     },
     postAddAddress: (req, res) => {
-        console.log('iam coming');
         userHelper.addNewAddress(req.body, req.session._BR_USER.urId).then(() => {
             res.redirect('/address')
         })
@@ -322,25 +321,53 @@ module.exports = {
             res.json(response)
         })
     },
+    verifyPayment: (req, res) => {
+        userHelper.verifyPayment(req.body).then(() => {
+            userHelper.changePaymentStatus(req.body).then(() => {
+                userHelper.afterOreder(req.body['order[products][]'], req.body['order[urId]'], req.body['order[cpCode]']).then(() => {
+                    delete req.body['order[products][]']
+                    delete req.body['order[cpCode]']
+                    userHelper.savePaymentDetails(req.body).then(() => {
+                        res.json({ status: true })
+                    })
+                })
+            })
+        }).catch((err) => {
+            res.json({ status: false, errMag: err })
+        })
+    },
     // CheckOut End
 
     // Order Start
     postOrder: (req, res) => {
         let user = req.session._BR_USER
+
         userHelper.orderAccessing(req.body, user.urId).then((response) => {
-           
             if (response.methord == "COD") {
-                userHelper.afterOreder(response, user.urId, req.body.cpCode).then((urId) => {
-                    res.json(urId)
+                userHelper.afterOreder(response.products, user.urId, req.body.cpCode).then(() => {
+                    res.json({ codSuccess: true })
                 })
             } else if (response.methord == 'online') {
-                console.log('online payment');
+                userHelper.generateRazorpay(response.orId, response.amount).then((generateResponse) => {
+                    generateResponse.name = response.name
+                    generateResponse.email = response.email
+                    generateResponse.phone = response.phone
+                    generateResponse.urId = user.urId
+                    generateResponse.cpCode = req.body.cpCode
+                    generateResponse.products = response.products
+                    res.json(generateResponse)
+                })
             }
         })
     },
     successOrder: (req, res) => {
         let user = req.session._BR_USER
         res.render('user/success-order', { title: 'Order Success | Bristles', user, })
+    },
+    failedOrder: (req, res) => {
+        let user = req.session._BR_USER
+        let reason = null
+        res.render('user/payment-failed', { title: 'Order Success | Bristles', user, reason })
     },
     getOrder: (req, res) => {
         let user = req.session._BR_USER
@@ -354,7 +381,6 @@ module.exports = {
         let prId = req.query.prId
         let user = req.session._BR_USER
         userHelper.getOneOrder(urId, orId, prId).then((order) => {
-            console.log(order);
             res.render('user/view-one-order', { title: 'View Order | Bristles', user, order })
         })
     },

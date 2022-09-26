@@ -5,6 +5,12 @@ const bcrypt = require('bcrypt');
 const optionHelpers = require('../helpers/option-helper');
 const helpFunctions = require('../helpers/help-fuctions');
 const { response } = require('express');
+const Razorpay = require('razorpay');
+const { user } = require('../config/multer');
+const instance = new Razorpay({
+    key_id: 'rzp_test_59KOR6eRcVHKh4',
+    key_secret: 'rEbNwpcSpVyBYMnDxcAauA6W',
+});
 module.exports = {
     // User Sign Start
     doSignUp: (body) => {
@@ -218,7 +224,6 @@ module.exports = {
                     }
                 }
                 resolve(address)
-                console.log(address);
             })
         })
     },
@@ -421,7 +426,6 @@ module.exports = {
                     } else {
                         resolve(result)
                     }
-                    console.log(str);
                 } else {
                     resolve({ notAvailable: true })
                 }
@@ -478,32 +482,50 @@ module.exports = {
                         }
 
                     }
+                },
+                {
+                    $lookup: {
+                        from: collection.USER_COLLECTION,
+                        localField: 'urId',
+                        foreignField: 'urId',
+                        as: 'user'
+                    }
                 }
 
             ]).toArray()
+
             obj.address = address[0].addresses[0]
+
             await db.get().collection(collection.ORDER_COLLECTION).insertOne(obj).then((response) => {
                 response.methord = obj.methord
                 response.products = obj.products
+                response.orId = obj.orId
+                response.amount = Number(obj.amount)
+                response.name = obj.address.name
+                response.email = address[0].user[0].email
+                response.phone = obj.address.phone
+
                 resolve(response)
             })
         })
     },
-    afterOreder: (response, urId, cpCode) => {
+    afterOreder: (products, urId, cpCode) => {
         return new Promise(async (resolve, reject) => {
-            for (let i = 0; i < response.products.length; i++) {
-                await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: response.products[i] }, {
+            for (let i = 0; i < products.length; i++) {
+                // change product Status
+                await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: products[i] }, {
                     $set: {
                         status: "Ordered"
                     }
                 })
+                // Delete Cart
                 await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
                     $pull: {
-                        list: response.products[i]
+                        list: products[i]
                     }
                 })
             }
-            console.log(cpCode);
+            // Change Coupon Status
             await db.get().collection(collection.COUPON_COLLECTION).updateOne({ cpCode }, {
                 $set: {
                     used: true
@@ -560,7 +582,6 @@ module.exports = {
                 }
             }
 
-            console.log(orders, 'hiiaa');
             resolve(orders.sort((a, b) => b - a))
         })
     },
@@ -612,7 +633,6 @@ module.exports = {
         })
     },
     cancelOrder: (orId) => {
-        console.log(orId, 'hi');
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ORDER_COLLECTION).findOne({ orId }).then((order) => {
                 if (order) {
@@ -635,7 +655,75 @@ module.exports = {
                 }
             })
         })
-    }
+    },
     // Order End
+    // Online Payment Start
+    generateRazorpay: (orId, amount) => {
+
+        return new Promise((resolve, reject) => {
+            // Create Order
+            instance.orders.create({
+                amount: amount * 100,
+                currency: "INR",
+                receipt: orId,
+
+            }, (err, order) => {
+                if (err) {
+                    console.log(err);
+                } else {
+
+                    resolve(order)
+                }
+            })
+        })
+    },
+    verifyPayment: (details) => {
+        return new Promise((resolve, reject) => {
+            const crypto = require('crypto');
+            let hmac = crypto.createHmac('sha256', 'rEbNwpcSpVyBYMnDxcAauA6W')
+            hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]'])
+            hmac = hmac.digest('hex')
+            if (hmac == details['payment[razorpay_signature]']) {
+                resolve()
+            } else {
+                reject()
+            }
+        })
+    },
+    changePaymentStatus: (body) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body['order[receipt]'] }, {
+                $set: {
+                    status: 'Placed'
+                }
+            }).then(() => {
+                resolve()
+            })
+        })
+    },
+    savePaymentDetails: (body) => {
+        return new Promise((resolve, reject) => {
+            let obj = {
+                razorpayPaymentId: body['payment[razorpay_payment_id]'],
+                razorpayOrderId: body['payment[razorpay_order_id]'],
+                razorpaySignature: body['payment[razorpay_signature]'],
+                orderId: body['order[id]'],
+                orderEntity: body['order[entity]'],
+                orderAmount: body['order[amount]'],
+                orderAmountPaid: body['order[amount_paid]'],
+                orderAmount_due: body['order[amount_due]'],
+                orderCurrency: body['order[currency]'],
+                orderReceipt: body['order[receipt]'],
+                orderStatus: body['order[status]'],
+                orderAttempts: body['order[attempts]'],
+                orderReatedAt: body['order[created_at]'],
+                orderUrId: body['order[urId]'],
+            }
+            db.get().collection(collection.PAYMENT_COLLECTION).insertOne(obj).then(() => {
+                resolve()
+            })
+        })
+    }
+    // Online Payment End
 
 }

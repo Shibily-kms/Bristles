@@ -59,7 +59,6 @@ function removeProduct(prId) {
 function deleteAddress(adId) {
     let confirmAlert = confirm('Delete this address ?')
     if (confirmAlert) {
-        console.log('yes');
         $.ajax({
             url: '/delete-address',
             data: {
