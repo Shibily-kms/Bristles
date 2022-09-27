@@ -102,5 +102,9 @@ router.get('/order/details', verifyUser, userController.getOneOrder);
 router.post('/order/cancel', verifyUser, userController.getCancelOrder);
 router.post('/pending-payment',verifyUser,userController.pendingPaymentCall)
 
+// WishList
+router.post('/wish-product',userController.wishProduct)
+router.get('/wishlist',verifyUser,userController.getAllWishlist);
+router.post('/remove-wish-product',verifyUser,userController.wishProduct)
 
 module.exports = router;

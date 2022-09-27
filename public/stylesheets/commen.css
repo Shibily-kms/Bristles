@@ -118,3 +118,23 @@ a {
   margin: 0 2px ;
 }
 
+/* Close Button */
+.closeButton{
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 100%;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  right: 18px;
+  cursor: pointer;
+}

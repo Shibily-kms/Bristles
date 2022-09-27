@@ -51,12 +51,15 @@
         <h4 class="fw-bold  mb-4">LATEST PAINTS</h4>
         {{#each latestProducts}}
         <div class="col-sm-6 col-lg-3 mb-4">
-            <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
-                <div class="card h-100">
+            <div class="card h-100">
+                <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
                     <img class="card-img-top" src="/images/products/{{this.image.[0]}}" alt="product image" />
-                    <div class="heart-icon">
-                        <i class='bx bxs-heart'></i>
-                    </div>
+                </a>
+                <div class="heart-icon " onclick="wishProduct('{{this.prId}}')">
+                    <i class='bx bxs-heart' {{#if this.wishlist.[0]}} style="color: red;" {{/if}}
+                        id="icon{{this.prId}}"></i>
+                </div>
+                <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
                     <div class="card-body card-boarder">
                         <h5 class="">{{this.title}}</h5>
                         <p>Size : {{this.size}}</p>
@@ -69,7 +72,11 @@
                             </div>
                             <div class="favorite">
                                 <i class='bx bxs-heart'></i>
-                                <p>(500)</p>
+                                {{#if this.wishCount}}
+                                <p>{{this.wishCount}}</p>
+                                {{else}}
+                                <p>0</p>
+                                {{/if}}
                             </div>
                         </div>
                         <div class="card-price mt-2">
@@ -82,14 +89,13 @@
                         </div>
                         <small>Free delivery</small>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
         {{/each}}
     </div>
 </div>
 {{>footer}}
+
 <script>
-
-
 </script>

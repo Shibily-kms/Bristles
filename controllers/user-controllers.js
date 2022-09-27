@@ -5,6 +5,7 @@ const path = require('path');
 const optionHelper = require('../helpers/option-helper');
 const { resolve } = require('path');
 const { response } = require('express');
+const { use } = require('../routes/user');
 
 module.exports = {
 
@@ -12,7 +13,7 @@ module.exports = {
     getHomePage: async (req, res) => {
         let user = req.session._BR_USER
         let category = await adminHelpers.getAllCategory()
-        let latestProducts = await userHelper.getLatestProducts()
+        let latestProducts = user ? await userHelper.getLatestProducts(user.urId) : await userHelper.getLatestProducts()
         let carousel = await adminHelpers.getCarousel()
 
         res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel });
@@ -79,12 +80,12 @@ module.exports = {
     // Sign End
 
     // Product Start
-    getProductCategoryList: (req, res) => {
+    getProductCategoryList: async (req, res) => {
         let user = req.session._BR_USER
         let NOW_CAT = req.params.NOW_CAT
-        adminHelpers.getAllCatProduct(NOW_CAT).then((product) => {
-            res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT, user })
-        })
+        let product = user ? await userHelper.getAllCatProduct(NOW_CAT, user.urId) : await userHelper.getAllCatProduct(NOW_CAT)
+        res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT, user })
+
     },
     viewProduct: (req, res) => {
         let user = req.session._BR_USER
@@ -397,8 +398,28 @@ module.exports = {
             generateResponse.urId = user.urId
             res.json(generateResponse)
         })
-    }
+    },
     // Order End
+
+    // Wish Start
+    wishProduct: (req, res) => {
+        let user = req.session._BR_USER
+        if (user) {
+            userHelper.wishProduct(req.body.prId, user.urId).then((response) => {
+                res.json(response)
+            })
+        } else {
+            response.nullUser = true
+            res.json(response)
+        }
+    },
+    getAllWishlist: (req, res) => {
+        let user = req.session._BR_USER
+        userHelper.getAllWishlist(user.urId).then((wishlist) => {
+            res.render('user/wishlist', { title: 'Wishlist | Bristles', user, wishlist })
+        })
+    }
+    // Wish End
 
 
 }

@@ -4,13 +4,13 @@ const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 const optionHelpers = require('../helpers/option-helper');
 const helpFunctions = require('../helpers/help-fuctions');
-const { response } = require('express');
 const Razorpay = require('razorpay');
-const { user } = require('../config/multer');
 const instance = new Razorpay({
     key_id: 'rzp_test_59KOR6eRcVHKh4',
     key_secret: 'rEbNwpcSpVyBYMnDxcAauA6W',
 });
+
+
 module.exports = {
     // User Sign Start
     doSignUp: (body) => {
@@ -101,12 +101,135 @@ module.exports = {
             })
         })
     },
-    getLatestProducts: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ delete: false, status: 'Approve' }).sort({ _id: -1 })
-                .limit(8).toArray().then((product) => {
-                    resolve(product)
-                })
+    getAllCatProduct: (CAT, urId) => {
+        return new Promise(async (resolve, reject) => {
+            let product = []
+            if (urId) {
+                product = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            delete: false, status: "Approve", category: CAT,
+                        }
+                    },
+                    {
+                        $sort: {
+                            _id: -1
+                        }
+                    },
+                  
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            urId: urId
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.USER_COLLECTION,
+                            localField: 'urId',
+                            foreignField: 'urId',
+                            as: 'user'
+                        }
+                    },
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            wishlist: { $first: '$user.wishlist' }
+                        }
+                    },
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            wishlist: {
+                                $filter: {
+                                    input: '$wishlist',
+                                    as: 'item',
+                                    cond: {
+                                        $eq: ['$$item', "$prId"]
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }
+                ]).toArray()
+            } else {
+                product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] }, delete: false })
+            }
+            resolve(product)
+        })
+    },
+    getLatestProducts: (urId) => {
+        return new Promise(async (resolve, reject) => {
+            console.log(urId);
+            let product = []
+            if (urId) {
+                product = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            delete: false, status: "Approve"
+                        }
+                    },
+                    {
+                        $sort: {
+                            _id: -1
+                        }
+                    },
+                    {
+                        $limit: 8
+                    },
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            urId: urId
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.USER_COLLECTION,
+                            localField: 'urId',
+                            foreignField: 'urId',
+                            as: 'user'
+                        }
+                    },
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            wishlist: { $first: '$user.wishlist' }
+                        }
+                    },
+                    {
+                        $project: {
+                            title: 1, size: 1, price: 1, image: 1,
+                            prId: 1, category: 1, medium: 1, quality: 1, ogPrice: 1, percentage: 1, wishCount: 1,
+                            wishlist: {
+                                $filter: {
+                                    input: '$wishlist',
+                                    as: 'item',
+                                    cond: {
+                                        $eq: ['$$item', "$prId"]
+                                    }
+
+                                }
+                            }
+                        }
+
+                    }
+                ]).toArray()
+                console.log('h');
+            } else {
+                product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ delete: false, status: 'Approve' }).sort({ _id: -1 })
+                    .limit(8).toArray()
+            }
+            console.log(product);
+            resolve(product)
+
 
         })
     },
@@ -494,7 +617,7 @@ module.exports = {
                 response.orId = obj.orId
                 response.amount = Number(obj.amount)
                 response.name = obj.address.name
-             
+
                 response.phone = obj.address.phone
 
                 resolve(response)
@@ -716,7 +839,90 @@ module.exports = {
                 resolve()
             })
         })
-    }
+    },
     // Online Payment End
+
+    // Wishlist Start
+    wishProduct: (prId, urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).findOne({ urId, wishlist: { $in: [prId] } }).then((result) => {
+                if (result) {
+                    db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                        $pull: {
+                            wishlist: prId
+                        }
+                    }).then(() => {
+                        db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
+                            $inc: {
+                                wishCount: -1
+                            }
+                        }).then(() => {
+                            resolve({ status: false })
+                        })
+                    })
+                } else {
+                    db.get().collection(collection.USER_COLLECTION).updateOne({ urId }, {
+                        $push: {
+                            wishlist: prId
+                        }
+                    }).then(() => {
+                        db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId }, {
+                            $inc: {
+                                wishCount: 1
+                            }
+                        }).then(() => {
+                            resolve({ status: true })
+                        })
+                    })
+                }
+            })
+        })
+    },
+    getAllWishlist: (urId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        urId
+                    }
+                },
+                {
+                    $project: {
+                        wishlist: 1, _id: 0
+                    }
+                },
+                {
+                    $unwind: '$wishlist'
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: 'wishlist',
+                        foreignField: 'prId',
+                        as: 'product'
+                    }
+                },
+                {
+                    $project: {
+                        title: { $first: '$product.title' },
+                        size: { $first: '$product.size' },
+                        price: { $first: '$product.price' },
+                        image: { $first: '$product.image' },
+                        prId: { $first: '$product.prId' },
+                        category: { $first: '$product.category' },
+                        medium: { $first: '$product.medium' },
+                        quality: { $first: '$product.qulity' },
+                        ogPrice: { $first: '$product.ogPrice' },
+                        percentage: { $first: '$product.percentage' },
+                        wishCount: { $first: '$product.wishCount' },
+                    }
+                }
+            ]).toArray().then((wishlist) => {
+                resolve(wishlist)
+            })
+        })
+    }
+    // Wishlist End
+
 
 }

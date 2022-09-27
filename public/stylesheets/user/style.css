@@ -163,7 +163,7 @@
 }
 
 .card .heart-icon {
-    background-color: rgba(255, 255, 255, 0.562);
+    background-color: rgba(179, 179, 179, 0.562);
     color: white;
     /* color: red; */
     position: absolute;
@@ -179,7 +179,7 @@
     -moz-border-radius: 100%;
     -ms-border-radius: 100%;
     -o-border-radius: 100%;
-    padding: 2px 0 0 2px;
+    
 }
 
 /* Search */

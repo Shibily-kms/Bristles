@@ -120,8 +120,9 @@ module.exports = {
         })
     },
 
-    getAllCatProduct: (CAT) => {
+    getAllCatProduct: (CAT,urId) => {
         return new Promise((resolve, reject) => {
+            
             db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] }, delete: false }).toArray().then((result) => {
                 resolve(result)
             })
