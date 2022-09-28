@@ -110,7 +110,7 @@ module.exports = {
             }
             body.percentage = null
             if (body.ogPrice) {
-                body.percentage = Math.round((body.price / body.ogPrice) * 100)
+                body.percentage = 100 - (Math.round((body.price / body.ogPrice) * 100))
             }
             db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body).then(() => {
                 resolve()

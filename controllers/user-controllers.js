@@ -3,9 +3,9 @@ const adminHelpers = require('../helpers/admin-helpers');
 const fs = require('fs');
 const path = require('path');
 const optionHelper = require('../helpers/option-helper');
-const { resolve } = require('path');
+const twilioHelper = require('../helpers/twilio-helper');
 const { response } = require('express');
-const { use } = require('../routes/user');
+
 
 module.exports = {
 
@@ -32,22 +32,65 @@ module.exports = {
         }
     },
     postSignUp: (req, res) => {
-        userHelper.doSignUp(req.body).then((response) => {
+        userHelper.verifyEmail(req.body.email).then((response) => {
+            console.log(response);
             if (response.emailError) {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
-            } else if (response) {
-                res.redirect('/sign-in')
+            } else if (response.status) {
+                req.session._BR_DATA = req.body
+                twilioHelper.dosms(req.body.mobile).then((status) => {
+                    if (status) {
+                        let mobile = req.body.mobile.substr(req.body.mobile.length - 3);
+                        res.render('user/otp', { title: 'OTP | Bristles', mobile })
+                    } else {
+                        req.session.error = 'Please check Mobile Number'
+                        res.redirect('/sign-up')
+                    }
+                })
+            }
+        })
+    },
+
+    postOtp: (req, res) => {
+        let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
+        twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
+            if (response) {
+                userHelper.doSignUp(req.session._BR_DATA).then((result) => {
+                    req.session._BR_DATA = false
+                    res.redirect('/sign-in')
+                })
+            } else {
+                req.session.error = 'Incorrect OTP'
+                res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error })
+                req.session.error = false
+            }
+        }).catch((err) => {
+            req.session.error = 'Incorrect OTP'
+            res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error })
+            res.session.error = false
+        })
+    },
+    resendOTP: (req, res) => {
+        twilioHelper.dosms(req.session._BR_DATA.mobile).then((status) => {
+            if (status) {
+                res.json(status)
             }
         })
     },
     getSignIn: (req, res) => {
+        console.log('8');
         if (req.session._BR_USER) {
+            console.log('9');
             res.redirect('/')
         } else if (req.session.error) {
             res.render('user/sign-in', { title: "Sign In", "error": req.session.error })
             req.session.error = false
+        } else if (req.session.success) {
+            res.render('user/sign-in', { title: "Sign In", "success": req.session.success })
+            req.session.success = false
         } else {
+            console.log('10');
             res.render('user/sign-in', { title: "Sign In" })
         }
     },
@@ -61,7 +104,7 @@ module.exports = {
                 res.redirect('/sign-in')
             } else if (data) {
                 if (req.session._BR_TOKEN) {
-                    userHelper.checkGuestCast(data.urId, req.session._BR_TOKEN).then(() => {
+                    userHelper.checkGuestCart(data.urId, req.session._BR_TOKEN).then(() => {
                         req.session._BR_TOKEN = false
                         req.session._BR_USER = data
                         res.redirect('/');
@@ -71,6 +114,56 @@ module.exports = {
                     res.redirect('/');
                 }
             }
+        })
+    },
+    getForgotPage: (req, res) => {
+        if (req.session.error) {
+            res.render('user/forgot-password', { title: 'Forgot password | Bristles', 'error': req.session.error })
+            req.session.error = false
+        } else {
+            res.render('user/forgot-password', { title: 'Forgot password | Bristles' })
+        }
+    },
+    postForgotPassword: (req, res) => {
+        userHelper.verifyEmail(req.body.email).then((response) => {
+            if (response.data) {
+                console.log(response);
+                twilioHelper.dosms(response.data.mobile).then((status) => { 
+                    
+                    if (status) {
+                        let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
+                        req.session._BR_DATA = response.data
+                        console.log(req.body._BR_DATA);
+                        res.render('user/otp', { title: 'OTP | Bristles', mobile, forgot: true })
+                    }
+                })
+            } else {
+                req.session.error = 'Incorrect Email Address'
+                res.redirect('/forgot-password')
+            }
+        })
+    },
+    postForgotOtp: (req, res) => {
+        let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
+        twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
+            if (response) {
+                res.render('user/new-password', { title: 'New Passoerd | Bristles', })
+            } else {
+                req.session.error = 'Incorrect OTP'
+                res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
+                req.session.error = false
+            }
+        }).catch((err) => {    
+            req.session.error = 'Incorrect OTP' 
+            res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
+            res.session.error = false
+        })
+    },
+    setNewPassword:(req,res)=>{
+        userHelper.setNewPassword(req.body,req.session._BR_DATA.urId).then(()=>{
+            req.session._BR_DATA = false
+            req.session.success = 'Your Password Changed'
+            res.redirect('/sign-in')
         })
     },
     signOut: (req, res) => {
@@ -114,10 +207,10 @@ module.exports = {
         let optionList = optionHelper
         res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, user })
     },
-    getAllProdutInSearch: (req, res) => {
-        userHelper.getAllProduct().then((product) => {
-            res.json(product)
-        })
+    getAllProdutInSearch: async (req, res) => {
+        let user = req.session._BR_USER
+        let product = user ? await userHelper.getAllProduct(user.urId) : await userHelper.getAllProduct()
+        res.json(product)
     },
     // Search End
 
@@ -246,8 +339,10 @@ module.exports = {
         let result = null
         if (req.session._BR_TOKEN) {
             result = await userHelper.getCartCount(req.session._BR_TOKEN)
-        } else {
+        } else if (req.session._BR_USER) {
             result = await userHelper.getCartCount(req.session._BR_USER.urId)
+        } else {
+            result = 0
         }
         res.json(result)
     },
@@ -370,7 +465,7 @@ module.exports = {
     getOrder: (req, res) => {
         let user = req.session._BR_USER
         userHelper.getAllOrder(user.urId).then((order) => {
-            console.log(order);
+
             res.render('user/order-list', { title: 'Order List | Bristles', user, order })
         })
     },

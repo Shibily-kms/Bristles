@@ -7,29 +7,40 @@ const help = require('../helpers/help-fuctions')
 
 module.exports = {
     // Sign Start
-    doSignUp: (body) => {
+    verifyEmail: (email) => {
+        console.log(email, 'email');
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email }).then(async (user) => {
-                if (user) {
-
-                    resolve({ emailError: true })
-                } else {
-                    // Create Random Id
-                    create_random_id(5)
-                    function create_random_id(sting_length) {
-                        var randomString = '';
-                        var numbers = '123456789'
-                        for (var i, i = 0; i < sting_length; i++) {
-                            randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
-                        }
-                        body.arId = "AR" + randomString
-                    }
-                    body.status = "Pending"
-                    body.password = await bcrypt.hash(body.password, 10)
-                    db.get().collection(collection.ARTIST_COLLECTION).insertOne(body).then((result) => {
-                        resolve(result)
-                    })
+            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email }).then((response) => {
+                let obj = {
+                    data: response,
+                    emailError: true       
                 }
+                if (response) {
+                    resolve(obj)
+                } else {
+                    resolve({ status: true })
+                }
+            })
+        })
+    },
+    doSignUp: (body) => {
+        console.log('5');
+        return new Promise(async (resolve, reject) => {
+            // Create Random Id
+            create_random_id(5)
+            function create_random_id(sting_length) {
+                var randomString = '';
+                var numbers = '123456789'
+                for (var i, i = 0; i < sting_length; i++) {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                }
+                body.arId = "AR" + randomString
+            }
+            body.status = "Pending"
+            body.password = await bcrypt.hash(body.password, 10)
+            await db.get().collection(collection.ARTIST_COLLECTION).insertOne(body).then((result) => {
+                console.log('6');
+                resolve(result)
             })
         })
     },
@@ -53,11 +64,25 @@ module.exports = {
         })
     },
 
+    setNewPassword: (body, arId) => {
+        return new Promise(async (resolve, reject) => {
+            body.password = await bcrypt.hash(body.password, 10)
+            await db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                $set: {
+                    password: body.password
+                }
+            }).then((result) => {
+                resolve(result)
+            })
+        })
+    },
+
     checkAccountActivation: (CHECK_ID) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ _id: ObjectId(CHECK_ID) }).then((result) => {
+                console.log(result);
                 if (result.status == "Active") {
-                    resolve({ active: true })
+                    resolve({ Active: true })
                 } else if (result.status == "Pending") {
                     resolve({ NotActivated: true })
                 } else if (result.status == "Rejected") {

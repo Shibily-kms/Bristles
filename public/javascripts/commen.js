@@ -72,3 +72,29 @@ function removeWishProduct(prId) {
         }
     })
 }
+
+// OTP
+function resendOtp(){
+    $.ajax({
+        url: '/resend-otp',
+        data: {
+           
+        },
+        method: 'post',
+        success: (response) => {
+            document.getElementById('otp-description').innerHTML = 'Resended to'
+        }
+    })
+}
+function resendArtistOtp(){
+    $.ajax({
+        url: '/artist/resend-otp',
+        data: {
+           
+        },
+        method: 'post',
+        success: (response) => {
+            document.getElementById('otp-description').innerHTML = 'Resended to'
+        }
+    })
+}

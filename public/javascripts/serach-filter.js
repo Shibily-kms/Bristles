@@ -127,7 +127,7 @@ function filterProduct() {
     }
 
     mainDiv.innerHTML = null
-   
+
     if (quality.length == 0) {
         mainDiv.innerHTML = `<div class="check-account container">
     <div class="box-boreder">
@@ -142,6 +142,7 @@ function filterProduct() {
 
         for (let i = 0; i < quality.length; i++) {
 
+            // mainDiv.innerHTML  += createThumb(quality[i])
             mainDiv.appendChild(createThumb(quality[i]))
 
         }
@@ -153,7 +154,49 @@ function filterProduct() {
 
 
 function createThumb(productOne) {
+    //     let model = `<div class="col-sm-6 col-md-4 col-lg-4 mb-4">
+    //     <div class="card h-100">
+    //         <a class="text-secondary" href="/list/`+ productOne.category + `/` + productOne.prId + `/view">
+    //             <img class="card-img-top" src="/images/products/`+ productOne.image[0] + `" alt="product image" />
+    //         </a>
+    //         <div class="heart-icon " onclick="wishProduct('`+ productOne.prId + `')">
+    //             <i class='bx bxs-heart' {{#if this.wishlist.[0]}} style="color: red;" {{/if}}
+    //                 id="icon` + productOne.prId + `"></i>
+    //         </div>
+    //         <a class="text-secondary" href="/list/`+ productOne.category + `/` + productOne.prId + `/view">
+    //             <div class="card-body card-boarder">
+    //                 <h5 class="">` + productOne.title + `</h5>
+    //                 <p>Size : ` + productOne.size + `</p>
+    //                 <p>` + productOne.medium + ` - ` + productOne.quality + `</p>
+    //                 <div class="card-rate mt-2">
+    //                     <div class="artist-rate-card section-two" title="artist-rate">
+    //                         <div class="rate">
+    //                             <p><i class='bx bxs-star'></i> 3.7</p>
+    //                         </div>
+    //                     </div>
+    //                     <div class="favorite">
+    //                         <i class='bx bxs-heart'></i>
+    //                         {{#if this.wishCount}}
+    //                         <p>{{this.wishCount}}</p>
+    //                         {{else}}
+    //                         <p>0</p>
+    //                         {{/if}}
+    //                     </div>
+    //                 </div>
+    //                 <div class="card-price mt-2">
+    //                     <h4 class="text-dark">₹ ` + productOne.price + `</h4>
+    //                     <h6 id='ogPrice'>₹` + productOne.ogPrice  + `</h6>
+    //                     <i class='bx bxs-offer'></i>
+    //                     <h6> ` + productOne.percentage + `% off</h6>
+    //                 </div>
+    //                 <small>Free delivery</small>
+    //             </div>
+    //         </a>
+    //     </div>
+    // </div>`
+
     // Create Element
+
     let boarderDiv = document.createElement('div')
     let aTag = document.createElement('a')
     let cardDiv = document.createElement('div')
@@ -189,8 +232,8 @@ function createThumb(productOne) {
     priceDiv.className = "card-price mt-2"
     h4Tag.className = 'text-dark'
     h4Tag.innerHTML = '₹ ' + productOne.price
-    if(productOne.ogPrice){
-        h6Two.innerHTML = productOne.percentage+ '% off'
+    if (productOne.ogPrice) {
+        h6Two.innerHTML = productOne.percentage + '% off'
         h6One.innerHTML = '₹ ' + productOne.ogPrice
         ofrIcon.className = 'bx bxs-offer'
     }

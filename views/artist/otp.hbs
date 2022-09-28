@@ -1,0 +1,63 @@
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register Card -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="/" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img class="logo-icon" src="/images/icon/logo.png" alt="Logo">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bold">Bristles</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Verify OTP</h4>
+                    <p class="mb-4">OTP <span id="otp-description">sended to</span> Your phone number *******{{mobile}}
+                    </p>
+                    {{#if forgot}}
+                    <form id="userOtpForm" class="mb-3" action="/artist/forgot-password/new-password" method="POST">
+                    {{else}}
+                    <form id="userOtpForm" class="mb-3" action="/artist/sign-up/otp" method="POST">
+                    {{/if}}
+
+                        <div class="">
+                            <label for="otp" class="form-label">otp</label>
+                            <input type="number" class="form-control" id="otp" name="otp" placeholder="Otp" />
+                        </div>
+                        <span class="text-info cursor-pointer" onclick="resendArtistOtp()">Resend OTP ?</span>
+                        {{#if error}}
+                        <p class="form-alert-error">{{error}} </p>
+                        {{/if}}
+
+                        {{!-- Alert Box --}}
+                        <p id="alertBox" style="display: none;" class="form-alert-error">Error </p>
+
+                        <button class="btn btn-primary d-grid w-100 mt-3">Submit</button>
+                    </form>
+
+
+                </div>
+            </div>
+            <!-- Register Card -->
+        </div>
+    </div>
+</div>
+{{>footer}}
+<script>
+    // Sign In On Submit Validation
+    document.getElementById('userOtpForm').addEventListener('submit', (event) => {
+        let box = document.getElementById('alertBox')
+        let otp = document.getElementById('otp')
+
+        if (otp.value == "") {
+            box.style.display = 'block'
+            box.innerHTML = "Please fill the form"
+            event.preventDefault();
+        }
+    })
+
+
+</script>

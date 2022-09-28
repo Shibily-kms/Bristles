@@ -41,11 +41,16 @@ router.get('/', verifyArtist, artistController.getOverView);
 // User Sign Up
 router.get('/sign-up', verifyAccountConfirm, artistController.getSignUp);
 router.post('/sign-up', artistController.postSignUp);
+router.post('/sign-up/otp', artistController.postOtp);
+router.post('/resend-otp', artistController.resendOTP)
 
 // User Sign In
 router.get('/sign-in', verifyAccountConfirm, artistController.getSignIn);
-
 router.post('/sign-in', artistController.postSignIn);
+router.get('/forgot-password', artistController.getForgotPage);
+router.post('/forgot-password', artistController.postForgotPassword);
+router.post('/forgot-password/new-password', artistController.postForgotOtp)
+router.post('/new-password',artistController.setNewPassword)
 
 // User Sign Out
 router.get('/sign-out', artistController.signOut);
@@ -75,7 +80,7 @@ router.get('/product-list', verifyArtist, artistController.getProductList)
 
 // View  Product
 router.get('/product-list/:prId/view', verifyArtist, artistController.veiwProduct);
-router.get('/product-list/:prId/order-status',verifyArtist,artistController.orderStatus)
+router.get('/product-list/:prId/order-status', verifyArtist, artistController.orderStatus)
 
 // Delete Product
 router.get('/product-list/:prId/delete', verifyArtist, artistController.deleteProduct);

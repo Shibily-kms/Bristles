@@ -5,6 +5,7 @@ document.getElementById('userSignUpForm').addEventListener('submit', (event) => 
     let firstname = document.getElementById('firstname')
     let lastname = document.getElementById('lastname')
     let username = document.getElementById('username')
+    let mobile = document.getElementById('mobile')
     let email = document.getElementById('email')
     let password = document.getElementById('password')
     let cpassword = document.getElementById('cpassword')
@@ -16,8 +17,8 @@ document.getElementById('userSignUpForm').addEventListener('submit', (event) => 
     var lastnameValid = regex.test(lastname.value);
     var usernameValid = uregex.test(username.value);
 
-    if (firstname.value == "" || lastname.value == "" || username.value == "" || email.value == "" || password.value == "" || cpassword.value == "") {
-        box.style.display = 'block'
+    if (firstname.value == "" || lastname.value == "" || username.value == "" || email.value == "" || mobile.value == "" || password.value == "" || cpassword.value == "") {
+        box.style.display = 'block' 
         box.innerHTML = "Please fill the form"
         event.preventDefault();
     } else if (!firstnameValid) {
@@ -32,6 +33,10 @@ document.getElementById('userSignUpForm').addEventListener('submit', (event) => 
         box.style.display = 'block'
         box.innerHTML = "Clear symbols in User name"
         event.preventDefault();
+    } else if (mobile.value.length < 10) {
+        box.style.display = 'block'
+        box.innerHTML = "Mobile number must contain 10 charecter"
+        event.preventDefault();
     } else if (password.value.length < 6) {
         box.style.display = 'block'
         box.innerHTML = "Password must contain 6 charecter"
@@ -40,7 +45,7 @@ document.getElementById('userSignUpForm').addEventListener('submit', (event) => 
         box.style.display = 'block'
         box.innerHTML = "Password not match"
         event.preventDefault();
-    }
+    } 
 })
 
 // Form Password Show and Hide
