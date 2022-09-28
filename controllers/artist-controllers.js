@@ -44,17 +44,6 @@ module.exports = {
                 })
             }
         })
-        // artistHelper.doSignUp(req.body).then((response) => {
-        //     if (response.emailError) {
-        //         req.session.error = "Email Id existed"
-        //         res.redirect('/artist/sign-up')
-        //     } else if (response) {
-
-        //         req.session._BR_ARTIST_CHECK_ID = response.insertedId
-        //         req.session._BR_ARTIST_CHECK = true
-        //         res.redirect('/artist/sign-in')
-        //     }
-        // })
     },
     postOtp: (req, res) => {
         console.log('3');
@@ -123,8 +112,8 @@ module.exports = {
         artistHelper.verifyEmail(req.body.email).then((response) => {
             if (response.data) {
                 console.log(response);
-                twilioHelper.dosms(response.data.mobile).then((status) => { 
-                    
+                twilioHelper.dosms(response.data.mobile).then((status) => {
+
                     if (status) {
                         let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
                         req.session._BR_DATA = response.data
@@ -148,14 +137,14 @@ module.exports = {
                 res.render('artist/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
                 req.session.error = false
             }
-        }).catch((err) => {    
-            req.session.error = 'Incorrect OTP' 
+        }).catch((err) => {
+            req.session.error = 'Incorrect OTP'
             res.render('artist/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
             res.session.error = false
         })
     },
-    setNewPassword:(req,res)=>{
-        artistHelper.setNewPassword(req.body,req.session._BR_DATA.arId).then(()=>{
+    setNewPassword: (req, res) => {
+        artistHelper.setNewPassword(req.body, req.session._BR_DATA.arId).then(() => {
             req.session._BR_DATA = false
             req.session.success = 'Your Password Changed'
             res.redirect('/artist/sign-in')

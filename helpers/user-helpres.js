@@ -2,10 +2,8 @@ const db = require('../config/connection')
 const collection = require('../config/collection')
 const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
-const optionHelpers = require('../helpers/option-helper');
-const helpFunctions = require('../helpers/help-fuctions');
+
 const Razorpay = require('razorpay');
-const { response } = require('express');
 const instance = new Razorpay({
     key_id: 'rzp_test_59KOR6eRcVHKh4',
     key_secret: 'rEbNwpcSpVyBYMnDxcAauA6W',

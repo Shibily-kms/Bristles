@@ -4,7 +4,7 @@ const artistHelpers = require('../helpers/artist-helpers');
 const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
-const { response } = require('express');
+
 module.exports = {
 
     // OverView Start
@@ -15,6 +15,7 @@ module.exports = {
     },
 
     // OverView End
+    
     // Sign Start
     getSignIn: (req, res) => {
         if (req.session._BR_ADMIN) {
@@ -528,20 +529,20 @@ module.exports = {
             res.render('admin/view-order', { title: "View Order | Admin panel", admin, CAT, order })
         })
     },
-    changeOrderStatus:(req,res)=>{
-        adminHelpers.changeOrderStatus(req.body).then((response)=>{
+    changeOrderStatus: (req, res) => {
+        adminHelpers.changeOrderStatus(req.body).then((response) => {
             res.json(response)
         })
     },
     // Order End
 
     // Payment Start
-    getOnePaymentDetails:(req,res)=>{
+    getOnePaymentDetails: (req, res) => {
         let orId = req.query.orId
         console.log(orId);
         let admin = req.session._BR_ADMIN
         let CAT = req.session._BR_CAT
-        adminHelpers.getOnePaymentDetails(orId).then((details)=>{
+        adminHelpers.getOnePaymentDetails(orId).then((details) => {
             res.render('admin/view-payment', { title: "Payment Details | Admin panel", admin, CAT, details })
         })
     }

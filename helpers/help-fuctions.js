@@ -1,4 +1,5 @@
 module.exports = {
+  
     dateWithMonth: (IsoDate) => {
         console.log(IsoDate);
         let NameMonth = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -9,6 +10,4 @@ module.exports = {
         return Now
 
     }
-
-
 }

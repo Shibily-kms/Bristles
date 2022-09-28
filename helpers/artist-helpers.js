@@ -2,7 +2,6 @@ const db = require('../config/connection')
 const collection = require('../config/collection')
 const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
-const session = require('express-session');
 const help = require('../helpers/help-fuctions')
 
 module.exports = {
