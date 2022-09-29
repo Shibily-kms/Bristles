@@ -44,7 +44,8 @@
                                             href="/list/{{this.cartItems.category}}/{{this.cartItems.prId}}/view"
                                             target="_blank"><i class='bx bx-show-alt me-0 me-sm-1'></i>
                                             <span class="d-none d-sm-block">View</span></a>
-                                        <a class="btn btn-sm btn-success text-white d-flex me-1 "><i
+                                        <a class="btn btn-sm btn-success text-white d-flex me-1 " 
+                                        href="/checkout?buynow=true&prId={{this.cartItems.prId}}"><i
                                                 class='bx bx-purchase-tag-alt me-0 me-sm-1'></i>
                                             <span class="d-none d-sm-block">Buy now</span></a>
                                         <button class="btn btn-sm btn-danger text-white d-flex me-1"
@@ -72,7 +73,7 @@
                             <hr>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Price (<span id="cart-count-page">0</span> Items)</p>
-                                <strong class="text-bold">₹{{total}}</strong>
+                                <strong class="text-bold">₹{{ogTotal}}</strong>
                             </div>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Discount</p>

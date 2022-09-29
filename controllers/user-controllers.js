@@ -509,16 +509,25 @@ module.exports = {
             for (let i = 0; i < products.length; i++) {
                 total = total + Number(products[i].cartItems.price)
             }
+            let ogTotal = 0
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].cartItems.ogPrice) {
+                    ogTotal = ogTotal + Number(products[i].cartItems.ogPrice)
+                } else {
+                    ogTotal = ogTotal + Number(products[i].cartItems.price)
+                }
+            }
             for (let i = 0; i < products.length; i++) {
                 if (products[i].cartItems.ogPrice) {
                     discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
                 }
             }
+            console.log(ogTotal);
             if (req.session.success) {
-                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, "success": req.session.success })
+                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, "success": req.session.success })
                 req.session.success = false
             } else {
-                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount })
+                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, })
             }
         } catch (error) {
 
@@ -544,25 +553,65 @@ module.exports = {
         }
 
     },
+    getBuyNow: async (req, res) => {
+        try {
+            let prId = req.params.prId
+
+        } catch (error) {
+
+        }
+    },
     // Cart End
 
     // CheckOut Start
     getCheckOut: async (req, res, next) => {
         let user = req.session._BR_USER
+        console.log(req.query);
         try {
-            let products = await userHelper.getCartProduct(user.urId)
+            let products = []
             let address = await userHelper.getAlladdress(user.urId)
             let total = 0
             let discount = 0
-            for (let i = 0; i < products.length; i++) {
-                total = total + Number(products[i].cartItems.price)
-            }
-            for (let i = 0; i < products.length; i++) {
-                if (products[i].cartItems.ogPrice) {
-                    discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+            let ogTotal = 0
+            let BuyNow = false
+            if (req.query.buynow) {
+                console.log('hi');
+                let oneProduct = await adminHelpers.getOneProduct(req.query.prId)
+
+                if (oneProduct.ogPrice) {
+                    ogTotal = Number(oneProduct.ogPrice)
+                } else {
+                    ogTotal = Number(oneProduct.price)
+                }
+                total = Number(oneProduct.price)
+
+                if (oneProduct.ogPrice) {
+                    discount = (Number(oneProduct.ogPrice) - Number(oneProduct.price))
+                }
+                products[0] = oneProduct
+                BuyNow = true
+
+            } else {
+                products = await userHelper.getCartProduct(user.urId)
+                for (let i = 0; i < products.length; i++) {
+                    if (products[i].cartItems.ogPrice) {
+                        ogTotal = ogTotal + Number(products[i].cartItems.ogPrice)
+                    } else {
+                        ogTotal = ogTotal + Number(products[i].cartItems.price)
+                    }
+                }
+                for (let i = 0; i < products.length; i++) {
+                    total = total + Number(products[i].cartItems.price)
+                }
+                for (let i = 0; i < products.length; i++) {
+                    if (products[i].cartItems.ogPrice) {
+                        discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+                    }
                 }
             }
-            res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address })
+
+
+            res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address, ogTotal, BuyNow })
 
         } catch (error) {
             res.render('error/user-found', { title: 'Checkout | Bristles', user, })
@@ -611,7 +660,6 @@ module.exports = {
     postOrder: async (req, res, next) => {
         let user = req.session._BR_USER
         try {
-            console.log('hi');
 
             let response = await userHelper.orderAccessing(req.body, user.urId)
             console.log(response);

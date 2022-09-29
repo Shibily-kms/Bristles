@@ -72,12 +72,15 @@
                 <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
                 {{/if}}
             </div>
-            {{!-- <a href=""> --}}
-                <button type="button" class="btn btn-lg btn-success mb-3 add-cart-button"
-                    onclick="addToCart('{{product.prId}}')">
-                    <i class='bx bx-cart-alt'></i> Add to Cart
+            <button type="button" class="btn btn-lg btn-success mb-3 add-cart-button"
+                onclick="addToCart('{{product.prId}}')">
+                <i class='bx bx-cart-alt'></i> Add to Cart
+            </button>
+            <a href="/checkout?buynow=true&prId={{product.prId}}">
+                <button type="button" class="btn btn-lg btn-dark mb-3 add-cart-button">
+                    <i class='bx  bx-purchase-tag-alt'></i> Buy Now
                 </button>
-                {{!-- </a> --}}
+            </a>
             <h6 class="sub-head">Specification</h6>
             <hr>
             <div class="product-list-admin pb-4">

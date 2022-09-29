@@ -140,6 +140,53 @@
             </div>
             <div class="row">
                 <h5 class="m-0 mt-4 mb-2">Order Summery</h5>
+                {{#if BuyNow}}
+                {{#each products}}
+                <div class="col-12 p-0 pe-lg-3 ">
+                    <div class="card my-2">
+                        <div class="row p-1">
+                            <div class="col-3">
+                                <img class="card-img card-img-left" style="border-radius: 10px;"
+                                    src="/images/products/{{this.image.[0]}}" alt="Card image" />
+                            </div>
+                            <div class="col-9">
+                                <div class="card-body p-1" style="">
+                                    <a href="/list/{{this.category}}/{{this.prId}}/view" target="_blank">
+                                        <h5 class="card-title">{{this.title}}_{{this.prId}}</h5>
+                                    </a>
+                                    <p class="card-text text-secondary">{{this.category}} _
+                                        {{this.medium}} _ {{this.quality}}<br>
+                                        {{#if this.arId}}
+                                        Artist ID : {{this.arId}}
+                                        {{else}}
+                                        Seller : Bristles Company
+                                        {{/if}}
+                                    </p>
+                                    {{!-- <p class="card-text">Seller name</p> --}}
+                                    <div class="card-price mt-2 d-flex align-items-center ">
+                                        <h4 class="text-dark m-0 me-1">₹ {{this.price}}</h4>
+                                        {{#if this.ogPrice}}
+                                        <h6 class="m-0 me-1 text-decoration-line-through">₹{{this.ogPrice}}
+                                        </h6>
+                                        <i class='bx bxs-offer text-success'></i>
+                                        <h6 class="m-0 me-1 text-success"> {{this.percentage}}% off</h6>
+                                        {{/if}}
+                                    </div>
+                                    <div class="d-flex mt-2 ">
+                                        <button class="btn btn-sm btn-danger text-white d-flex me-1"
+                                            onclick="removeProduct('{{this.prId}}')"><i
+                                                class='bx bx-trash me-0 me-sm-1'></i>
+                                            <span class="d-none d-sm-block">Remove</span></button>
+                                    </div>
+                                    {{!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                    </p> --}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else}}
                 {{#each products}}
                 <div class="col-12 p-0 pe-lg-3 ">
                     <div class="card my-2">
@@ -186,6 +233,7 @@
                     </div>
                 </div>
                 {{/each}}
+                {{/if}}
 
             </div>
         </div>
@@ -199,7 +247,7 @@
                             <hr>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Price (<span id="cart-count-page">0</span> Items)</p>
-                                <p><strong class="text-bold">₹{{total}}</strong></p>
+                                <p><strong class="text-bold">₹{{ogTotal}}</strong></p>
                             </div>
                             <div class="d-flex justify-content-between text-dark">
                                 <p>Discount</p>
@@ -272,6 +320,9 @@
                         </div>
                     </div>
                 </div>
+                {{#if BuyNow}}
+                <input type="text" name="prId" id="buynowPrId" value="{{products.[0].prId}}" hidden>
+                {{/if}}
             </div>
         </div>
     </div>
@@ -298,10 +349,12 @@
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
         var form = $(this);
-        var actionUrl = form.attr('action');
+        var actionUrl = form.attr('action');   // Url is /order
         let amount = document.getElementById('totalPrice').innerHTML
         let couponCode = document.getElementById('couponInput').value
-        let prId = null
+        let buyNow = document.getElementById('buynowPrId').value
+        console.log(buyNow,'ho')
+        let prId = buyNow == '' ? null : buyNow
         $.ajax({
             type: "POST",
             url: actionUrl,
