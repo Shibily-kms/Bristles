@@ -16,23 +16,29 @@ module.exports = {
     // Artist
 
     // middlewear
-    verifyArtist: (req, res, next) => {
-        if (req.session._BR_ARTIST) {
-            artistHelper.checkAccountActive(req.session._BR_ARTIST.arId).then((result) => {
+    verifyArtist: async (req, res, next) => {
+        try {
+            if (req.session._BR_ARTIST) {
+                let result = await artistHelper.checkAccountActive(req.session._BR_ARTIST.arId)
                 if (result.activeErr) {
                     let artist = req.session._BR_ARTIST
                     res.render('artist/blocked-page', { title: 'Account Blocked | Bristles', artist, })
                 } else {
                     next()
                 }
-            })
-        } else {
-            res.redirect('/artist/sign-in')
+
+            } else {
+                res.redirect('/artist/sign-in')
+            }
+
+        } catch (error) {
+            reject(error)
         }
     },
-    verifyAccountConfirm: (req, res, next) => {
-        if (req.session._BR_ARTIST_CHECK) {
-            artistHelper.checkAccountActivation(req.session._BR_ARTIST_CHECK_ID).then((response) => {
+    verifyAccountConfirm: async (req, res, next) => {
+        try {
+            if (req.session._BR_ARTIST_CHECK) {
+                let response = await artistHelper.checkAccountActivation(req.session._BR_ARTIST_CHECK_ID)
                 if (response) {
                     res.redirect('/artist/check-account')
                 } else {
@@ -40,37 +46,50 @@ module.exports = {
                     req.session._BR_ARTIST_CHECK = false
                     next()
                 }
-            })
-        } else {
-            next()
+
+            } else {
+                next()
+            }
+
+        } catch (error) {
+            reject(error)
         }
     },
 
     // User
-    verifyUser: (req, res, next) => {
-        if (req.session._BR_USER) {
-            userHelper.checkAccountActive(req.session._BR_USER.urId).then((result) => {
+    verifyUser: async (req, res, next) => {
+        try {
+            if (req.session._BR_USER) {
+                let result = await userHelper.checkAccountActive(req.session._BR_USER.urId)
                 if (result.activeErr) {
                     let user = req.session._BR_USER
                     res.render('user/blocked-page', { title: 'Account Blocked | Bristles', user, })
                 } else {
                     next()
                 }
-            })
-        } else {
-            res.redirect('/sign-in')
+
+            } else {
+                res.redirect('/sign-in')
+            }
+
+        } catch (error) {
+            reject(error)
         }
     },
-    verifyTokenOrUser: (req, res, next) => {
-        if (req.session._BR_USER) {
-            next()
-        } else if (req.session._BR_TOKEN) {
-            next()
-        } else {
-            userHelper.setToken().then((token) => {
+    verifyTokenOrUser: async (req, res, next) => {
+        try {
+            if (req.session._BR_USER) {
+                next()
+            } else if (req.session._BR_TOKEN) {
+                next()
+            } else {
+                let token = await userHelper.setToken()
                 req.session._BR_TOKEN = token
                 next()
-            })
+            }
+
+        } catch (error) {
+            reject(error)
         }
     }
 

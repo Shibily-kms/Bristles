@@ -86,7 +86,6 @@ router.post('/pending-payment', middleware.verifyUser, userController.pendingPay
 router.post('/wish-product', userController.wishProduct)
 router.get('/wishlist', middleware.verifyUser, userController.getAllWishlist);
 router.post('/remove-wish-product', middleware.verifyUser, userController.wishProduct)
-router.get('/hi',(req,res)=>{
-    res.render('partials/print-invoice')
-})
+
+
 module.exports = router;

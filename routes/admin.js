@@ -119,4 +119,21 @@ router.post('/order-list/change-order-status', middleware.verifyAdmin, adminCont
 // Payment
 router.get('/payment/details', middleware.verifyAdmin, adminController.getOnePaymentDetails)
 
+
+
+// catch 404 and forward to error handler
+router.use((req, res, next) => {
+    next(createError(404));
+});
+
+// error handler
+router.use((err, req, res, next) => {
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error/admin-404', { layout: 'layout' });
+});
+
+
+
 module.exports = router;

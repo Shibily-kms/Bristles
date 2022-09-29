@@ -7,75 +7,96 @@ const help = require('../helpers/help-fuctions')
 module.exports = {
     // Sign Start
     verifyEmail: (email) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email }).then((response) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let response = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ email })
                 let obj = {
                     data: response,
-                    emailError: true       
+                    emailError: true
                 }
                 if (response) {
                     resolve(obj)
                 } else {
                     resolve({ status: true })
                 }
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
     doSignUp: (body) => {
         return new Promise(async (resolve, reject) => {
-            // Create Random Id
-            create_random_id(5)
-            function create_random_id(sting_length) {
-                var randomString = '';
-                var numbers = '123456789'
-                for (var i, i = 0; i < sting_length; i++) {
-                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+            try {
+                // Create Random Id
+                create_random_id(5)
+                function create_random_id(sting_length) {
+                    var randomString = '';
+                    var numbers = '123456789'
+                    for (var i, i = 0; i < sting_length; i++) {
+                        randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                    }
+                    body.arId = "AR" + randomString
                 }
-                body.arId = "AR" + randomString
-            }
-            body.status = "Pending"
-            body.password = await bcrypt.hash(body.password, 10)
-            await db.get().collection(collection.ARTIST_COLLECTION).insertOne(body).then((result) => {
+                body.status = "Pending"
+                body.password = await bcrypt.hash(body.password, 10)
+                let result = await db.get().collection(collection.ARTIST_COLLECTION).insertOne(body)
                 resolve(result)
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     doSignIn: (body) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email, status: "Active" }).then(async (data) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let data = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email, status: "Active" })
                 if (data) {
-                    await bcrypt.compare(body.password, data.password).then((status) => {
-                        if (status) {
-                            delete data.password;
-                            resolve(data)
-                        } else {
-                            resolve({ passError: true })
-                        }
-                    })
+                    let status = await bcrypt.compare(body.password, data.password)
+                    if (status) {
+                        delete data.password;
+                        resolve(data)
+                    } else {
+                        resolve({ passError: true })
+                    }
                 } else {
                     resolve({ emailError: true })
                 }
-            })
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     setNewPassword: (body, arId) => {
         return new Promise(async (resolve, reject) => {
-            body.password = await bcrypt.hash(body.password, 10)
-            await db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
-                $set: {
-                    password: body.password
-                }
-            }).then((result) => {
+            try {
+                body.password = await bcrypt.hash(body.password, 10)
+                let result = await db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId }, {
+                    $set: {
+                        password: body.password
+                    }
+                })
                 resolve(result)
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     checkAccountActivation: (CHECK_ID) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ _id: ObjectId(CHECK_ID) }).then((result) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let result = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ _id: ObjectId(CHECK_ID) })
                 if (result.status == "Active") {
                     resolve({ Active: true })
                 } else if (result.status == "Pending") {
@@ -83,26 +104,36 @@ module.exports = {
                 } else if (result.status == "Rejected") {
                     resolve({ Rejected: true })
                 }
-            })
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
     checkAccountActive: (arId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId, status: "Active" }).then((result) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let result = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId, status: "Active" })
                 if (result) {
                     resolve(result)
                 } else {
                     resolve({ activeErr: true })
                 }
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
     // Sign End
 
     // Artist About Start
     getArtist: (arId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId }).then((result) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let result = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId })
 
                 if (result) {
                     if (result.status == "Pending") {
@@ -118,14 +149,19 @@ module.exports = {
                 } else {
                     resolve({ exception: true })
                 }
-            })
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     editProfile: (body) => {
-        return new Promise((resolve, reject) => {
-            let image = null
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let image = null
+                let artist = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId })
                 if (body.image == null) {
                     body.image = artist.image
                 } else {
@@ -151,54 +187,63 @@ module.exports = {
                         address: obj,
                         image: body.image
                     }
-                }).then(() => {
-                    let obj = {
-                        firstName: body.firstName,
-                        lastName: body.lastName,
-                        userName: body.userName,
-                        email: artist.email,
-                        mobile: body.mobile,
-                        place: body.place,
-                        image: body.image,
-                        arId: artist.arId,
-                        deleteImage: image
-                    }
-                    resolve(obj)
                 })
-            })
+                let obj2 = {
+                    firstName: body.firstName,
+                    lastName: body.lastName,
+                    userName: body.userName,
+                    email: artist.email,
+                    mobile: body.mobile,
+                    place: body.place,
+                    image: body.image,
+                    arId: artist.arId,
+                    deleteImage: image
+                }
+                resolve(obj2)
+
+
+            } catch (error) {
+                reject(error)
+            }
 
         })
     },
 
     changePassword: (body) => {
 
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId }).then((artist) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let artist = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ arId: body.arId })
                 if (artist) {
-                    bcrypt.compare(body.currentPassword, artist.password).then(async (status) => {
-                        if (status) {
-                            let newPass = await bcrypt.hash(body.newPassword, 10)
-                            db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId: body.arId }, {
-                                $set: {
-                                    password: newPass
-                                }
-                            }).then((response) => {
-                                resolve(response)
-                            })
-                        } else {
-                            resolve({ passErr: true })
-                        }
-                    })
+                    let status = await bcrypt.compare(body.currentPassword, artist.password)
+                    if (status) {
+                        let newPass = await bcrypt.hash(body.newPassword, 10)
+                        let response = await db.get().collection(collection.ARTIST_COLLECTION).updateOne({ arId: body.arId }, {
+                            $set: {
+                                password: newPass
+                            }
+                        })
+                        resolve(response)
+
+                    } else {
+                        resolve({ passErr: true })
+                    }
+
                 }
-            })
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
 
     changeEmail: (body) => {
 
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email }).then((artist) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let artist = await db.get().collection(collection.ARTIST_COLLECTION).findOne({ email: body.email })
                 if (artist) {
                     resolve({ emailErr: true })
                 } else {
@@ -206,11 +251,15 @@ module.exports = {
                         $set: {
                             email: body.email
                         }
-                    }).then(() => {
-                        resolve(body.email)
                     })
+                    resolve(body.email)
+
                 }
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
@@ -218,8 +267,9 @@ module.exports = {
 
     // Product Start
     getPendingList: (arId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, status: { $in: ['Pending', 'Rejected'] } }).toArray().then((product) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, status: { $in: ['Pending', 'Rejected'] } }).toArray()
                 for (let i = 0; i < product.length; i++) {
                     if (product[i].status == "Pending") {
                         product[i].pending = true
@@ -228,48 +278,64 @@ module.exports = {
                     }
                 }
                 resolve(product)
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     addProduct: (body) => {
-        return new Promise((resolve, reject) => {
-            // Create Random Id
-            create_random_id(5)
-            function create_random_id(sting_length) {
-                var randomString = '';
-                var numbers = '123456789'
-                for (var i, i = 0; i < sting_length; i++) {
-                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+        return new Promise(async (resolve, reject) => {
+            try {
+                // Create Random Id
+                create_random_id(5)
+                function create_random_id(sting_length) {
+                    var randomString = '';
+                    var numbers = '123456789'
+                    for (var i, i = 0; i < sting_length; i++) {
+                        randomString += numbers.charAt(Math.floor(Math.random() * numbers.length))
+                    }
+                    body.prId = "PR" + randomString
+                    body.delete = false
+                    body.status = "Pending"
                 }
-                body.prId = "PR" + randomString
-                body.delete = false
-                body.status = "Pending"
-            }
-            db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body).then(() => {
+                db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body)
                 resolve()
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     getOneProduct: (prId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId }).then((result) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let result = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId })
                 if (result.status == "Pending") {
                     result.pending = true
                 } else if (result.status == "Rejected") {
                     result.rejected = true
                 }
                 resolve(result)
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     editProduct: (body) => {
-        return new Promise((resolve, reject) => {
-            let images = null
+        return new Promise(async (resolve, reject) => {
+            try {
 
-            db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: body.prId }).then((product) => {
+                let images = null
+
+                let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: body.prId })
                 if (body.image.length == 0) {
                     body.image = product.image
                 } else {
@@ -287,61 +353,78 @@ module.exports = {
                         image: body.image,
                         price: parseInt(body.price)
                     }
-                }).then(() => {
-                    resolve(images)
                 })
-            })
+                resolve(images)
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     deleteProduct: (prId) => {
-        return new Promise((resolve, reject) => {
-            let image = null
-            db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId }).then((product) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let image = null
+                let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId })
                 image = product.image
-                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ prId, status: "Pending" }).then(() => {
-                    resolve(image)
-                })
-            })
+                db.get().collection(collection.PRODUCT_COLLECTION).deleteOne({ prId, status: "Pending" })
+                resolve(image)
+
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     getAllProducts: (arId) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve", "Ordered"] } }).toArray().then((result) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let result = await db.get().collection(collection.PRODUCT_COLLECTION).find({ arId, delete: false, status: { $in: ["Approve", "Ordered"] } }).toArray()
                 for (let i = 0; i < result.length; i++) {
                     if (result[i].status == "Ordered") {
                         result[i].order = true
                     }
                 }
                 resolve(result)
-            })
+
+
+            } catch (error) {
+                reject(error)
+            }
         })
     },
     getOrderStatus: (prId) => {
         return new Promise(async (resolve, reject) => {
-            let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId, status: "Ordered" })
-            let status = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-                {
-                    $match: {
-                        products: {
-                            $in: [prId]
+            try {
+                let product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId, status: "Ordered" })
+                let status = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            products: {
+                                $in: [prId]
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            orId: 1, methord: 1, status: 1, deliveryDate: 1
                         }
                     }
-                },
-                {
-                    $project: {
-                        orId: 1, methord: 1, status: 1, deliveryDate: 1
-                    }
+                ]).toArray()
+                if (status.length > 0) {
+                    product.orId = status[0].orId
+                    product.methord = status[0].methord
+                    product.status = status[0].status
+                    product.date = help.dateWithMonth(status[0].deliveryDate)
                 }
-            ]).toArray()
-            if (status.length > 0) {
-                product.orId = status[0].orId
-                product.methord = status[0].methord
-                product.status = status[0].status
-                product.date = help.dateWithMonth(status[0].deliveryDate)
+                resolve(product)
+            } catch (error) {
+                reject(error)
             }
-            resolve(product)
         })
     },
     // Product End

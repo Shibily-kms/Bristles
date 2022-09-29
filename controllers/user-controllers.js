@@ -10,35 +10,47 @@ const twilioHelper = require('../helpers/twilio-helper');
 module.exports = {
 
     // Home Page Start
-    getHomePage: async (req, res) => {
+    getHomePage: async (req, res, next) => {
         let user = req.session._BR_USER
-        let category = await adminHelpers.getAllCategory()
-        let latestProducts = user ? await userHelper.getLatestProducts(user.urId) : await userHelper.getLatestProducts()
-        let carousel = await adminHelpers.getCarousel()
+        try {
+            let category = await adminHelpers.getAllCategory()
+            let latestProducts = user ? await userHelper.getLatestProducts(user.urId) : await userHelper.getLatestProducts()
+            let carousel = await adminHelpers.getCarousel()
+            res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel });
 
-        res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel });
+        } catch (error) {
+            res.render('error/user-found', { title: 'Home | Bristles', user, });
+
+        }
     },
     // Home Page End
 
     // Sign Start
-    getSignUp: (req, res) => {
-        if (req.session._BR_USER) {
-            res.redirect('/')
-        } else if (req.session.error) {
-            res.render('user/sign-up', { title: "Sign Up", "error": req.session.error })
-            req.session.error = false
-        } else {
-            res.render('user/sign-up', { title: "Sign Up" })
+    getSignUp: async (req, res, next) => {
+        try {
+            if (req.session._BR_USER) {
+                res.redirect('/')
+            } else if (req.session.error) {
+                res.render('user/sign-up', { title: "Sign Up", "error": req.session.error })
+                req.session.error = false
+            } else {
+                res.render('user/sign-up', { title: "Sign Up" })
+            }
+
+        } catch (error) {
+            next(error)
         }
     },
-    postSignUp: (req, res) => {
-        userHelper.verifyEmail(req.body.email).then((response) => {
+    postSignUp: async (req, res, next) => {
+        try {
+
+            let response = await userHelper.verifyEmail(req.body.email)
             if (response.emailError) {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
             } else if (response.status) {
                 req.session._BR_DATA = req.body
-                twilioHelper.dosms(req.body.mobile).then((status) => {
+                await twilioHelper.dosms(req.body.mobile).then((status) => {
                     if (status) {
                         let mobile = req.body.mobile.substr(req.body.mobile.length - 3);
                         res.render('user/otp', { title: 'OTP | Bristles', mobile })
@@ -50,50 +62,70 @@ module.exports = {
                     res.redirect('/sign-up')
                 })
             }
-        })
+        } catch (error) {
+            next(error)
+        }
+
     },
 
-    postOtp: (req, res) => {
-        let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
-        twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
-            if (response) {
-                userHelper.doSignUp(req.session._BR_DATA).then((result) => {
+    postOtp: async (req, res, next) => {
+        try {
+            let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
+            twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then(async (response) => {
+                if (response) {
+                    await userHelper.doSignUp(req.session._BR_DATA)
                     req.session._BR_DATA = false
                     res.redirect('/sign-in')
-                })
-            } else {
+
+                } else {
+                    req.session.error = 'Incorrect OTP'
+                    res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error })
+                    req.session.error = false
+                }
+            }).catch((err) => {
                 req.session.error = 'Incorrect OTP'
                 res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error })
-                req.session.error = false
-            }
-        }).catch((err) => {
-            req.session.error = 'Incorrect OTP'
-            res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error })
-            res.session.error = false
-        })
+                res.session.error = false
+            })
+
+        } catch (error) {
+            next(error)
+        }
     },
-    resendOTP: (req, res) => {
-        twilioHelper.dosms(req.session._BR_DATA.mobile).then((status) => {
+    resendOTP: async (req, res, next) => {
+        try {
+            let status = await twilioHelper.dosms(req.session._BR_DATA.mobile)
             if (status) {
                 res.json(status)
             }
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    getSignIn: (req, res) => {
-        if (req.session._BR_USER) {
-            res.redirect('/')
-        } else if (req.session.error) {
-            res.render('user/sign-in', { title: "Sign In", "error": req.session.error })
-            req.session.error = false
-        } else if (req.session.success) {
-            res.render('user/sign-in', { title: "Sign In", "success": req.session.success })
-            req.session.success = false
-        } else {
-            res.render('user/sign-in', { title: "Sign In" })
+    getSignIn: async (req, res, next) => {
+        try {
+
+            if (req.session._BR_USER) {
+                res.redirect('/')
+            } else if (req.session.error) {
+                res.render('user/sign-in', { title: "Sign In", "error": req.session.error })
+                req.session.error = false
+            } else if (req.session.success) {
+                res.render('user/sign-in', { title: "Sign In", "success": req.session.success })
+                req.session.success = false
+            } else {
+                res.render('user/sign-in', { title: "Sign In" })
+            }
+        } catch (error) {
+            next(error)
         }
     },
-    postSignIn: (req, res) => {
-        userHelper.doSignIn(req.body).then((data) => {
+    postSignIn: async (req, res, next) => {
+        try {
+
+            let data = await userHelper.doSignIn(req.body)
             if (data.emailError) {
                 req.session.error = "Invalid email id"
                 res.redirect('/sign-in')
@@ -102,140 +134,208 @@ module.exports = {
                 res.redirect('/sign-in')
             } else if (data) {
                 if (req.session._BR_TOKEN) {
-                    userHelper.checkGuestCart(data.urId, req.session._BR_TOKEN).then(() => {
-                        req.session._BR_TOKEN = false
-                        req.session._BR_USER = data
-                        res.redirect('/');
-                    })
+                    await userHelper.checkGuestCart(data.urId, req.session._BR_TOKEN)
+                    req.session._BR_TOKEN = false
+                    req.session._BR_USER = data
+                    res.redirect('/');
+
                 } else {
                     req.session._BR_USER = data
                     res.redirect('/');
                 }
             }
-        })
+        } catch (error) {
+            next(error)
+        }
+
     },
-    getForgotPage: (req, res) => {
-        if (req.session.error) {
-            res.render('user/forgot-password', { title: 'Forgot password | Bristles', 'error': req.session.error })
-            req.session.error = false
-        } else {
-            res.render('user/forgot-password', { title: 'Forgot password | Bristles' })
+    getForgotPage: async (req, res, next) => {
+        try {
+            if (req.session.error) {
+                res.render('user/forgot-password', { title: 'Forgot password | Bristles', 'error': req.session.error })
+                req.session.error = false
+            } else {
+                res.render('user/forgot-password', { title: 'Forgot password | Bristles' })
+            }
+
+        } catch (error) {
+            next(error)
         }
     },
-    postForgotPassword: (req, res) => {
-        userHelper.verifyEmail(req.body.email).then((response) => {
+    postForgotPassword: async (req, res, next) => {
+        try {
+            let response = await userHelper.verifyEmail(req.body.email)
             if (response.data) {
-                twilioHelper.dosms(response.data.mobile).then((status) => {
+                let status = await twilioHelper.dosms(response.data.mobile)
 
-                    if (status) {
-                        let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
-                        req.session._BR_DATA = response.data
-                        res.render('user/otp', { title: 'OTP | Bristles', mobile, forgot: true })
-                    }
-                })
+                if (status) {
+                    let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
+                    req.session._BR_DATA = response.data
+                    res.render('user/otp', { title: 'OTP | Bristles', mobile, forgot: true })
+                }
+
             } else {
                 req.session.error = 'Incorrect Email Address'
                 res.redirect('/forgot-password')
             }
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    postForgotOtp: (req, res) => {
-        let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
-        twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
-            if (response) {
-                res.render('user/new-password', { title: 'New Passoerd | Bristles', })
-            } else {
+    postForgotOtp: async (req, res, next) => {
+        try {
+            let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
+            twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
+                if (response) {
+                    res.render('user/new-password', { title: 'New Passoerd | Bristles', })
+                } else {
+                    req.session.error = 'Incorrect OTP'
+                    res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
+                    req.session.error = false
+                }
+            }).catch((err) => {
                 req.session.error = 'Incorrect OTP'
                 res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
-                req.session.error = false
-            }
-        }).catch((err) => {
-            req.session.error = 'Incorrect OTP'
-            res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
-            res.session.error = false
-        })
+                res.session.error = false
+            })
+
+        } catch (error) {
+            next(error)
+        }
     },
-    setNewPassword: (req, res) => {
-        userHelper.setNewPassword(req.body, req.session._BR_DATA.urId).then(() => {
+    setNewPassword: async (req, res, next) => {
+        try {
+            userHelper.setNewPassword(req.body, req.session._BR_DATA.urId)
             req.session._BR_DATA = false
             req.session.success = 'Your Password Changed'
             res.redirect('/sign-in')
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    signOut: (req, res) => {
-        req.session._BR_USER = false
-        res.redirect('/sign-in')
+    signOut: async (req, res, next) => {
+        try {
+            req.session._BR_USER = false
+            res.redirect('/sign-in')
+
+        } catch (error) {
+            next(error)
+        }
     },
     // Sign End
 
     // Product Start
-    getProductCategoryList: async (req, res) => {
+    getProductCategoryList: async (req, res, next) => {
         let user = req.session._BR_USER
-        let NOW_CAT = req.params.NOW_CAT
-        let product = user ? await userHelper.getAllCatProduct(NOW_CAT, user.urId) : await userHelper.getAllCatProduct(NOW_CAT)
-        res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT, user })
+        try {
+            let NOW_CAT = req.params.NOW_CAT
+            let product = user ? await userHelper.getAllCatProduct(NOW_CAT, user.urId) : await userHelper.getAllCatProduct(NOW_CAT)
+            res.render('user/product-list', { title: NOW_CAT + ' | Bristles', product, NOW_CAT, user })
 
-    },
-    viewProduct: (req, res) => {
-        let user = req.session._BR_USER
-        let NOW_CAT = req.params.NOW_CAT
-        let prId = req.params.prId
-        adminHelpers.getOneProduct(prId).then((product) => {
-            res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT, user })
-        })
-
-    },
-    addToCart: async (req, res) => {
-        let result = null
-        if (req.session._BR_TOKEN) {
-            result = await userHelper.addToCart(req.session._BR_TOKEN, req.body)
-        } else {
-            result = await userHelper.addToCart(req.session._BR_USER.urId, req.body)
+        } catch (error) {
+            res.render('error/user-found', { title: NOW_CAT + ' | Bristles', user })
         }
-        res.json(result)
+
+    },
+    viewProduct: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let NOW_CAT = req.params.NOW_CAT
+            let prId = req.params.prId
+            let product = await adminHelpers.getOneProduct(prId)
+            res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT, user })
+
+        } catch (error) {
+
+            res.render('error/user-found', { title: 'View Product | Bristles', user })
+        }
+
+
+    },
+    addToCart: async (req, res, next) => {
+        try {
+            let result = null
+            if (req.session._BR_TOKEN) {
+                result = await userHelper.addToCart(req.session._BR_TOKEN, req.body)
+            } else {
+                result = await userHelper.addToCart(req.session._BR_USER.urId, req.body)
+            }
+            res.json(result)
+
+        } catch (error) {
+            next(error)
+        }
     },
     // Product End
 
     // Search Start
-    getSearchPage: async (req, res) => {
+    getSearchPage: async (req, res, next) => {
         let user = req.session._BR_USER
-        let categoryList = await adminHelpers.getAllCategory()
-        let optionList = optionHelper
-        res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, user })
+        try {
+            let categoryList = await adminHelpers.getAllCategory()
+            let optionList = optionHelper
+            res.render('user/search', { title: 'Search | Bristles', toggleIcon: true, categoryList, optionList, user })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Search | Bristles', toggleIcon: true, user })
+
+        }
     },
-    getAllProdutInSearch: async (req, res) => {
+    getAllProdutInSearch: async (req, res, next) => {
         let user = req.session._BR_USER
-        let product = user ? await userHelper.getAllProduct(user.urId) : await userHelper.getAllProduct()
-        res.json(product)
+        try {
+            let product = user ? await userHelper.getAllProduct(user.urId) : await userHelper.getAllProduct()
+            res.json(product)
+
+        } catch (error) {
+            next(error)
+        }
     },
     // Search End
 
     // Profile Start
-    getProfile: (req, res) => {
+    getProfile: async (req, res, next) => {
         let user = req.session._BR_USER
-        userHelper.getUser(user.urId).then((userData) => {
+        try {
+            let userData = await userHelper.getUser(user.urId)
             if (req.session.success) {
                 res.render('user/profile', { title: 'Profile | Bristles', user, userData, "success": req.session.success })
                 req.session.success = false
             } else {
                 res.render('user/profile', { title: 'Profile | Bristles', user, userData })
             }
-        })
-    },
-    getEditProfile: (req, res) => {
-        let user = req.session._BR_USER
-        userHelper.getUser(user.urId).then((userData) => {
-            res.render('user/edit-profile', { title: 'Edit profile | Bristles', user, userData })
-        })
-    },
-    postEditProfile: (req, res) => {
 
-        let image = null
-        if (req.file) {
-            image = req.file.filename
+        } catch (error) {
+            res.render('error/user-found', { title: 'Profile | Bristles', user, })
+
         }
-        req.body.image = image
-        userHelper.editProfile(req.body).then((obj) => {
+
+    },
+    getEditProfile: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let userData = await userHelper.getUser(user.urId)
+            res.render('user/edit-profile', { title: 'Edit profile | Bristles', user, userData })
+
+        } catch (error) {
+
+            res.render('error/user-found', { title: 'Edit profile | Bristles', user, })
+        }
+
+    },
+    postEditProfile: async (req, res, next) => {
+        try {
+
+            let image = null
+            if (req.file) {
+                image = req.file.filename
+            }
+            req.body.image = image
+            let obj = await userHelper.editProfile(req.body)
             if (obj.deleteImage) {
                 var Imagepath = path.join(__dirname, '../public/images/user/' + obj.deleteImage)
                 fs.unlink(Imagepath, function (err) {
@@ -247,23 +347,33 @@ module.exports = {
             req.session._BR_USER = obj
             req.session.success = "Profile edited"
             res.redirect('/profile')
-        })
+        } catch (error) {
+            next(error)
+        }
+
     },
-    getChangePassword: (req, res) => {
+    getChangePassword: async (req, res, next) => {
         let user = req.session._BR_USER
-        if (req.session.success) {
-            res.render('user/change-password', { title: 'Change Password | Bristles', user, "success": req.session.success })
-            req.session.success = false
-        } else if (req.session.error) {
-            res.render('user/change-password', { title: 'Change Password | Bristles', user, "error": req.session.error })
-            req.session.error = false
-        } else {
-            res.render('user/change-password', { title: 'Change Password | Bristles', user })
+        try {
+            if (req.session.success) {
+                res.render('user/change-password', { title: 'Change Password | Bristles', user, "success": req.session.success })
+                req.session.success = false
+            } else if (req.session.error) {
+                res.render('user/change-password', { title: 'Change Password | Bristles', user, "error": req.session.error })
+                req.session.error = false
+            } else {
+                res.render('user/change-password', { title: 'Change Password | Bristles', user })
+            }
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Change Password | Bristles', user })
+
         }
     },
-    postChangePassword: (req, res) => {
+    postChangePassword: async (req, res, next) => {
+        try {
 
-        userHelper.changePassword(req.body).then((response) => {
+            let response = await userHelper.changePassword(req.body)
             if (response.passErr) {
                 req.session.error = "Incorrect current password"
                 res.redirect('/profile/change-password')
@@ -271,22 +381,32 @@ module.exports = {
                 req.session.success = "Password changed"
                 res.redirect('/profile/change-password')
             }
-        })
+        } catch (error) {
+            next(error)
+        }
+
     },
-    getChangeEmail: (req, res) => {
+    getChangeEmail: async (req, res, next) => {
         let user = req.session._BR_USER
-        if (req.session.success) {
-            res.render('user/change-email', { title: 'Change Email | Bristles', user, "success": req.session.success })
-            req.session.success = false
-        } else if (req.session.error) {
-            res.render('user/change-email', { title: 'Change Email | Bristles', user, "error": req.session.error })
-            req.session.error = false
-        } else {
-            res.render('user/change-email', { title: 'Change Email | Bristles', user })
+        try {
+            if (req.session.success) {
+                res.render('user/change-email', { title: 'Change Email | Bristles', user, "success": req.session.success })
+                req.session.success = false
+            } else if (req.session.error) {
+                res.render('user/change-email', { title: 'Change Email | Bristles', user, "error": req.session.error })
+                req.session.error = false
+            } else {
+                res.render('user/change-email', { title: 'Change Email | Bristles', user })
+            }
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Change Email | Bristles', user })
+
         }
     },
-    postChangeEmail: (req, res) => {
-        userHelper.changeEmail(req.body).then((response) => {
+    postChangeEmail: async (req, res, next) => {
+        try {
+            let response = await userHelper.changeEmail(req.body)
             if (response.emailErr) {
                 req.session.error = "This email already used"
                 res.redirect('/profile/change-email')
@@ -295,221 +415,326 @@ module.exports = {
                 req.session.success = "Email changed"
                 res.redirect('/profile/change-email')
             }
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    getAlladdress: (req, res) => {
+    getAlladdress: async (req, res, next) => {
         let user = req.session._BR_USER
-        userHelper.getAlladdress(user.urId).then((address) => {
+        try {
+            let address = await userHelper.getAlladdress(user.urId)
             if (req.session.success) {
                 res.render('user/address', { title: 'Mangae Address | Bristles', user, address, 'success': req.session.success })
                 req.session.success = false
             } else {
                 res.render('user/address', { title: 'Mangae Address | Bristles', user, address })
             }
-        })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Mangae Address | Bristles', user, })
+
+        }
+
     },
-    postAddAddress: (req, res) => {
-        userHelper.addNewAddress(req.body, req.session._BR_USER.urId).then(() => {
+    postAddAddress: async (req, res, next) => {
+        try {
+            await userHelper.addNewAddress(req.body, req.session._BR_USER.urId)
             res.redirect('/address')
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    postEditAddress: (req, res) => {
-        let adId = req.params.adId
+    postEditAddress: async (req, res, next) => {
         let user = req.session._BR_USER
-        userHelper.updateAddress(req.body, adId, user.urId).then((response) => {
+        try {
+            let adId = req.params.adId
+            let response = await userHelper.updateAddress(req.body, adId, user.urId)
             // req.session.success = "Address updated"
             res.json(response)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    deleteAddress: (req, res) => {
-        let user = req.session._BR_USER
-        userHelper.deleteAddress(req.body.adId, user.urId).then((response) => {
+    deleteAddress: async (req, res, next) => {
+        try {
+            let user = req.session._BR_USER
+            let response = await userHelper.deleteAddress(req.body.adId, user.urId)
             // req.session.success = "Address Deleted"
             res.json(response)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
     // Profile End
 
     // Cart Start
-    getCartCount: async (req, res) => {
-        let result = null
-        if (req.session._BR_TOKEN) {
-            result = await userHelper.getCartCount(req.session._BR_TOKEN)
-        } else if (req.session._BR_USER) {
-            result = await userHelper.getCartCount(req.session._BR_USER.urId)
-        } else {
-            result = 0
-        }
-        res.json(result)
-    },
-
-    getCart: async (req, res) => {
-        let urId = null
-        let user = req.session._BR_USER
-        if (req.session._BR_TOKEN) {
-            urId = req.session._BR_TOKEN
-        } else if (user) {
-            urId = user.urId
-        }
-        let products = await userHelper.getCartProduct(urId)
-        let total = 0
-        let discount = 0
-        for (let i = 0; i < products.length; i++) {
-            total = total + Number(products[i].cartItems.price)
-        }
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].cartItems.ogPrice) {
-                discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+    getCartCount: async (req, res, next) => {
+        try {
+            let result = null
+            if (req.session._BR_TOKEN) {
+                result = await userHelper.getCartCount(req.session._BR_TOKEN)
+            } else if (req.session._BR_USER) {
+                result = await userHelper.getCartCount(req.session._BR_USER.urId)
+            } else {
+                result = 0
             }
-        }
-        if (req.session.success) {
-            res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, "success": req.session.success })
-            req.session.success = false
-        } else {
-            res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount })
+            res.json(result)
+
+        } catch (error) {
+            next(error)
         }
     },
 
-    removeFromCart: (req, res) => {
-        let urId = null
+    getCart: async (req, res, next) => {
         let user = req.session._BR_USER
-        if (req.session._BR_TOKEN) {
-            urId = req.session._BR_TOKEN
-        } else if (user) {
-            urId = user.urId
+        try {
+
+            let urId = null
+            if (req.session._BR_TOKEN) {
+                urId = req.session._BR_TOKEN
+            } else if (user) {
+                urId = user.urId
+            }
+            let products = await userHelper.getCartProduct(urId)
+            let total = 0
+            let discount = 0
+            for (let i = 0; i < products.length; i++) {
+                total = total + Number(products[i].cartItems.price)
+            }
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].cartItems.ogPrice) {
+                    discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+                }
+            }
+            if (req.session.success) {
+                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, "success": req.session.success })
+                req.session.success = false
+            } else {
+                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount })
+            }
+        } catch (error) {
+
+            res.render('error/user-found', { title: 'Cart | Bristles', user, })
         }
-        userHelper.removeProductFromCart(req.body.prId, urId).then((result) => {
+    },
+
+    removeFromCart: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let urId = null
+            if (req.session._BR_TOKEN) {
+                urId = req.session._BR_TOKEN
+            } else if (user) {
+                urId = user.urId
+            }
+            let result = await userHelper.removeProductFromCart(req.body.prId, urId)
             req.session.success = "Removed form Cart"
             res.json(result)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
     // Cart End
 
     // CheckOut Start
-    getCheckOut: async (req, res) => {
+    getCheckOut: async (req, res, next) => {
         let user = req.session._BR_USER
-        let products = await userHelper.getCartProduct(user.urId)
-        let address = await userHelper.getAlladdress(user.urId)
-        let total = 0
-        let discount = 0
-        for (let i = 0; i < products.length; i++) {
-            total = total + Number(products[i].cartItems.price)
-        }
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].cartItems.ogPrice) {
-                discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+        try {
+            let products = await userHelper.getCartProduct(user.urId)
+            let address = await userHelper.getAlladdress(user.urId)
+            let total = 0
+            let discount = 0
+            for (let i = 0; i < products.length; i++) {
+                total = total + Number(products[i].cartItems.price)
             }
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].cartItems.ogPrice) {
+                    discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
+                }
+            }
+            res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Checkout | Bristles', user, })
+
         }
-        res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address })
 
     },
-    changeCurrentAddress: (req, res) => {
-        userHelper.changeCurrentAddress(req.body.adId, req.session._BR_USER.urId).then((response) => {
+    changeCurrentAddress: async (req, res, next) => {
+        try {
+            let response = await userHelper.changeCurrentAddress(req.body.adId, req.session._BR_USER.urId)
             res.json(response)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    checkCouponCode: (req, res) => {
-        userHelper.checkCouponCode(req.body).then((response) => {
+    checkCouponCode: async (req, res, next) => {
+        try {
+            let response = await userHelper.checkCouponCode(req.body)
             res.json(response)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
-    verifyPayment: (req, res) => {
-        userHelper.verifyPayment(req.body).then(() => {
-            userHelper.changePaymentStatus(req.body).then(() => {
+    verifyPayment: async (req, res, next) => {
+        try {
+            userHelper.verifyPayment(req.body).then(async () => {
+                await userHelper.changePaymentStatus(req.body)
+                await userHelper.savePaymentDetails(req.body)
+                res.json({ status: true })
 
-                userHelper.savePaymentDetails(req.body).then(() => {
-                    res.json({ status: true })
-                })
-
+            }).catch((err) => {
+                res.json({ status: false, errMag: err })
             })
-        }).catch((err) => {
-            res.json({ status: false, errMag: err })
-        })
+
+        } catch (error) {
+            next(error)
+        }
     },
     // CheckOut End
 
     // Order Start
-    postOrder: (req, res) => {
+    postOrder: async (req, res, next) => {
         let user = req.session._BR_USER
+        try {
+            console.log('hi');
 
-        userHelper.orderAccessing(req.body, user.urId).then(async (response) => {
+            let response = await userHelper.orderAccessing(req.body, user.urId)
+            console.log(response);
             if (response.methord == "COD") {
-                userHelper.afterOreder(response.products, user.urId, req.body.cpCode).then(() => {
-                    res.json({ codSuccess: true })
-                })
+                await userHelper.afterOreder(response.products, user.urId, req.body.cpCode)
+                res.json({ codSuccess: true })
+
             } else if (response.methord == 'online') {
                 await userHelper.afterOreder(response.products, user.urId, req.body.cpCode)
-                await userHelper.generateRazorpay(response.orId, response.amount).then((generateResponse) => {
-                    generateResponse.name = response.name
-                    generateResponse.email = user.email
-                    generateResponse.phone = response.phone
-                    generateResponse.urId = user.urId
-                    res.json(generateResponse)
-                })
-            }
-        })
-    },
-    successOrder: (req, res) => {
-        let user = req.session._BR_USER
-        res.render('user/success-order', { title: 'Order Success | Bristles', user, })
-    },
-    failedOrder: (req, res) => {
-        let user = req.session._BR_USER
-        let reason = null
-        res.render('user/payment-failed', { title: 'Order Success | Bristles', user, reason })
-    },
-    getOrder: (req, res) => {
-        let user = req.session._BR_USER
-        userHelper.getAllOrder(user.urId).then((order) => {
+                let generateResponse = await userHelper.generateRazorpay(response.orId, response.amount)
+                generateResponse.name = response.name
+                generateResponse.email = user.email
+                generateResponse.phone = response.phone
+                generateResponse.urId = user.urId
+                res.json(generateResponse)
 
+            }
+        } catch (error) {
+            next(error)
+        }
+
+    },
+    successOrder: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            res.render('user/success-order', { title: 'Order Success | Bristles', user, })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Order Success | Bristles', user, })
+
+        }
+    },
+    failedOrder: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let reason = null
+            res.render('user/payment-failed', { title: 'Order Success | Bristles', user, reason })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Order Success | Bristles', user, })
+
+        }
+    },
+    getOrder: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let order = await userHelper.getAllOrder(user.urId)
             res.render('user/order-list', { title: 'Order List | Bristles', user, order })
-        })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Order List | Bristles', user, })
+
+        }
+
     },
-    getOneOrder: (req, res) => {
-        let orId = req.query.orId
-        let urId = req.query.urId
-        let prId = req.query.prId
-        let user = req.session._BR_USER
-        userHelper.getOneOrder(urId, orId, prId).then((order) => {
+    getOneOrder: async (req, res, next) => {
+        try {
+            let orId = req.query.orId
+            let urId = req.query.urId
+            let prId = req.query.prId
+            let user = req.session._BR_USER
+            let order = await userHelper.getOneOrder(urId, orId, prId)
             res.render('user/view-one-order', { title: 'View Order | Bristles', user, order })
-        })
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'View Order | Bristles', user, })
+
+        }
+
     },
-    getCancelOrder: (req, res) => {
-        let orId = req.body.orId
-        userHelper.cancelOrder(orId).then((response) => {
+    getCancelOrder: async (req, res, next) => {
+        try {
+            let orId = req.body.orId
+            let response = await userHelper.cancelOrder(orId)
             res.json(response)
-        })
+        } catch (error) {
+            next(error)
+        }
+
     },
-    pendingPaymentCall: (req, res) => {
+    pendingPaymentCall: async (req, res, next) => {
         let user = req.session._BR_USER
-        userHelper.generateRazorpay(req.body.orId, req.body.amount).then((generateResponse) => {
+        try {
+            let generateResponse = await userHelper.generateRazorpay(req.body.orId, req.body.amount)
             generateResponse.name = req.body.name
             generateResponse.email = user.email
             generateResponse.phone = req.body.phone
             generateResponse.urId = user.urId
             res.json(generateResponse)
-        })
+
+        } catch (error) {
+            next(error)
+        }
+
     },
     // Order End
 
     // Wish Start
-    wishProduct: (req, res) => {
+    wishProduct: async (req, res, next) => {
         let user = req.session._BR_USER
-        if (user) {
-            userHelper.wishProduct(req.body.prId, user.urId).then((response) => {
+        try {
+            if (user) {
+                let response = await userHelper.wishProduct(req.body.prId, user.urId)
                 res.json(response)
-            })
-        } else {
-           
+            } else {
+                res.json({ nullUser: true })
+            }
 
-            res.json({ nullUser: true })
+        } catch (error) {
+            next(error)
         }
     },
-    getAllWishlist: (req, res) => {
+    getAllWishlist: async (req, res, next) => {
         let user = req.session._BR_USER
-        userHelper.getAllWishlist(user.urId).then((wishlist) => {
+        try {
+            let wishlist = await userHelper.getAllWishlist(user.urId)
             res.render('user/wishlist', { title: 'Wishlist | Bristles', user, wishlist })
-        })
+
+        } catch (error) {
+
+            res.render('error/user-found', { title: 'Wishlist | Bristles', user, })
+        }
+
     }
     // Wish End
 

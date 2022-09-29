@@ -72,5 +72,18 @@ router.get('/change-email', middleware.verifyArtist, artistController.getChangeE
 router.post('/change-email', middleware.verifyArtist,)
 
 
+// catch 404 and forward to error handler
+router.use((req, res, next) => {
+    next(createError(404));
+});
+
+// error handler
+router.use((err, req, res, next) => {
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error/artist-404', { layout: 'layout' });
+});
+
 
 module.exports = router;
