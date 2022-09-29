@@ -295,6 +295,40 @@ module.exports = {
             }
         })
     },
+    getOneUserOrder: (urId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let order = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            urId
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.USER_COLLECTION,
+                            localField: 'urId',
+                            foreignField: 'urId',
+                            as: 'user'
+                        }
+                    },
+                    {
+                        $project: {
+                            orId: 1, urId: 1, methord: 1, amount: 1, status: 1,
+                            date: { $dateToString: { format: "%d-%m-%Y ", date: "$date", } },
+                            firstName: { $first: '$user.firstName' },
+                            lastName: { $first: '$user.lastName' },
+                            image: { $first: '$user.image' }
+                        }
+                    }
+
+                ]).sort({_id:-1}).toArray()
+                resolve(order)
+            } catch (error) {
+                reject (error)
+            }
+        })
+    },
     // User End
 
     // Artist Start

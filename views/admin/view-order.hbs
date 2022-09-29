@@ -34,8 +34,10 @@
                         </p>
                         {{/if}}
                         {{#if order.[0].Online}}
-                        <p class="text-end "><a href="/admin/payment/details?orId={{order.[0].orId}}" class="text-primary">Payment Details</a></p>
-                        {{/if}} 
+                        <p class="text-end "><a href="/admin/payment/details?orId={{order.[0].orId}}"
+                                data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                data-bs-html="true" title="Click to view" class="text-primary">Payment Details</a></p>
+                        {{/if}}
                     </div>
                 </div>
             </div>
@@ -45,40 +47,43 @@
                         {{!-- Table --}}
                         <div class="card p-3" style="background-color:rgb(213, 255, 255) ;">
                             {{#if order.[0].Cancelled}}
-                            <div class="d-flex justify-content-center align-items-center" style="height: 90px;" >
+                            <div class="d-flex justify-content-center align-items-center" style="height: 90px;">
                                 <div>
-                                    <p class="text-center text-danger"><i class='bx bxs-check-circle mb-1' style="font-size: 25px;"></i><br>
-                                    This Product Cancelled on {{order.[0].cancelDate}}</p>
+                                    <p class="text-center text-danger"><i class='bx bxs-check-circle mb-1'
+                                            style="font-size: 25px;"></i><br>
+                                        This Product Cancelled on {{order.[0].cancelDate}}</p>
                                 </div>
                             </div>
                             {{else}}{{#if order.[0].Delivered}}
                             <div class="d-flex justify-content-center align-items-center" style="height: 90px;">
                                 <div>
-                                    <p class="text-center text-success"><i class='bx bxs-check-circle mb-1' style="font-size: 25px;"></i><br>
-                                    This Product delivered on {{order.[0].deliveryDate}}</p>
+                                    <p class="text-center text-success"><i class='bx bxs-check-circle mb-1'
+                                            style="font-size: 25px;"></i><br>
+                                        This Product delivered on {{order.[0].deliveryDate}}</p>
                                 </div>
                             </div>
                             {{else}}
                             <form action="">
                                 <p class="fw-bold text-dark m-0 mb-2">Change Status</p>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Placed"
-                                    {{#if order.[0].Placed}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
+                                        name="status" value="Placed" {{#if order.[0].Placed}} checked {{/if}}>
                                     <label class="ml-1" for="">Placed</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Shipped"
-                                    {{#if order.[0].Shipped}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
+                                        name="status" value="Shipped" {{#if order.[0].Shipped}} checked {{/if}}>
                                     <label for="">Shipped</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="OutForDelivery"
-                                    {{#if order.[0].OutForDelivery}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
+                                        name="status" value="OutForDelivery" {{#if order.[0].OutForDelivery}} checked
+                                        {{/if}}>
                                     <label for="">Out For Delivery</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')" name="status" value="Delivered"
-                                    {{#if order.[0].Delivered}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
+                                        name="status" value="Delivered" {{#if order.[0].Delivered}} checked {{/if}}>
                                     <label for="">Delivered</label>
                                 </div>
                             </form>
@@ -140,7 +145,8 @@
                     {{#each order}}
                     <div class="col-12 col-md-6 mb-3">
                         <a href="/admin/products/{{this.category}}/{{this.prId}}/view" target="_blank"
-                            class="text-dark">
+                            data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                            title="View Product" class="text-dark">
                             <div class="d-flex">
                                 <img class="order-list-image" src="/images/products/{{this.prImage.[0]}}" alt="">
                                 <div class="d-none d-sm-block">
@@ -150,7 +156,7 @@
                                     <p class="m-1 ">PR ID : {{this.prId}}</p>
                                     <p class="m-1 ">Category : {{this.category}}</p>
                                     <p class="m-1 ">Medium : {{this.medium}}</p>
-                                  
+
                                     <p class="m-1 ">{{this.description}}</p>
                                 </div>
                             </div>

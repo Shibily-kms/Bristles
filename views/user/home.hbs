@@ -55,7 +55,9 @@
                 <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
                     <img class="card-img-top" src="/images/products/{{this.image.[0]}}" alt="product image" />
                 </a>
-                <div class="heart-icon " onclick="wishProduct('{{this.prId}}')">
+                <div class="heart-icon " onclick="wishProduct('{{this.prId}}')" data-bs-toggle="tooltip"
+                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                            title="Wish product">
                     <i class='bx bxs-heart' {{#if this.wishlist.[0]}} style="color: red;" {{/if}}
                         id="icon{{this.prId}}"></i>
                 </div>

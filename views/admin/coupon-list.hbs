@@ -34,12 +34,14 @@
                             {{!-- <td>Active</td> --}}
                             <td>
                                 <span class="table-action-td">
-                                    <a href="/admin/coupon/{{this.cpCode}}/edit ">
+                                    <a href="/admin/coupon/{{this.cpCode}}/edit " data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Edit">
                                         <button type="button" class="btn rounded-pill btn-icon btn-primary">
                                             <span class="tf-icons bx bxs-edit-alt"></span>
                                         </button>
                                     </a>
-                                    <a href="/admin/coupon/{{this.cpCode}}/delete"
+                                    <a href="/admin/coupon/{{this.cpCode}}/delete" data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Delete"
                                         onclick="return confirm('Are you remove this category?')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-trash"></span>

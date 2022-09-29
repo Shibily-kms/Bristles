@@ -33,13 +33,17 @@
                             {{!-- <td>Active</td> --}}
                             <td>
                                  <span class="table-action-td">
-                                <a href="/admin/category/{{this.cgId}}/edit ">
+                                <a href="/admin/category/{{this.cgId}}/edit " data-bs-toggle="tooltip"
+                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                            title="Edit">
                                     <button type="button" class="btn rounded-pill btn-icon btn-primary">
                                         <span class="tf-icons bx bxs-edit-alt"></span>
                                     </button>
                                 </a>
                                 <a href="/admin/category/{{this.cgId}}/delete"
-                                    onclick="return confirm('Are you remove this category?')">
+                                    onclick="return confirm('Are you remove this category?')" data-bs-toggle="tooltip"
+                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                            title="Delete">
                                     <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                         <span class="tf-icons bx bx-trash"></span>
                                     </button>

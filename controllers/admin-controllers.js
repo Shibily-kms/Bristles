@@ -732,6 +732,18 @@ module.exports = {
         }
 
     },
+    getUserOrder: async (req, res, next) => {
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
+        try {
+            let order = await adminHelpers.getOneUserOrder(req.params.urId)
+            console.log('hiam');
+            res.render('admin/view-user-orders', { title: "View User | Admin panel", admin, CAT, order })
+
+        } catch (error) {
+            res.render('admin/view-user-orders', { title: "View User | Admin panel", admin, CAT, })
+        }
+    },
     // User End
 
     // Order Start
@@ -780,10 +792,10 @@ module.exports = {
             let orId = req.query.orId
             let details = await adminHelpers.getOnePaymentDetails(orId)
             res.render('admin/view-payment', { title: "Payment Details | Admin panel", admin, CAT, details })
-            
+
         } catch (error) {
             res.render('error/admin-found', { title: "Payment Details | Admin panel", admin, })
-            
+
         }
 
     }

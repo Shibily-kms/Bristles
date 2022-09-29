@@ -20,7 +20,8 @@
                 <img src="/images/carousel/{{this.image}}" alt="carousel">
                 <p class="text-center mt-2">{{this.crId}}</p>
                 <a onclick="return confirm ('Delete this carousel ?')" href="/admin/carousel-delete/{{this.crId}}"
-                    class="icon">
+                    class="icon" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                    data-bs-html="true" title="Delete">
                     <i class='bx bx-x'></i>
                 </a>
             </div>

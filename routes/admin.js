@@ -3,6 +3,7 @@ const router = express.Router();
 const store = require('../config/multer');
 const adminController = require('../controllers/admin-controllers')
 const middleware = require('../helpers/middleware-helpers')
+const userHelper = require('../helpers/user-helpres')
 
 
 /* GET users listing. */
@@ -54,6 +55,9 @@ router.get('/user-list', middleware.verifyAdmin, adminController.getUserList)
 
 // Get One User
 router.get('/user-list/:urId/view', middleware.verifyAdmin, adminController.getUserView);
+
+// Get One User Order
+router.get('/user-list/:urId/orders',middleware.verifyAdmin, adminController.getUserOrder)
 
 // Block and Acitve User
 router.get('/user-list/:urId/:status', middleware.verifyAdmin, adminController.blockAndActiveUser)

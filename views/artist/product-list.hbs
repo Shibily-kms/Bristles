@@ -1,5 +1,4 @@
-{{>artist-side}}
-{{>artist-top}}
+{{>artist-top}} {{>artist-side}}
 
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
@@ -30,20 +29,23 @@
                             <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
                             <td>
                                 <span class="table-action-td">
-                                    <a href="/artist/product-list/{{this.prId}}/view ">
+                                    <a href="/artist/product-list/{{this.prId}}/view " data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="View">
                                         <button type="button" class="btn rounded-pill btn-icon btn-dark">
                                             <span class="tf-icons bx bxs-show"></span>
                                         </button>
                                     </a>
                                     {{#if this.order}}
-                                    <a href="/artist/product-list/{{this.prId}}/order-status">
+                                    <a href="/artist/product-list/{{this.prId}}/order-status" data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Edit">
                                         <button type="button" class="btn rounded-pill btn-icon btn-info"
                                             title="View Status">
                                             <span class="tf-icons bx bx-trip"></span>
                                         </button>
                                     </a>
                                     {{else}}
-                                    <a href="/artist/product-list/{{this.prId}}/delete"
+                                    <a href="/artist/product-list/{{this.prId}}/delete" data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Delete"
                                         onclick="return confirm('Are you remove this product?')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-trash"></span>
