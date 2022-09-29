@@ -7,7 +7,6 @@ const help = require('../helpers/help-fuctions')
 module.exports = {
     // Sign Start
     verifyEmail: (email) => {
-        console.log(email, 'email');
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ email }).then((response) => {
                 let obj = {
@@ -23,7 +22,6 @@ module.exports = {
         })
     },
     doSignUp: (body) => {
-        console.log('5');
         return new Promise(async (resolve, reject) => {
             // Create Random Id
             create_random_id(5)
@@ -38,7 +36,6 @@ module.exports = {
             body.status = "Pending"
             body.password = await bcrypt.hash(body.password, 10)
             await db.get().collection(collection.ARTIST_COLLECTION).insertOne(body).then((result) => {
-                console.log('6');
                 resolve(result)
             })
         })
@@ -79,7 +76,6 @@ module.exports = {
     checkAccountActivation: (CHECK_ID) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.ARTIST_COLLECTION).findOne({ _id: ObjectId(CHECK_ID) }).then((result) => {
-                console.log(result);
                 if (result.status == "Active") {
                     resolve({ Active: true })
                 } else if (result.status == "Pending") {
@@ -339,7 +335,6 @@ module.exports = {
                     }
                 }
             ]).toArray()
-            console.log(status);
             if (status.length > 0) {
                 product.orId = status[0].orId
                 product.methord = status[0].methord

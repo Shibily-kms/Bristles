@@ -1,0 +1,272 @@
+<div hidden id="print-container">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
+
+    <table class="pTable ">
+        <thead>
+            <tr>
+                <td style="display: none;"></td>
+                <td colspan="4">
+                    <div class="pHeader">
+                        <div class="section-one">
+                            <img src="/images/icon/logo-2.png" alt="">
+                            <h1>BRISTLES</h1>
+                            <h3>Online Painting sell platform</h3>
+                            <p>Kinfra Techno Park, Kakkanchery, <br>Thenhipalam PO, 679324 <br>Kerala, India, </p>
+                        </div>
+                        <div class="section-two">
+                            <div>
+                                <h2>INVOICE</h2>
+                                {{#if order.[0].Cancelled}}
+                                <h3 class="pending">- Cancelled -</h3>
+                                {{else}}
+                                {{#if order.[0].Delivered}}
+                                <h3 class="paid"> - Paided -</h3>
+                                {{else}}
+                                {{#if order.[0].Online}}
+                                {{#if order.[0].Pending}}
+                                <h3 class="pending">- Unpaided -</h3>
+                                {{else}}
+                                <h3 class="paid"> - Paided -</h3>
+                                {{/if}}{{else}}
+                                <h3 class="pending">- Unpaided -</h3>
+                                {{/if}}{{/if}}{{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="address">
+                        <div class="bill">
+                            <h3>BILL TO</h3>
+                            <Strong>{{order.[0].address.name}}</Strong> <br>
+                            <p style="margin: 0;">{{order.[0].address.landmark}}, {{order.[0].address.locality}},<br>
+                                {{order.[0].address.area}}
+                                -{{order.[0].address.pincode}} <br>
+                                {{order.[0].address.city}}, {{order.[0].address.state}}
+                                <br>{{order.[0].address.phone}}
+                            </p>
+                        </div>
+                        <div class="ship">
+                            <h3>SHIP TO</h3>
+                            <Strong>{{order.[0].address.name}}</Strong> <br>
+                            <p style="margin: 0;">{{order.[0].address.landmark}}, {{order.[0].address.locality}},<br>
+                                {{order.[0].address.area}}
+                                -{{order.[0].address.pincode}} <br>
+                                {{order.[0].address.city}}, {{order.[0].address.state}}
+                                <br>{{order.[0].address.phone}}
+                            </p>
+                        </div>
+                        <div class="invoice">
+                            <div class="">
+                                <p>Order Id</p>
+                                <p>:</p>
+                                <p>{{order.[0].orId}}</p>
+                            </div>
+                            <div class="">
+                                <p>Order Date</p>
+                                <p>:</p>
+                                <p>{{order.[0].date}}</p>
+                            </div>
+                            <div class="">
+                                <p>Methord</p>
+                                <p>:</p>
+                                <p>{{order.[0].methord}}</p>
+                            </div>
+                            {{#if order.[0].Online}}
+                            <div class="">
+                                <p>Payment Id</p>
+                                <p>:</p>
+                                <p>PM{{order.[0].orId}}</p>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <hr>
+                    <p style="text-align: center;"><strong>Products Details</strong></p>
+                </td>
+            </tr>
+        </thead>
+        <tbody class="css-serial">
+            <tr style="">
+                <th class="headerTh">Sl No</th>
+                <th class="headerTh">Title</th>
+                <th class="headerTh">Category</th>
+                <th class="headerTh">Amount</th>
+            </tr>
+            {{#each order}}
+            <tr>
+                <td class="contentTd"></td>
+                <td class="contentTd">{{this.title}}</td>
+                <td class="contentTd">{{this.category}}</td>
+                <td class="contentTd" id="{{@index}}">{{this.price}}</td>
+            </tr>
+            {{/each}}
+
+            <tr>
+                <th class=""></th>
+                <th class=""></th>
+                <td class="totalTd">Sub Total</td>
+                <td class="totalTd" id="subtotal">{{order.[0].countProduct}}</td>
+            </tr>
+            <tr>
+                <th class=""></th>
+                <th class=""></th>
+                <td class="totalTd" style=" border-width: 1px;">coupon offer</td>
+                <td class="totalTd" style=" border-width: 1px;" id="offer">-0</td>
+            </tr>
+            <tr>
+                <th class=""></th>
+                <th class=""></th>
+                <td class="totalTd" style="color: rgb(0, 88, 110); font-weight:bolder; font-size:20px; ">Total</td>
+                <td class="totalTd" style="color: rgb(0, 88, 110); font-weight:bolder; font-size:20px;" id="total">
+                    {{order.[0].amount}}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+
+
+        </tfoot>
+    </table>
+
+    <Style>
+        .pTable {
+            font-family: "Rubik", Helvetica, Arial, sans-serif;
+            width: 100%;
+
+        }
+
+        .pHeader {
+
+            display: flex;
+        }
+
+        .pHeader div {
+            width: 100%;
+        }
+
+        .pHeader .section-one img {
+            width: 60px;
+            margin-bottom: 5px;
+        }
+
+        .pHeader .section-one h1 {
+            margin: 0;
+            margin-bottom: 0px;
+            color: rgb(0, 122, 179);
+        }
+
+        .pHeader .section-one h3 {
+            margin: 0;
+            color: rgb(0, 158, 34);
+        }
+
+        .pHeader .section-one p {
+            margin: 0;
+            margin-top: 5px;
+            color: rgb(71, 71, 71);
+        }
+
+        .pHeader .section-two {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pHeader .section-two h2 {
+            text-align: center;
+            color: rgb(255, 166, 0);
+            margin: 0;
+        }
+
+        .pHeader .section-two .paid {
+            color: green;
+            text-align: center;
+            margin: 0;
+        }
+
+        .pHeader .section-two .pending {
+            color: red;
+            text-align: center;
+            margin: 0;
+        }
+
+        .address {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            color: black;
+        }
+
+        .address .bill h3,
+        .address .ship h3,
+        .address .invoice h3 {
+            margin: 0;
+            margin-bottom: 5px;
+            color: rgb(0, 97, 187);
+            font-weight: bold;
+        }
+
+        .address .invoice div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .address .invoice p {
+            margin: 0;
+            margin-bottom: 5px;
+        }
+
+        tbody .headerTh {
+            background-color: #005085;
+            -webkit-print-color-adjust: exact;
+            color: white;
+            padding: 5px 0 5px 0;
+        }
+
+        tbody .contentTd {
+            padding: 5px 5px 5px 5px;
+
+            color: rgb(0, 0, 0);
+        }
+
+        tbody .totalTd {
+            border-top: solid 2px black;
+            padding: 5px 5px 5px 5px;
+
+        }
+
+        /* Automatic Serial Number Row */
+        .css-serial {
+            counter-reset: serial-number;
+            /* Set the serial number counter to 0 */
+        }
+
+        .css-serial td:first-child:before {
+            counter-increment: serial-number;
+            /* Increment the serial number counter */
+            content: counter(serial-number);
+            /* Display the counter */
+        }
+    </Style>
+    <script>
+        function checkTotal() {
+            let sub = document.getElementById('subtotal')
+            let count = parseInt(sub.innerHTML)
+            let total = document.getElementById('total')
+            let offer = document.getElementById('offer')
+            let ogTotal = 0
+            for (let i = 0; i < count; i++) {
+                let price = document.getElementById(i).innerHTML
+                ogTotal = ogTotal + parseInt(price)
+            }
+            sub.innerHTML = ogTotal
+            let off = 0
+            off = ogTotal - parseInt(total.innerHTML)
+            offer.innerHTML = '-₹' + off
+            offer.style.color = '#00b344'
+            total.innerHTML = '₹' + total.innerHTML
+        }
+        checkTotal()
+    </script>
+</div>

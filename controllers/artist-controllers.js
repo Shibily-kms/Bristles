@@ -25,7 +25,6 @@ module.exports = {
         }
     },
     postSignUp: (req, res) => {
-        console.log('1');
         artistHelper.verifyEmail(req.body.email).then((response) => {
             if (response.emailError) {
                 req.session.error = "Email Id existed"
@@ -34,7 +33,6 @@ module.exports = {
                 req.session._BR_DATA = req.body
                 twilioHelper.dosms(req.body.mobile).then((status) => {
                     if (status) {
-                        console.log('2');
                         let mobile = req.body.mobile.substr(req.body.mobile.length - 3);
                         res.render('artist/otp', { title: 'OTP | Bristles', mobile })
                     } else {
@@ -46,16 +44,13 @@ module.exports = {
         })
     },
     postOtp: (req, res) => {
-        console.log('3');
         let mobile = req.session._BR_DATA.mobile.substr(req.session._BR_DATA.mobile.length - 3);
         twilioHelper.otpVerify(req.body.otp, req.session._BR_DATA.mobile).then((response) => {
             if (response) {
-                console.log('4');
                 artistHelper.doSignUp(req.session._BR_DATA).then((result) => {
                     req.session._BR_DATA = false
                     req.session._BR_ARTIST_CHECK_ID = result.insertedId
                     req.session._BR_ARTIST_CHECK = true
-                    console.log('7');
                     res.redirect('/artist/sign-in')
                 })
             } else {
@@ -111,13 +106,11 @@ module.exports = {
     postForgotPassword: (req, res) => {
         artistHelper.verifyEmail(req.body.email).then((response) => {
             if (response.data) {
-                console.log(response);
                 twilioHelper.dosms(response.data.mobile).then((status) => {
 
                     if (status) {
                         let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
                         req.session._BR_DATA = response.data
-                        console.log(req.body._BR_DATA);
                         res.render('artist/otp', { title: 'OTP | Bristles', mobile, forgot: true })
                     }
                 })
@@ -157,7 +150,6 @@ module.exports = {
     checkAccount: (req, res) => {
         if (req.session._BR_ARTIST_CHECK_ID) {
             artistHelper.checkAccountActivation(req.session._BR_ARTIST_CHECK_ID).then((response) => {
-                console.log(response);
                 if (response.Rejected) {
                     req.session._BR_ARTIST_CHECK = false
                     res.render('artist/check-account', { title: "Place wait...", rejected: true })
@@ -399,7 +391,6 @@ module.exports = {
         let prId = req.params.prId
         let artist = req.session._BR_ARTIST
         artistHelper.getOrderStatus(prId).then((product) => {
-            console.log(product);
             res.render('artist/view-order-status', { title: 'Order Status | Bristles', artist, product })
         })
     }

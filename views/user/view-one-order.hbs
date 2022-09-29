@@ -5,7 +5,6 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-pills flex-column flex-md-row mb-3">
-
                     <li class="nav-item">
                         <a class="nav-link" href="/profile"><i class='bx bxs-user me-1'></i>
                             Profile</a>
@@ -19,9 +18,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/order"><i class='bx bxs-package'></i> Orders</a>
                     </li>
-
                 </ul>
-
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
@@ -75,6 +72,10 @@
                                         </p>
                                     </div>
                                     {{/if}}{{/if}}
+                                    <div class="d-flex justify-content-end">
+                                        <button onclick="PrintDiv('print-container','nsaonline.in')"
+                                            class="btn btn-sm text-dark fw-bold btn-warning"><i class='bx bx-spreadsheet'></i> Print Invoice</button>
+                                    </div>
 
                                 </div>
                             </div>
@@ -101,11 +102,11 @@
                                     <div class="row">
                                         <div class="col-12 col-md-10 hh-grayBox pt45 pb20 w-100">
                                             <div class="row justify-content-between aligh-items-center ">
-                                                {{#if Pending}}
+                                                {{#if this.Pending}}
                                                 <p class="text-center">Your Order is Pending ..!<br>
                                                     <button class="btn btn-primary mt-2"
-                                                        onclick="pendingPayment('{{this.orId}}','{{this.amount}}','{{this.address.name}}','{{this.address.phone}}')">Pay
-                                                        Now</button>
+                                                        onclick="pendingPayment('{{this.orId}}','{{this.amount}}','{{this.address.name}}','{{this.address.phone}}')">
+                                                        Pay Now</button>
                                                 </p>
                                                 {{else}}
                                                 {{#if this.Cancelled}}
@@ -204,10 +205,9 @@
             </div>
         </div>
     </div>
-
 </div>
-
 {{>footer}}
+{{>print-invoice}}
 <script>
     document.getElementById('order').className = "dropdown-item active"
 
@@ -222,7 +222,6 @@
             },
             method: 'post',
             success: (response) => {
-                console.log('here')
                 razorepayPayment(response)
             }
         })

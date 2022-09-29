@@ -33,7 +33,6 @@ module.exports = {
     },
     postSignUp: (req, res) => {
         userHelper.verifyEmail(req.body.email).then((response) => {
-            console.log(response);
             if (response.emailError) {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
@@ -47,6 +46,8 @@ module.exports = {
                         req.session.error = 'Please check Mobile Number'
                         res.redirect('/sign-up')
                     }
+                }).catch((err) => {
+                    res.redirect('/sign-up')
                 })
             }
         })
@@ -79,9 +80,7 @@ module.exports = {
         })
     },
     getSignIn: (req, res) => {
-        console.log('8');
         if (req.session._BR_USER) {
-            console.log('9');
             res.redirect('/')
         } else if (req.session.error) {
             res.render('user/sign-in', { title: "Sign In", "error": req.session.error })
@@ -90,7 +89,6 @@ module.exports = {
             res.render('user/sign-in', { title: "Sign In", "success": req.session.success })
             req.session.success = false
         } else {
-            console.log('10');
             res.render('user/sign-in', { title: "Sign In" })
         }
     },
@@ -127,13 +125,11 @@ module.exports = {
     postForgotPassword: (req, res) => {
         userHelper.verifyEmail(req.body.email).then((response) => {
             if (response.data) {
-                console.log(response);
-                twilioHelper.dosms(response.data.mobile).then((status) => { 
-                    
+                twilioHelper.dosms(response.data.mobile).then((status) => {
+
                     if (status) {
                         let mobile = response.data.mobile.substr(response.data.mobile.length - 3);
                         req.session._BR_DATA = response.data
-                        console.log(req.body._BR_DATA);
                         res.render('user/otp', { title: 'OTP | Bristles', mobile, forgot: true })
                     }
                 })
@@ -153,14 +149,14 @@ module.exports = {
                 res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
                 req.session.error = false
             }
-        }).catch((err) => {    
-            req.session.error = 'Incorrect OTP' 
+        }).catch((err) => {
+            req.session.error = 'Incorrect OTP'
             res.render('user/otp', { title: 'OTP | Bristles', mobile, 'error': req.session.error, forgot: true })
             res.session.error = false
         })
     },
-    setNewPassword:(req,res)=>{
-        userHelper.setNewPassword(req.body,req.session._BR_DATA.urId).then(()=>{
+    setNewPassword: (req, res) => {
+        userHelper.setNewPassword(req.body, req.session._BR_DATA.urId).then(() => {
             req.session._BR_DATA = false
             req.session.success = 'Your Password Changed'
             res.redirect('/sign-in')
@@ -504,8 +500,9 @@ module.exports = {
                 res.json(response)
             })
         } else {
-            response.nullUser = true
-            res.json(response)
+           
+
+            res.json({ nullUser: true })
         }
     },
     getAllWishlist: (req, res) => {

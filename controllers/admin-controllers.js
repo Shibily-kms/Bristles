@@ -539,7 +539,6 @@ module.exports = {
     // Payment Start
     getOnePaymentDetails: (req, res) => {
         let orId = req.query.orId
-        console.log(orId);
         let admin = req.session._BR_ADMIN
         let CAT = req.session._BR_CAT
         adminHelpers.getOnePaymentDetails(orId).then((details) => {

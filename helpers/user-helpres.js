@@ -13,7 +13,6 @@ const instance = new Razorpay({
 module.exports = {
     // User Sign Start
     verifyEmail: (email) => {
-        console.log(email, 'email');
         return new Promise((resolve, reject) => {
             db.get().collection(collection.USER_COLLECTION).findOne({ email }).then((response) => {
                 let obj = {
@@ -246,7 +245,6 @@ module.exports = {
     },
     getLatestProducts: (urId) => {
         return new Promise(async (resolve, reject) => {
-            console.log(urId);
             let product = []
             if (urId) {
                 product = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
@@ -303,12 +301,10 @@ module.exports = {
 
                     }
                 ]).toArray()
-                console.log('h');
             } else {
                 product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ delete: false, status: 'Approve' }).sort({ _id: -1 })
                     .limit(8).toArray()
             }
-            console.log(product);
             resolve(product)
 
 
@@ -802,6 +798,14 @@ module.exports = {
                     }
                 },
                 {
+                    $project: {
+                        countProduct: { $size: '$products' },
+                        orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
+                        date: 1, deliveryDate: 1, cancelDate: 1, status: 1, methord: 1,
+                        products:1
+                    }
+                },
+                {
                     $unwind: "$products"
                 },
                 {
@@ -814,7 +818,7 @@ module.exports = {
                 },
                 {
                     $project: {
-                        orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
+                        orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,countProduct:1,
                         date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
                         deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
                         cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
@@ -833,6 +837,8 @@ module.exports = {
                         OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
                         Delivered: { $eq: ["$status", "Delivered"] },
                         Cancelled: { $eq: ["$status", "Cancelled"] },
+                        Online: { $eq: ['$methord', 'online'] },
+
                     }
                 }
             ]).toArray().then((order) => {
@@ -877,7 +883,6 @@ module.exports = {
 
             }, (err, order) => {
                 if (err) {
-                    console.log(err);
                 } else {
 
                     resolve(order)

@@ -27,11 +27,7 @@
                             </div>
                             <div class="favorite">
                                 <i class='bx bxs-heart'></i>
-                                {{#if this.wishCount}}
-                                <p>{{this.wishCount}}</p>
-                                {{else}}
-                                <p>0</p>
-                                {{/if}}
+                                <p id="wishCount{{this.prId}}">{{#if this.wishCount}}{{this.wishCount}}{{else}}0{{/if}}</p>
                             </div>
                         </div>
                         <div class="card-price mt-2">
