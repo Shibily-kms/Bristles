@@ -10,6 +10,7 @@ const middleware = require('../helpers/middleware-helpers')
 /* GET home page. */
 router.get('/', userController.getHomePage);
 
+
 // User Sign Up
 router.get('/sign-up', userController.getSignUp);
 router.post('/sign-up', userController.postSignUp);

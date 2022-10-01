@@ -29,6 +29,362 @@ module.exports = {
     },
     // Sign End
 
+    // Dashboard Start
+    getDashboardCountObj: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                let today = new Date()
+                let todayYMD = new Date().toLocaleDateString('en-CA')
+                console.log(todayYMD);
+                let before = new Date(new Date().getTime() - (30 * 24 * 60 * 60 * 1000))
+                let paymentLastMonth = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: 'Delivered',
+                            deliveryDate: {
+                                $gte: before,
+                                $lte: today
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            Amount: { $sum: '$amount' }
+                        }
+                    }
+                ]).toArray()
+                let productsCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Approve', delete: false }).count()
+                let orderCount = await db.get().collection(collection.ORDER_COLLECTION).find({ status: { $in: ['Placed', 'Pending', 'Shipped', 'OutForDelivery'] } }).count()
+                let artistCount = await db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ['Active', 'Blocked'] } }).count()
+                let userCount = await db.get().collection(collection.USER_COLLECTION).find().count()
+                let pendingProductCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Pending' }).count()
+                let categoryCount = await db.get().collection(collection.CAROUSEL_COLLECTION).find().count()
+                let couponCount = await db.get().collection(collection.COUPON_COLLECTION).find({ used: false, validity: { $gte: todayYMD } }).count()
+                let orderStatusBasieCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $project: {
+                            status: 1
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { status: '$status' },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            status: '$_id.status',
+                            count: 1,
+                            _id: 0
+                        }
+                    }
+                ]).toArray()
+                let a = [0, 0, 0, 0, 0, 0]
+                for (let i = 0; i < orderStatusBasieCount.length; i++) {
+                    if (orderStatusBasieCount[i].status == "Delivered") {
+                        a[0] = orderStatusBasieCount[i].count
+                    } else if (orderStatusBasieCount[i].status == "OutForDelivery") {
+                        a[1] = orderStatusBasieCount[i].count
+                    } else if (orderStatusBasieCount[i].status == "Shipped") {
+                        a[2] = orderStatusBasieCount[i].count
+                    } else if (orderStatusBasieCount[i].status == "Placed") {
+                        a[3] = orderStatusBasieCount[i].count
+                    } else if (orderStatusBasieCount[i].status == "Pending") {
+                        a[4] = orderStatusBasieCount[i].count
+                    } else if (orderStatusBasieCount[i].status == "Cancelled") {
+                        a[5] = orderStatusBasieCount[i].count
+                    }
+                }
+                orderStatusBasieCount = a
+                let top4Category = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: "Approve", delete: false
+                        }
+                    },
+
+                    {
+                        $project: {
+                            category: 1,
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { category: '$category' },
+                            myCount: { $sum: 1 },
+
+                        }
+                    },
+                    {
+                        $project: {
+                            category: '$_id.category',
+                            count: '$myCount',
+                            _id: 0,
+                        }
+                    }
+                ]).sort({ count: -1 }).limit(4).toArray()
+                console.log(top4Category);
+                let obj = {
+                    lastMonthAmount: paymentLastMonth[0].Amount,
+                    productsCount,
+                    orderCount,
+                    artistCount,
+                    userCount,
+                    pendingProductCount,
+                    categoryCount, couponCount, top4Category,
+                    orderStatusBasieCount
+                }
+
+                resolve(obj)
+
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    getTotalRevenueList: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let today = new Date()
+                let before = new Date(new Date().getTime() - (250 * 24 * 60 * 60 * 1000))
+
+                let revenue = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: 'Delivered',
+                            deliveryDate: {
+                                $gte: before,
+                                $lte: today
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            methord: 1, amount: 1, deliveryDate: 1
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } }, methord: '$methord' },
+                            Amount: { $sum: '$amount' }
+                        }
+                    },
+                    {
+                        $project: {
+                            date: '$_id.date',
+                            methord: '$_id.methord',
+                            amount: '$Amount',
+                            _id: 0
+                        }
+                    }
+                ]).sort({ date: 1 }).toArray()
+                console.log(revenue);
+                let obj = {
+                    date: [], cod: [0, 0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0, 0]
+                }
+                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                let a = today.getMonth() - 6
+                for (let i = 0; i < 8; i++) {
+                    for (let k = 0; k < revenue.length; k++) {
+                        if (Number(revenue[k].date.slice(0, 2)) == Number(a + i)) {
+                            if (revenue[k].methord == 'online') {
+                                obj.online[i] = revenue[k].amount
+                            } else {
+                                obj.cod[i] = revenue[k].amount
+                            }
+                        }
+                    }
+                    obj.date[i] = month[a + i - 1]
+                }
+                resolve(obj)
+
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    getOrderMethodChart: () => {
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                let today = new Date()
+                let before = new Date(new Date().getTime() - (190 * 24 * 60 * 60 * 1000))
+
+                let order = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: 'Delivered',
+                            deliveryDate: {
+                                $gte: before,
+                                $lte: today
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            methord: 1, amount: 1, deliveryDate: 1
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } }, method: '$methord' },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            date: '$_id.date',
+                            method: '$_id.method',
+                            count: '$count',
+                            _id: 0
+                        }
+                    }
+                ]).sort({ date: 1 }).toArray()
+                console.log(order);
+                let obj = {
+                    date: [], cod: [0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0]
+                }
+                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                let a = today.getMonth() - 5
+                let large = 0
+                for (let i = 0; i < 7; i++) {
+                    for (let k = 0; k < order.length; k++) {
+                        if (Number(order[k].date.slice(0, 2)) == Number(a + i)) {
+                            if (order[k].method == 'online') {
+                                obj.online[i] = order[k].count
+                            } else {
+                                obj.cod[i] = order[k].count
+                            }
+                            if (order[k].count > large) {
+                                large = order[k].count
+                            }
+                        }
+                    }
+                    obj.date[i] = month[a + i - 1]
+                }
+                obj.large = large + 2
+                console.log(obj);
+                resolve(obj)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    getCategoryChart: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let categoryList = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: "Approve", delete: false
+                        }
+                    },
+
+                    {
+                        $project: {
+                            category: 1,
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { category: '$category' },
+                            myCount: { $sum: 1 },
+
+                        }
+                    },
+                    {
+                        $project: {
+                            category: '$_id.category',
+                            count: '$myCount',
+                            _id: 0,
+                        }
+                    }
+                ]).sort({ count: -1 }).toArray()
+                let sum = 0
+                let obj = {
+                    category: [], count: []
+                }
+                for (let i = 0; i < 4; i++) {
+                    sum = sum + categoryList[i].count
+                }
+
+                for (let i = 0; i < 4; i++) {
+                    obj.category[i] = categoryList[i].category
+                    obj.count[i] = categoryList[i].count
+                }
+                obj.sum = sum
+
+                resolve(obj)
+
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    getDeliveryChart: () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let today = new Date()
+                let before = new Date(new Date().getTime() - (190 * 24 * 60 * 60 * 1000))
+
+                let orderCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            status: 'Delivered',
+                            deliveryDate: {
+                                $gte: before,
+                                $lte: today
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            deliveryDate: 1, status: 1
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } } },
+                            myCount: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            date: '$_id.date',
+                            count: '$myCount',
+                            status: '$_id.status',
+                            _id: 0
+                        }
+                    }
+                ]).sort({ date: 1 }).toArray()
+                let obj = {
+                    date: [], count: [0, 0, 0, 0, 0, 0]
+                }
+                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                let a = today.getMonth() - 4
+                let sum = 0
+                for (let i = 0; i < 6; i++) {
+                    for (let k = 0; k < orderCount.length; k++) {
+                        if (Number(orderCount[k].date.slice(0, 2)) == Number(a + i)) {
+                            obj.count[i] = orderCount[k].count
+                            sum = sum + orderCount[k].count
+                        }
+                    }
+                    obj.date[i] = month[a + i - 1]
+                }
+                obj.sum = sum
+                resolve(obj)
+
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    // Dashboard End
+
     // Category Start
     addCategory: (body) => {
         return new Promise(async (resolve, reject) => {
@@ -185,7 +541,7 @@ module.exports = {
                 resolve(result)
 
             } catch (error) {
-                console.log('errorFirst');
+
                 reject(error)
             }
         })
@@ -322,10 +678,10 @@ module.exports = {
                         }
                     }
 
-                ]).sort({_id:-1}).toArray()
+                ]).sort({ _id: -1 }).toArray()
                 resolve(order)
             } catch (error) {
-                reject (error)
+                reject(error)
             }
         })
     },

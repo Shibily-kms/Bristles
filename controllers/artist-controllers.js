@@ -6,17 +6,17 @@ const path = require('path');
 const twilioHelper = require('../helpers/twilio-helper');
 
 module.exports = {
-    // OverView Start
-    getOverView: async (req, res, next) => {
+    // Dashboard Start
+    getDashboard: async (req, res, next) => {
         let artist = req.session._BR_ARTIST
         try {
-            res.render('artist/overview', { title: 'Overview | Bristles', artist });
+            res.render('artist/dashboard', { title: 'Dashboard | Bristles', artist });
         } catch (error) {
-            res.render('error/artist-found', { title: 'Overview | Bristles', artist });
+            res.render('error/artist-found', { title: 'Dashboard | Bristles', artist });
 
         }
     },
-    // OverView End
+    // Dashboard End
 
     // Sign Start
     getSignUp: async (req, res, next) => {

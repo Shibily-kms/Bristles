@@ -11,16 +11,6 @@ $(document).ready(function () {
 
 
 
-// Carousel Auto Working
-let carouselIndicators = document.getElementById('carousel-indicators')
-let one = carouselIndicators.firstElementChild
-one.className = "active"
-
-let carouseInner = document.getElementById('carousel-inner')
-let first = carouseInner.firstElementChild
-first.className = "carousel-item active"
-
-
 // Alert Function
 function PopAlert(text, type = "success") {
     let popDiv = document.getElementById('customAlerts')

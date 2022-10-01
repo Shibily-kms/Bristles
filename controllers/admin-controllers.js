@@ -4,21 +4,59 @@ const artistHelpers = require('../helpers/artist-helpers');
 const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
+const { resolve } = require('path');
 
 module.exports = {
 
-    // OverView Start
-    getOverView: async (req, res, next) => {
+    // Dashboard Start
+    getDashboard: async (req, res, next) => {
         try {
             let admin = req.session._BR_ADMIN
             let CAT = req.session._BR_CAT
-            res.render('admin/overview', { title: "Overview | Admin panel", admin, CAT })
+            let countObj = await adminHelpers.getDashboardCountObj()
+            res.render('admin/dashboard', { title: "Dashboard | Admin panel", admin, CAT, countObj })
         } catch (error) {
-            res.render('error/admin-found', { title: "Overview | Admin panel", admin, CAT })
+            res.render('error/admin-found', { title: "Dashboard | Admin panel", admin, CAT })
+        }
+    },
+    getTotalRevenueList: async (req, res, next) => {
+        try {
+            let response = []
+            let totalRevenueList = await adminHelpers.getTotalRevenueList()
+
+            res.json(totalRevenueList)
+        } catch (error) {
+            next(error)
+        }
+    },
+    getOrderMethodChart: async (req, res, next) => {
+        try {
+            let chartOrder = await adminHelpers.getOrderMethodChart()
+
+            res.json(chartOrder)
+        } catch (error) {
+
+            next(error)
+        }
+    },
+    getCategoryProductsChart: async (req, res, next) => {
+        try {
+            let chartCategory = await adminHelpers.getCategoryChart()
+            res.json(chartCategory)
+        } catch (error) {
+            next(error)
+        }
+    },
+    getDeliveryChart: async (req, res, next) => {
+        try {
+            let DeliveryChart = await adminHelpers.getDeliveryChart()
+            res.json(DeliveryChart)
+        } catch (error) {
+            next(error)
         }
     },
 
-    // OverView End
+    // Dashboard End
 
     // Sign Start
     getSignIn: async (req, res, next) => {
@@ -278,7 +316,7 @@ module.exports = {
             }
 
         } catch (error) {
-            console.log('errorTwo');
+
             res.render('error/admin-found', { title: "View product | Admin panel", admin, CAT, })
         }
     },
@@ -737,7 +775,7 @@ module.exports = {
         let CAT = req.session._BR_CAT
         try {
             let order = await adminHelpers.getOneUserOrder(req.params.urId)
-            console.log('hiam');
+
             res.render('admin/view-user-orders', { title: "View User | Admin panel", admin, CAT, order })
 
         } catch (error) {

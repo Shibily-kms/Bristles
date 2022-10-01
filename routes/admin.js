@@ -7,9 +7,13 @@ const userHelper = require('../helpers/user-helpres')
 
 
 /* GET users listing. */
-router.get('/', middleware.verifyAdmin, adminController.getOverView)
+router.get('/', middleware.verifyAdmin, adminController.getDashboard)
+router.post('/total-revenue-chart',adminController.getTotalRevenueList)
+router.post('/total-order-method-chart',adminController.getOrderMethodChart);
+router.post('/category-products-chart',adminController.getCategoryProductsChart);
+router.post('/total-delivery-chart',adminController.getDeliveryChart)
 
-// Admin Sign In
+// Admin Sign In    
 router.get('/sign-in', adminController.getSignIn);
 router.post('/sign-in', adminController.postSignIn)
 

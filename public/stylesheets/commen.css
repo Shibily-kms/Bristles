@@ -25,38 +25,38 @@ a {
 
 .status-Active , .status-Approve, .status-In, .status-Delivered {
   background-color: rgb(173, 255, 173);
-  color: rgb(0, 165, 0);
+  color: #00a500;
   border-color: rgb(0, 165, 0);
 }
 
 .status-Pending {
   background-color: rgb(209, 209, 209);
-  color: rgb(36, 36, 36);
+  color: #242424;
   border-color: rgb(36, 36, 36);
 }
 .status-Rejected, .status-Blocked, .status-Out , .status-Cancelled {
   background-color: rgb(255, 204, 204);
-  color: rgb(206, 0, 0);
+  color: #ce0000;
   border-color: rgb(206, 0, 0);
 }
 .status-Ordered {
   background-color: rgb(194, 232, 255);
   color: rgb(0, 110, 173);
-  border-color: rgb(0, 110, 173);
+  border-color: #006ead;
 }
 .status-Placed {
   background-color: rgb(246, 200, 255);
-  color: rgb(144, 0, 173);
+  color: #9000ad;
   border-color: rgb(144, 0, 173);
 }
 .status-Shipped{
   background-color: rgb(255, 233, 191);
-  color: rgb(187, 121, 0);
+  color: #bb7900;
   border-color: rgb(228, 148, 0);
 }
 .status-OutForDelivery{
   background-color: rgb(167, 205, 255);
-  color: rgb(0, 81, 187);
+  color: #0051bb;
   border-color: rgb(0, 81, 187);
 }
 /* Admin Slide header */

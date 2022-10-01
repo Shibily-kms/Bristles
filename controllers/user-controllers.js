@@ -522,7 +522,7 @@ module.exports = {
                     discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
                 }
             }
-            console.log(ogTotal);
+           
             if (req.session.success) {
                 res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, "success": req.session.success })
                 req.session.success = false
@@ -566,7 +566,7 @@ module.exports = {
     // CheckOut Start
     getCheckOut: async (req, res, next) => {
         let user = req.session._BR_USER
-        console.log(req.query);
+       
         try {
             let products = []
             let address = await userHelper.getAlladdress(user.urId)
@@ -575,7 +575,7 @@ module.exports = {
             let ogTotal = 0
             let BuyNow = false
             if (req.query.buynow) {
-                console.log('hi');
+               
                 let oneProduct = await adminHelpers.getOneProduct(req.query.prId)
 
                 if (oneProduct.ogPrice) {
@@ -662,7 +662,7 @@ module.exports = {
         try {
 
             let response = await userHelper.orderAccessing(req.body, user.urId)
-            console.log(response);
+           
             if (response.methord == "COD") {
                 await userHelper.afterOreder(response.products, user.urId, req.body.cpCode)
                 res.json({ codSuccess: true })

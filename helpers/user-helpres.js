@@ -752,7 +752,7 @@ module.exports = {
     orderAccessing: (body, urId) => {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log(body, 'hii');
+              
                 let obj = {}
                 // Create Random Id
                 create_random_id(8)
@@ -774,10 +774,10 @@ module.exports = {
                 obj.address = null
                 // Product
                 if (body.prId) {
-                    console.log('tobody');
+                  
                     obj.products.push(body.prId)
                 } else {
-                    console.log('outbody');
+                   
                     let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
                     obj.products = cart.list
                 }

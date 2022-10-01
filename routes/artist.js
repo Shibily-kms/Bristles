@@ -6,7 +6,7 @@ const middleware = require('../helpers/middleware-helpers')
 
 
 /* GET home page. */
-router.get('/', middleware.verifyArtist, artistController.getOverView);
+router.get('/', middleware.verifyArtist, artistController.getDashboard);
 
 // User Sign Up
 router.get('/sign-up', middleware.verifyAccountConfirm, artistController.getSignUp);

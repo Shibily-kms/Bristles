@@ -1,0 +1,404 @@
+{{>admin-top}}
+{{>admin-side}}
+
+<div class="admin-content-page-over">
+    <div class=" container-fluid top-page-padding">
+        {{!-- Start --}}
+        <div class="row">
+            <div class="col-lg-8 mb-4 order-0">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-6 mb-md-0 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/rupee-primary.png" alt="chart success"
+                                            class="rounded" />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Profit</span>
+                                <h3 class="card-title mb-2">₹{{countObj.lastMonthAmount}}</h3>
+                                <small class="text-light fw-semibold">Last 30 Days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-6 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/product-rose.png" alt="chart success"
+                                            class="rounded" />
+                                    </div>
+
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Products</span>
+                                <h3 class="card-title mb-2">{{countObj.productsCount}}</h3>
+                                <small class="text-light fw-semibold">Total Availability</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-6 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/order-warning.png" alt="chart success"
+                                            class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" href="/admin/order-list">View More</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Orders</span>
+                                <h3 class="card-title mb-2">{{countObj.orderCount}}</h3>
+                                <small class="text-light fw-semibold">On running</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-6 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/artist-success.png" alt="chart success"
+                                            class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" href="/admin/artist/all-artist">View More</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Artist</span>
+                                <h3 class="card-title mb-2">{{countObj.artistCount}}</h3>
+                                <small class="text-light fw-semibold">Availability</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 order-1">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/user-primary.png" alt="chart success"
+                                            class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                                            <a class="dropdown-item" href="/admin/user-list">View More</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Users</span>
+                                <h3 class="card-title mb-2">{{countObj.userCount}}</h3>
+                                <small class="text-light fw-semibold">Availability</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/pending-dark.png" alt="Credit Card"
+                                            class="rounded" />
+                                    </div>
+
+                                </div>
+                                <span class=" d-block mb-1">Pending items</span>
+                                <h3 class="card-title text-nowrap mb-1">{{countObj.pendingProductCount}}</h3>
+                                <small class="text-light fw-semibold">Total Pendings</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Total Revenue -->
+            <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
+                <div class="card">
+                    <div class="row row-bordered g-0">
+                        <div class="">
+                            <h5 class="card-header m-0 me-2 pb-3">Total Revenue <small style="font-size: 12px;"
+                                    class="text-light">Last 250 Days</small></h5>
+                            <div id="totalRevenueChart" class="px-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Total Revenue -->
+            <div class="col-12 col-md-8 col-lg-4 order-3 order-md-2">
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/category-blue.png" alt="Credit Card"
+                                            class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt4" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
+                                            <a class="dropdown-item" href="/admin/category">View More</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="d-block mb-1">Categories</span>
+                                <h3 class="card-title text-nowrap mb-2">{{countObj.categoryCount}}</h3>
+                                <small class="text-light fw-semibold">Count</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-title d-flex align-items-start justify-content-between">
+                                    <div class="avatar flex-shrink-0">
+                                        <img src="../assets/img/icons/unicons/coupon-info.png" alt="Credit Card"
+                                            class="rounded" />
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn p-0" type="button" id="cardOpt1" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="cardOpt1">
+                                            <a class="dropdown-item" href="/admin/coupon">View More</a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="fw-semibold d-block mb-1">Coupons</span>
+                                <h3 class="card-title mb-2">{{countObj.couponCount}}</h3>
+                                <small class="text-light fw-semibold">Active Coupons</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
+                                    <div
+                                        class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                                        <div class="card-title">
+                                            <h5 class="text-nowrap mb-2">Delivery Report</h5>
+                                            <span class="badge bg-label-warning rounded-pill">6 Months</span>
+                                        </div>
+                                        <div class="mt-sm-auto">
+                                            <small class="text-light text-nowrap fw-semibold">Total</small>
+                                            <h3 class="mb-0" id="deliveryCount">0</h3>
+                                        </div>
+                                    </div>
+                                    <div id="profileReportChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Order Statistics -->
+            <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Top Categories</h5>
+                            <small class="text-muted">Top 4 Categories</small>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex flex-column align-items-center gap-1">
+                                <h2 class="mb-2">{{countObj.productsCount}}</h2>
+                                <span>Total Products</span>
+                            </div>
+                            <div id="orderStatisticsChart"></div>
+                        </div>
+                        <ul class="p-0 m-0">
+                            {{#each countObj.top4Category}}
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class='bx bxs-category-alt'></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">{{this.category}}</h6>
+                                        <small class="text-muted">Products count</small>
+                                    </div>
+                                    <div class="user-progress">
+                                        <small class="fw-semibold">{{this.count}}</small>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--/ Order Statistics -->
+
+            <!-- Expense Overview -->
+            <div class="col-md-6 col-lg-4 order-1 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+                            <h5 class="m-0 me-2">Orders Method</h5>
+                            <small class="text-muted">COD / Online</small>
+                        </div>
+
+                    </div>
+                    <div class="card-body px-0">
+                        <div class="tab-content p-0">
+                            <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
+
+                                <div id="incomeChart"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Expense Overview -->
+
+            <!-- Transactions -->
+            <div class="col-md-6 col-lg-4 order-2 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="card-title m-0 me-2">Order List</h5>
+
+                    </div>
+                    <div class="card-body">
+                        <ul class="p-0 m-0">
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/order-success.png" alt="User"
+                                        class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Delivered</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[0]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/out-blue.png" alt="User" class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Out For Delivery</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[1]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/shipped.png" alt="User" class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Shipped</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[2]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/placed.png" alt="User" class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Placed</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[3]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/pending-black.png" alt="User"
+                                        class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Pending</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[4]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="d-flex">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <img src="../assets/img/icons/unicons/cancel.png" alt="User" class="rounded" />
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Order</small>
+                                        <h6 class="mb-0">Cancelled</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{countObj.orderStatusBasieCount.[5]}}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Sidebar Action --}}
+<script>
+    document.getElementById('dashboard').classList += " active"
+</script>
+
+<script src="/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+<script src="/assets/js/admin-dashboards-analytics.js"></script>
