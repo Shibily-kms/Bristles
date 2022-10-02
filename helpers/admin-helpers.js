@@ -36,7 +36,7 @@ module.exports = {
 
                 let today = new Date()
                 let todayYMD = new Date().toLocaleDateString('en-CA')
-                console.log(todayYMD);
+              
                 let before = new Date(new Date().getTime() - (30 * 24 * 60 * 60 * 1000))
                 let paymentLastMonth = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
@@ -126,7 +126,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ count: -1 }).limit(4).toArray()
-                console.log(top4Category);
+              
                 let obj = {
                     lastMonthAmount: paymentLastMonth[0].Amount,
                     productsCount,
@@ -181,7 +181,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ date: 1 }).toArray()
-                console.log(revenue);
+              
                 let obj = {
                     date: [], cod: [0, 0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0, 0]
                 }
@@ -243,7 +243,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ date: 1 }).toArray()
-                console.log(order);
+              
                 let obj = {
                     date: [], cod: [0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0]
                 }
@@ -266,7 +266,7 @@ module.exports = {
                     obj.date[i] = month[a + i - 1]
                 }
                 obj.large = large + 2
-                console.log(obj);
+              
                 resolve(obj)
             } catch (error) {
                 reject(error)

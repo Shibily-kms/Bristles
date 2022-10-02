@@ -128,6 +128,186 @@ module.exports = {
     },
     // Sign End
 
+    // DashBoard Start
+    getTotalRevenueChart: (arId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let today = new Date()
+                let before = new Date(new Date().getTime() - (190 * 24 * 60 * 60 * 1000))
+
+                let revenue = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            arId: arId, status: 'Ordered'
+                        }
+                    },
+                    {
+                        $project: {
+                            arId: 1, prId: 1, price: 1
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.ORDER_COLLECTION,
+                            let: { 'proId': '$prId' },
+                            pipeline: [
+                                {
+                                    '$match': {
+                                        '$expr': {
+                                            '$in': ['$$proId', '$products']
+                                        }
+                                    }
+                                }
+                            ],
+                            as: 'order'
+                        }
+                    },
+                    {
+                        $project: {
+                            prId: 1, price: 1,
+                            date: { $dateToString: { format: "%m-%Y", date: { $first: '$order.deliveryDate' } } }
+                        }
+                    }
+                ]).toArray()
+
+                let obj = {
+                    date: [], amount: [0, 0, 0, 0, 0, 0, 0], count: [0, 0, 0, 0, 0, 0, 0]
+                }
+                let month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                let large = 0
+
+                let a = today.getMonth() - 5
+                for (let i = 0; i < 7; i++) {
+                    for (let k = 0; k < revenue.length; k++) {
+                        if (Number(revenue[k].date.slice(0, 2)) == Number(a + i)) {
+                            obj.amount[i] = obj.amount[i] + revenue[k].price
+                            obj.count[i] = obj.count[i] + 1
+                        }
+                        if (obj.amount[i] > large) {
+                            large = obj.amount[i]
+                        }
+
+                    }
+                    obj.date[i] = month[a + i - 1]
+                }
+                obj.large = large + 10
+
+                resolve(obj);
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    getDashboardDetails: (arId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let totalPayment = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            arId: arId, status: 'Ordered',
+                        }
+
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            count: { $sum: 1 },
+                            amount: { $sum: '$price' }
+                        }
+                    }
+                ]).toArray()
+                totalPayment = totalPayment[0] == undefined ? { count: 0, amount: 0 } : totalPayment[0]
+                console.log(totalPayment, 'print');
+                let totalProducts = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            arId: arId, status: {
+                                $in: ['Approve', 'Pending']
+                            }
+                        }
+
+                    },
+                    {
+                        $group: {
+                            _id: { status: '$status' },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            status: '$_id.status',
+                            count: '$count',
+                            _id: 0
+                        }
+                    }
+                ]).toArray()
+                let pending = 0
+                let approve = 0
+                for (let i = 0; i < totalProducts.length; i++) {
+                    if (totalProducts[i].status == "Pending") {
+                        pending = totalProducts[i].count
+                    } else {
+                        approve = totalProducts[i].count
+                    }
+
+                }
+
+
+                let obj = {
+                    totalPayment,
+                    productCount: {
+                        pending, approve
+                    },
+                    totalProducts : approve + totalPayment.count 
+                }
+
+                resolve(obj)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    get4TopCategory: (arId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let topCategory = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
+                    {
+                        $match: {
+                            arId: arId,
+                            status: {
+                                $in: ['Approve', 'Ordered']
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: { category: '$category' },
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $project: {
+                            category: '$_id.category',
+                            count: '$count',
+                            _id: 0
+                        }
+                    }
+                ]).sort({ count: -1 }).limit(4).toArray()
+                let obj = {
+                    category: [], count: []
+                }
+                for (let i = 0; i < topCategory.length; i++) {
+                    obj.category[i] = topCategory[i].category
+                    obj.count[i] = topCategory[i].count
+                }
+                resolve(obj);
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
+    // DashBoard End
+
     // Artist About Start
     getArtist: (arId) => {
         return new Promise(async (resolve, reject) => {
@@ -300,6 +480,7 @@ module.exports = {
                     body.prId = "PR" + randomString
                     body.delete = false
                     body.status = "Pending"
+                    body.price = Number(body.price)
                 }
                 db.get().collection(collection.PRODUCT_COLLECTION).insertOne(body)
                 resolve()
@@ -341,7 +522,7 @@ module.exports = {
                 } else {
                     images = product.image
                 }
-
+                body.price = Number(body.price)
                 db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: body.prId }, {
                     $set: {
                         title: body.title,

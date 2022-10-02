@@ -10,10 +10,28 @@ module.exports = {
     getDashboard: async (req, res, next) => {
         let artist = req.session._BR_ARTIST
         try {
-            res.render('artist/dashboard', { title: 'Dashboard | Bristles', artist });
+            let dashboardCount = await artistHelper.getDashboardDetails(artist.arId)
+            res.render('artist/dashboard', { title: 'Dashboard | Bristles', artist, dashboardCount });
         } catch (error) {
             res.render('error/artist-found', { title: 'Dashboard | Bristles', artist });
 
+        }
+    },
+    getTotalRevenueChart: async (req, res, next) => {
+        try {
+            let revenue = await artistHelper.getTotalRevenueChart(req.session._BR_ARTIST.arId)
+            res.json(revenue)
+        } catch (error) {
+            next(error)
+        }
+    },
+    top4CategoryChart:async(req,res)=>{
+        try {
+            console.log('here');
+            let categoryChart = await artistHelper.get4TopCategory(req.session._BR_ARTIST.arId)
+            res.json(categoryChart)
+        } catch (error) {
+            next(error)
         }
     },
     // Dashboard End

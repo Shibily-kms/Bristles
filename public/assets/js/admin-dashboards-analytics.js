@@ -18,8 +18,6 @@
       },
       method: 'post',
       success: (response) => {
-
-
         // Chart
         const totalRevenueChartEl = document.querySelector('#totalRevenueChart'),
           totalRevenueChartOptions = {

@@ -7,6 +7,8 @@ const middleware = require('../helpers/middleware-helpers')
 
 /* GET home page. */
 router.get('/', middleware.verifyArtist, artistController.getDashboard);
+router.post('/total-revenue-chart',artistController.getTotalRevenueChart);
+router.post('/top-4-category',artistController.top4CategoryChart)
 
 // User Sign Up
 router.get('/sign-up', middleware.verifyAccountConfirm, artistController.getSignUp);
