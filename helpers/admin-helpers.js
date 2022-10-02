@@ -36,7 +36,7 @@ module.exports = {
 
                 let today = new Date()
                 let todayYMD = new Date().toLocaleDateString('en-CA')
-              
+
                 let before = new Date(new Date().getTime() - (30 * 24 * 60 * 60 * 1000))
                 let paymentLastMonth = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
@@ -60,8 +60,9 @@ module.exports = {
                 let artistCount = await db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ['Active', 'Blocked'] } }).count()
                 let userCount = await db.get().collection(collection.USER_COLLECTION).find().count()
                 let pendingProductCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Pending' }).count()
-                let categoryCount = await db.get().collection(collection.CAROUSEL_COLLECTION).find().count()
+                let categoryCount = await db.get().collection(collection.CATEGORY_COLLECTION).find().count()
                 let couponCount = await db.get().collection(collection.COUPON_COLLECTION).find({ used: false, validity: { $gte: todayYMD } }).count()
+
                 let orderStatusBasieCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
                         $project: {
@@ -126,9 +127,14 @@ module.exports = {
                         }
                     }
                 ]).sort({ count: -1 }).limit(4).toArray()
-              
+
+
+                // Zero Handiling
+                let lastMonthAmount = paymentLastMonth[0] == undefined ? 0 : paymentLastMonth[0].Amount
+
+
                 let obj = {
-                    lastMonthAmount: paymentLastMonth[0].Amount,
+                    lastMonthAmount,
                     productsCount,
                     orderCount,
                     artistCount,
@@ -181,7 +187,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ date: 1 }).toArray()
-              
+
                 let obj = {
                     date: [], cod: [0, 0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0, 0]
                 }
@@ -243,7 +249,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ date: 1 }).toArray()
-              
+
                 let obj = {
                     date: [], cod: [0, 0, 0, 0, 0, 0, 0], online: [0, 0, 0, 0, 0, 0, 0]
                 }
@@ -266,7 +272,7 @@ module.exports = {
                     obj.date[i] = month[a + i - 1]
                 }
                 obj.large = large + 2
-              
+
                 resolve(obj)
             } catch (error) {
                 reject(error)
@@ -303,6 +309,7 @@ module.exports = {
                         }
                     }
                 ]).sort({ count: -1 }).toArray()
+                categoryList = categoryList[0] == undefined ? [{ category: 0, count: 0 }] : categoryList
                 let sum = 0
                 let obj = {
                     category: [], count: []

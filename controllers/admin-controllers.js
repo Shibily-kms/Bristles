@@ -4,7 +4,7 @@ const artistHelpers = require('../helpers/artist-helpers');
 const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
-const { resolve } = require('path');
+
 
 module.exports = {
 
