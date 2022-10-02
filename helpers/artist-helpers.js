@@ -217,7 +217,7 @@ module.exports = {
                     }
                 ]).toArray()
                 totalPayment = totalPayment[0] == undefined ? { count: 0, amount: 0 } : totalPayment[0]
-                console.log(totalPayment, 'print');
+             
                 let totalProducts = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                     {
                         $match: {

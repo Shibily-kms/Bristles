@@ -4,6 +4,7 @@ const artistHelpers = require('../helpers/artist-helpers');
 const userHelper = require('../helpers/user-helpres');
 const adminHelpers = require('../helpers/admin-helpers');
 const optionHelpers = require('../helpers/option-helper');
+var json2xls = require('json2xls');
 
 
 module.exports = {
@@ -790,7 +791,12 @@ module.exports = {
         let CAT = req.session._BR_CAT
         try {
             let order = await adminHelpers.getAllOrder()
-            res.render('admin/order-list', { title: "Order List | Admin panel", admin, CAT, order })
+            if (req.session.error) {
+                res.render('admin/order-list', { title: "Order List | Admin panel", admin, CAT, order, 'error': req.session.error })
+                req.session.error = false
+            } else {
+                res.render('admin/order-list', { title: "Order List | Admin panel", admin, CAT, order })
+            }
         } catch (error) {
             res.render('error/admin-found', { title: "Order List | Admin panel", admin, CAT, })
         }
@@ -802,6 +808,7 @@ module.exports = {
         try {
             let orId = req.query.orId
             let order = await adminHelpers.getOneOrder(orId)
+            console.log(order);
             res.render('admin/view-order', { title: "View Order | Admin panel", admin, CAT, order })
 
         } catch (error) {
@@ -819,6 +826,37 @@ module.exports = {
             next(error)
         }
 
+    },
+    downloadOrderListXLFile: async (req, res, next) => {
+        try {
+            let orId = req.query.orId
+            
+            let orderData = await adminHelpers.getOneOrderForXL(orId)
+            // Set to JSON and Path
+            orderDate = JSON.stringify(orderData)
+            console.log('hi');
+            let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
+            let xls = json2xls(JSON.parse(orderDate));
+            console.log('hia');
+            // Write file
+            fs.writeFileSync(filePath, xls, 'binary', function (err) {
+                if (err) console.log(err);
+                return err;
+            });
+            // Download File
+            res.download(filePath, (err) => {
+                if (err) {
+                    fs.unlinkSync(filePath)
+                    req.session.error = 'Could not download the file'
+                    res.redirect('/admin/order-list')
+                } else {
+                    fs.unlinkSync(filePath)
+                }
+            })
+
+        } catch (error) {
+            next(error)
+        }
     },
     // Order End
 

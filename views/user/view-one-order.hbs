@@ -73,8 +73,16 @@
                                     </div>
                                     {{/if}}{{/if}}
                                     <div class="d-flex justify-content-end">
-                                        <button onclick="PrintDiv('print-container','nsaonline.in')"
-                                            class="btn btn-sm text-dark fw-bold btn-warning"><i class='bx bx-spreadsheet'></i> Print Invoice</button>
+                                        <button onclick="PrintDiv('print-container','Bristles.in')"
+                                            data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                            data-bs-html="true" title="Print Invoice"
+                                            class="btn btn-sm text-dark fw-bold btn-warning"><i
+                                                class='bx bx-printer'></i> Invoice</button>
+                                        <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                            data-bs-html="true" title="Download XL File"
+                                            class="btn btn-sm text-white fw-bold btn-success ms-1"
+                                            href="/order/xl-file?orId={{order.[0].orId}}"><i
+                                                class='bx bx-spreadsheet'></i> XL file</a>
                                     </div>
 
                                 </div>

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const optionHelper = require('../helpers/option-helper');
 const twilioHelper = require('../helpers/twilio-helper');
-
+var json2xls = require('json2xls');
 
 
 module.exports = {
@@ -49,6 +49,7 @@ module.exports = {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
             } else if (response.status) {
+                console.log('here');
                 req.session._BR_DATA = req.body
                 await twilioHelper.dosms(req.body.mobile).then((status) => {
                     if (status) {
@@ -522,7 +523,7 @@ module.exports = {
                     discount = discount + (Number(products[i].cartItems.ogPrice) - Number(products[i].cartItems.price))
                 }
             }
-           
+
             if (req.session.success) {
                 res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, "success": req.session.success })
                 req.session.success = false
@@ -566,7 +567,7 @@ module.exports = {
     // CheckOut Start
     getCheckOut: async (req, res, next) => {
         let user = req.session._BR_USER
-       
+
         try {
             let products = []
             let address = await userHelper.getAlladdress(user.urId)
@@ -575,7 +576,7 @@ module.exports = {
             let ogTotal = 0
             let BuyNow = false
             if (req.query.buynow) {
-               
+
                 let oneProduct = await adminHelpers.getOneProduct(req.query.prId)
 
                 if (oneProduct.ogPrice) {
@@ -659,10 +660,11 @@ module.exports = {
     // Order Start
     postOrder: async (req, res, next) => {
         let user = req.session._BR_USER
+        console.log('hi');
         try {
 
             let response = await userHelper.orderAccessing(req.body, user.urId)
-           
+
             if (response.methord == "COD") {
                 await userHelper.afterOreder(response.products, user.urId, req.body.cpCode)
                 res.json({ codSuccess: true })
@@ -707,7 +709,13 @@ module.exports = {
         let user = req.session._BR_USER
         try {
             let order = await userHelper.getAllOrder(user.urId)
-            res.render('user/order-list', { title: 'Order List | Bristles', user, order })
+            if (req.session.error) {
+                res.render('user/order-list', { title: 'Order List | Bristles', user, order, 'error': req.session.error })
+                req.session.error = false
+            } else {
+
+                res.render('user/order-list', { title: 'Order List | Bristles', user, order })
+            }
 
         } catch (error) {
             res.render('error/user-found', { title: 'Order List | Bristles', user, })
@@ -754,6 +762,37 @@ module.exports = {
             next(error)
         }
 
+    },
+    downloadOrderListXLFile: async (req, res, next) => {
+        try {
+            let orId = req.query.orId
+
+            let orderData = await adminHelpers.getOneOrderForXL(orId)
+            // Set to JSON and Path
+            orderDate = JSON.stringify(orderData)
+            console.log('hi');
+            let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
+            let xls = json2xls(JSON.parse(orderDate));
+            console.log('hia');
+            // Write file
+            fs.writeFileSync(filePath, xls, 'binary', function (err) {
+                if (err) console.log(err);
+                return err;
+            });
+            // Download File
+            res.download(filePath, (err) => {
+                if (err) {
+                    fs.unlinkSync(filePath)
+                    req.session.error = 'Could not download the file'
+                    res.redirect('/order')
+                } else {
+                    fs.unlinkSync(filePath)
+                }
+            })
+
+        } catch (error) {
+            next(error)
+        }
     },
     // Order End
 

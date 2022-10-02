@@ -991,7 +991,7 @@ module.exports = {
                             date: { $dateToString: { format: "%d-%m-%Y", date: "$date", timezone: "+05:30" } },
                         }
                     }
-                ]).sort({ date: -1 }).toArray()
+                ]).sort({ _id: -1 }).toArray()
                 resolve(order)
 
 
@@ -1067,17 +1067,80 @@ module.exports = {
     changeOrderStatus: (body) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
-                    $set: {
-                        status: body.status
-                    }
-                })
+                let response = ''
+                if (body.status == 'Delivered') {
+                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
+                        $set: {
+                            status: body.status,
+                            deliveryDate: new Date()
+                        }
+                    })
+                } else {
+                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
+                        $set: {
+                            status: body.status
+                        }
+                    })
+                }
                 resolve(response)
 
 
             } catch (error) {
                 reject(error)
             }
+        })
+    },
+    getOneOrderForXL: (orId) => {
+        return new Promise(async (resolve, reject) => {
+            let order = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match: {
+                        orId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: collection.USER_COLLECTION,
+                        localField: "urId",
+                        foreignField: "urId",
+                        as: 'user'
+                    }
+                },
+                {
+                    $unwind: "$products"
+                },
+                {
+                    $lookup: {
+                        from: collection.PRODUCT_COLLECTION,
+                        localField: "products",
+                        foreignField: "prId",
+                        as: 'productDetails'
+                    }
+                },
+                {
+                    $project: {
+                        _id:0,
+                        ORDER_ID: '$orId',
+                        USER_ID: '$urId',
+                        NAME: { $first: '$user.userName' },
+                        EMAIL: { $first: '$user.email' },
+                        METHOD: '$method',
+                        TOTAL_AMOUNT: '$amount',
+                        STATUS: '$status',
+                        DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
+                        PRODUCT_ID: { $first: '$productDetails.prId' },
+                        PRODUCT_TITLE: { $first: '$productDetails.title' },
+                        CATEGORY: { $first: '$productDetails.category' },
+                        SIZE: { $first: '$productDetails.size' },
+                        MEDIUM: { $first: '$productDetails.medium' },
+                        PRODUCT_PRICE: { $first: '$productDetails.price' },
+                        DELIVERY_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$deliveryDate", } },
+                        CANCEL_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$cancelDate", } },
+                        ARTIST_ID: { $first: '$productDetails.arId' },
+                    }
+                }
+            ]).toArray()
+            resolve(order)
         })
     },
     // Order End

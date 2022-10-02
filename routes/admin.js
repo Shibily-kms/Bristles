@@ -122,7 +122,8 @@ router.get('/coupon/:cpCode/delete', middleware.verifyAdmin, adminController.del
 // Order
 router.get('/order-list', middleware.verifyAdmin, adminController.getAllOrder)
 router.get('/order-list/details', middleware.verifyAdmin, adminController.getOneOrder)
-router.post('/order-list/change-order-status', middleware.verifyAdmin, adminController.changeOrderStatus)
+router.post('/order-list/change-order-status', middleware.verifyAdmin, adminController.changeOrderStatus);
+router.get('/order-list/xl-file',middleware.verifyAdmin,adminController.downloadOrderListXLFile)
 
 // Payment
 router.get('/payment/details', middleware.verifyAdmin, adminController.getOnePaymentDetails)

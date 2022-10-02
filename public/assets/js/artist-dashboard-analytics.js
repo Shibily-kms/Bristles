@@ -20,7 +20,7 @@
             },
             method: 'post',
             success: (categoryChart) => {
-                console.log(categoryChart);
+               
                 const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
                     orderChartConfig = {
                         chart: {

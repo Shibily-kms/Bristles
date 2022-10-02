@@ -27,7 +27,7 @@ module.exports = {
     },
     top4CategoryChart:async(req,res)=>{
         try {
-            console.log('here');
+        
             let categoryChart = await artistHelper.get4TopCategory(req.session._BR_ARTIST.arId)
             res.json(categoryChart)
         } catch (error) {

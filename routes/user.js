@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const store = require('../config/multer')
-const userController = require('../controllers/user-controllers')
+const store = require('../config/multer');
+const userController = require('../controllers/user-controllers');
 const middleware = require('../helpers/middleware-helpers')
 
 // middlewear
@@ -81,8 +81,10 @@ router.get('/checkout/payment/success', middleware.verifyUser, userController.su
 router.get('/checkout/payment/failed', middleware.verifyUser, userController.failedOrder)
 router.get('/order', middleware.verifyUser, userController.getOrder)
 router.get('/order/details', middleware.verifyUser, userController.getOneOrder);
+router.get('/order/xl-file',middleware.verifyUser,userController.downloadOrderListXLFile)
 router.post('/order/cancel', middleware.verifyUser, userController.getCancelOrder);
 router.post('/pending-payment', middleware.verifyUser, userController.pendingPaymentCall)
+
 
 // WishList
 router.post('/wish-product', userController.wishProduct)
