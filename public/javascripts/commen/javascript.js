@@ -13,6 +13,7 @@ $(document).ready(function () {
 
 // Alert Function
 function PopAlert(text, type = "success") {
+    console.log('success');
     let popDiv = document.getElementById('customAlerts')
     let alertBox = `<div class="admin-alert"  >
         <div id="alertBoxStyle" class="alert alert-success alert-dismissible" role="alert"><span id="value-alert"></span>

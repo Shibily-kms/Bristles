@@ -571,26 +571,30 @@ module.exports = {
     addToCart: (urId, body) => {
         return new Promise(async (resolve, reject) => {
             try {
+                let productStatus = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({ prId: body.prId, status: 'Approve' })
+                if (productStatus) {
+                    let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
+                    if (cart) {
+                        let status = await db.get().collection(collection.CART_COLLECTION).findOne({ urId, list: { $in: [body.prId] } })
+                        if (status) {
+                            resolve({ alreadyErr: true })
+                        } else {
+                            let response = await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
+                                $push: {
+                                    list: body.prId
+                                }
+                            })
+                            resolve(response)
 
-                let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
-                if (cart) {
-                    let status = await db.get().collection(collection.CART_COLLECTION).findOne({ urId, list: { $in: [body.prId] } })
-                    if (status) {
-                        resolve({ alreadyErr: true })
+                        }
+
                     } else {
-                        let response = await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
-                            $push: {
-                                list: body.prId
-                            }
-                        })
+                        let response = await db.get().collection(collection.CART_COLLECTION).insertOne({ urId, list: [body.prId] })
                         resolve(response)
 
                     }
-
                 } else {
-                    let response = await db.get().collection(collection.CART_COLLECTION).insertOne({ urId, list: [body.prId] })
-                    resolve(response)
-
+                    resolve({ outStoke: true })
                 }
 
             } catch (error) {
@@ -643,7 +647,8 @@ module.exports = {
                     },
                     {
                         $project: {
-                            cartItems: { $arrayElemAt: ['$cartItems', 0] }
+                            cartItems: { $arrayElemAt: ['$cartItems', 0] },
+                            outStoke: { $eq: [{ $first: '$cartItems.status' }, "Ordered"] }
                         }
                     }
 
@@ -752,7 +757,7 @@ module.exports = {
     orderAccessing: (body, urId) => {
         return new Promise(async (resolve, reject) => {
             try {
-              
+
                 let obj = {}
                 // Create Random Id
                 create_random_id(8)
@@ -774,10 +779,10 @@ module.exports = {
                 obj.address = null
                 // Product
                 if (body.prId) {
-                  
+
                     obj.products.push(body.prId)
                 } else {
-                   
+
                     let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
                     obj.products = cart.list
                 }

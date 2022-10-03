@@ -1,18 +1,19 @@
-const client = require('twilio')('AC72717c826f8ab1f8c921a975f7f71b8c', 'aa0faf109eb533f8dc612dfe7e66e268');
-const serviceSid = 'AC72717c826f8ab1f8c921a975f7f71b8c'
+const client = require('twilio')('AC72717c826f8ab1f8c921a975f7f71b8c', '936287e96fc4bb59975c684e894c522c');
+const serviceSid = 'VAfd8b8483b29c8a6816871d0c20295559'
 
 module.exports = {
 
     dosms: (mobile) => {
         return new Promise(async (resolve, reject) => {
-
             await client.verify.services(serviceSid).verifications.create({
                 to: `+91${mobile}`,
                 channel: 'sms'
             }).then((response) => {
+                console.log(response);
                 response.valid = true
                 resolve(response)
             }).catch((err)=>{
+                console.log(err,'rrr');
                 reject(err)
             })
 

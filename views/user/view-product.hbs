@@ -72,6 +72,10 @@
                 <h6 class="m-0 text-success"> {{product.percentage}}% off</h6>
                 {{/if}}
             </div>
+            {{#if product.OutStoke}}
+            <button type="button" class="btn btn-danger mb-3 add-cart-button"><i class='bx bx-info-circle'></i> Out of Stoke
+            </button>
+            {{else}}
             <button type="button" class="btn btn-lg btn-success mb-3 add-cart-button"
                 onclick="addToCart('{{product.prId}}')">
                 <i class='bx bx-cart-alt'></i> Add to Cart
@@ -81,6 +85,7 @@
                     <i class='bx  bx-purchase-tag-alt'></i> Buy Now
                 </button>
             </a>
+            {{/if}}
             <h6 class="sub-head">Specification</h6>
             <hr>
             <div class="product-list-admin pb-4">

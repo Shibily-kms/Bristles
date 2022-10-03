@@ -544,6 +544,7 @@ module.exports = {
                     result.status = "In"
                 } else if (result.status == "Ordered") {
                     result.status = 'Out'
+                    result.OutStoke = true
                 }
                 resolve(result)
 

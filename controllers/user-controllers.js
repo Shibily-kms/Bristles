@@ -248,6 +248,7 @@ module.exports = {
             let NOW_CAT = req.params.NOW_CAT
             let prId = req.params.prId
             let product = await adminHelpers.getOneProduct(prId)
+
             res.render('user/view-product', { title: 'View Product | Bristles', product, NOW_CAT, user })
 
         } catch (error) {
@@ -505,6 +506,7 @@ module.exports = {
                 urId = user.urId
             }
             let products = await userHelper.getCartProduct(urId)
+            console.log(products);
             let total = 0
             let discount = 0
             for (let i = 0; i < products.length; i++) {
@@ -527,6 +529,9 @@ module.exports = {
             if (req.session.success) {
                 res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, "success": req.session.success })
                 req.session.success = false
+            } else if (req.session.error) {
+                res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, "error": req.session.error })
+                req.session.error = false
             } else {
                 res.render('user/cart', { title: 'Cart | Bristles', user, products, total, discount, ogTotal, })
             }
@@ -554,14 +559,7 @@ module.exports = {
         }
 
     },
-    getBuyNow: async (req, res) => {
-        try {
-            let prId = req.params.prId
 
-        } catch (error) {
-
-        }
-    },
     // Cart End
 
     // CheckOut Start
@@ -575,6 +573,7 @@ module.exports = {
             let discount = 0
             let ogTotal = 0
             let BuyNow = false
+            let flag = false
             if (req.query.buynow) {
 
                 let oneProduct = await adminHelpers.getOneProduct(req.query.prId)
@@ -594,11 +593,16 @@ module.exports = {
 
             } else {
                 products = await userHelper.getCartProduct(user.urId)
+                
                 for (let i = 0; i < products.length; i++) {
                     if (products[i].cartItems.ogPrice) {
                         ogTotal = ogTotal + Number(products[i].cartItems.ogPrice)
                     } else {
                         ogTotal = ogTotal + Number(products[i].cartItems.price)
+                    }
+                    console.log(products[i].outStoke);
+                    if (products[i].outStoke) {
+                        flag = true
                     }
                 }
                 for (let i = 0; i < products.length; i++) {
@@ -610,9 +614,14 @@ module.exports = {
                     }
                 }
             }
-
-
-            res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address, ogTotal, BuyNow })
+            console.log('iam here');
+            console.log(flag);
+            if (flag == true) {
+                req.session.error = 'Remeove ordered Products from cart'
+                res.redirect('/cart')
+            } else {
+                res.render('user/checkout', { title: 'Checkout | Bristles', user, products, total, discount, address, ogTotal, BuyNow })
+            }
 
         } catch (error) {
             res.render('error/user-found', { title: 'Checkout | Bristles', user, })

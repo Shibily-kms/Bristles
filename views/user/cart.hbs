@@ -44,16 +44,25 @@
                                             href="/list/{{this.cartItems.category}}/{{this.cartItems.prId}}/view"
                                             target="_blank"><i class='bx bx-show-alt me-0 me-sm-1'></i>
                                             <span class="d-none d-sm-block">View</span></a>
-                                        <a class="btn btn-sm btn-success text-white d-flex me-1 " 
-                                        href="/checkout?buynow=true&prId={{this.cartItems.prId}}"><i
+                                        {{#if this.outStoke}}
+                                        {{else}}
+                                        <a class="btn btn-sm btn-success text-white d-flex me-1 "
+                                            href="/checkout?buynow=true&prId={{this.cartItems.prId}}"><i
                                                 class='bx bx-purchase-tag-alt me-0 me-sm-1'></i>
                                             <span class="d-none d-sm-block">Buy now</span></a>
+                                        {{/if}}
                                         <button class="btn btn-sm btn-danger text-white d-flex me-1"
                                             onclick="removeProduct('{{this.cartItems.prId}}')"><i
                                                 class='bx bx-trash me-0 me-sm-1'></i>
                                             <span class="d-none d-sm-block">Remove</span></button>
+                                        {{#if this.outStoke}}
+                                        <button class="btn btn-sm  d-flex me-1 text-danger"><i
+                                                class='bx bx-info-circle'></i>
+                                            This product ordered
+                                            !</button>
+                                        {{/if}}
                                     </div>
-                                   
+
                                 </div>
                             </div>
                         </div>

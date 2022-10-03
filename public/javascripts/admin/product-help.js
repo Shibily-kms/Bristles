@@ -16,6 +16,7 @@ function viewImage(event) {
         }
         if (leng > 4) {
             document.getElementById('inputChoose').value = null
+           
             alert('4 picher only allowed')
         } else {
             for (let i = 0; i < leng; i++) {

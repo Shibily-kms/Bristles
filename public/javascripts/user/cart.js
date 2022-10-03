@@ -9,7 +9,10 @@ function addToCart(prId) {
         success: (response) => {
             if (response.alreadyErr) {
                 location.replace('/cart')
+            } else if (response.outStoke) {
+                PopAlert('This product out of stoke','danger')
             } else {
+                PopAlert('Added in cart')
                 let count = document.getElementById('cart-count').innerHTML
                 count = parseInt(count) + 1
                 document.getElementById('cart-count').innerHTML = count
@@ -213,8 +216,13 @@ function checkCouponCode() {
                     document.getElementById('totalPrice').innerHTML = price - response.value
                     document.getElementById('couponAlert').style.display = 'none'
                     let discount = Number(document.getElementById('discoundPrice').innerHTML)
-                    document.getElementById('discoundPrice').innerHTML = discount + Number(response.value) 
+                    document.getElementById('discoundPrice').innerHTML = discount + Number(response.value)
                 }
+                let button = document.getElementById('button-addon2')
+                button.innerHTML = 'Applied!'
+                button.className = 'btn btn-success'
+                button.onclick = ''
+
             }
 
         }
