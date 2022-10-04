@@ -154,7 +154,7 @@ module.exports = {
                                 {
                                     '$match': {
                                         '$expr': {
-                                            '$in': ['$$proId', '$products']
+                                            '$in': ['$$proId', '$products.prId']
                                         }
                                     }
                                 }
@@ -165,7 +165,7 @@ module.exports = {
                     {
                         $project: {
                             prId: 1, price: 1,
-                            date: { $dateToString: { format: "%m-%Y", date: { $first: '$order.deliveryDate' } } }
+                            date: { $dateToString: { format: "%m-%Y", date: { $first: '$order.date' } } }
                         }
                     }
                 ]).toArray()
@@ -217,7 +217,7 @@ module.exports = {
                     }
                 ]).toArray()
                 totalPayment = totalPayment[0] == undefined ? { count: 0, amount: 0 } : totalPayment[0]
-             
+
                 let totalProducts = await db.get().collection(collection.PRODUCT_COLLECTION).aggregate([
                     {
                         $match: {
@@ -258,7 +258,7 @@ module.exports = {
                     productCount: {
                         pending, approve
                     },
-                    totalProducts : approve + totalPayment.count 
+                    totalProducts: approve + totalPayment.count
                 }
 
                 resolve(obj)
@@ -586,21 +586,29 @@ module.exports = {
                     {
                         $match: {
                             products: {
-                                $in: [prId]
+                                $elemMatch: {
+                                    prId: prId,
+                                    status: {
+                                        $nin: ['Cancelled']
+                                    }
+                                }
                             }
+
                         }
                     },
+
+
                     {
                         $project: {
-                            orId: 1, methord: 1, status: 1, deliveryDate: 1
+                            orId: 1, methord: 1, date: 1,
                         }
                     }
                 ]).toArray()
+              
                 if (status.length > 0) {
                     product.orId = status[0].orId
                     product.methord = status[0].methord
-                    product.status = status[0].status
-                    product.date = help.dateWithMonth(status[0].deliveryDate)
+                    product.date = help.dateWithMonth(status[0].date)
                 }
                 resolve(product)
             } catch (error) {

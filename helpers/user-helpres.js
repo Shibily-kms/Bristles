@@ -772,20 +772,31 @@ module.exports = {
                 obj.urId = urId
                 obj.methord = body.methord == 'payment=COD' ? 'COD' : "online"
                 obj.amount = Number(body.amount)
-                obj.status = obj.methord == "COD" ? "Placed" : "Pending"
+                // obj.status = obj.methord == "COD" ? "Placed" : "Pending"
                 obj.date = new Date()
-                obj.deliveryDate = new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000))
+                // obj.deliveryDate = new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000))
                 obj.products = []
                 obj.address = null
                 // Product
                 if (body.prId) {
-
                     obj.products.push(body.prId)
                 } else {
-
                     let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
-                    obj.products = cart.list
+                    typeof cart == 'string' ? obj.products.push(cart) : obj.products = cart.list
                 }
+              
+                let proObj = []
+                for (let i = 0; i < obj.products.length; i++) {
+                    let objNew = {
+                        prId: obj.products[i],
+                        status: obj.methord == "COD" ? "Placed" : "Pending",
+                        deliveryDate: new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000))
+                    }
+                    proObj.push(objNew)
+                }
+                obj.products = proObj
+              
+
                 // Address
                 let address = await db.get().collection(collection.USER_COLLECTION).aggregate([
                     {
@@ -829,15 +840,15 @@ module.exports = {
             }
         })
     },
-    afterOreder: (product, urId, cpCode) => {
+    afterOreder: (products, urId, cpCode) => {
         return new Promise(async (resolve, reject) => {
             try {
 
-                let products = []
-                typeof product == 'string' ? products.push(product) : products = product
+
+
                 for (let i = 0; i < products.length; i++) {
                     // change product Status
-                    await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: products[i] }, {
+                    await db.get().collection(collection.PRODUCT_COLLECTION).updateOne({ prId: products[i].prId }, {
                         $set: {
                             status: "Ordered"
                         }
@@ -845,7 +856,7 @@ module.exports = {
                     // Delete Cart
                     await db.get().collection(collection.CART_COLLECTION).updateOne({ urId }, {
                         $pull: {
-                            list: products[i]
+                            list: products[i].prId
                         }
                     })
                 }
@@ -881,23 +892,24 @@ module.exports = {
                     },
                     {
                         $project: {
-                            orId: 1, urId: 1, status: 1, date: 1, deliveryDate: 1, products: 1, cancelDate: 1
+                            orId: 1, urId: 1, date: 1, products: 1
                         }
                     },
                     {
                         $lookup: {
                             from: collection.PRODUCT_COLLECTION,
-                            localField: "products",
+                            localField: "products.prId",
                             foreignField: "prId",
                             as: 'productDetails'
                         }
                     },
                     {
                         $project: {
-                            orId: 1, urId: 1, status: 1,
+                            orId: 1, urId: 1,
+                            status: '$products.status',
                             date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
-                            deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
-                            cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                            deliveryDate: { $dateToString: { format: "%d-%m-%Y", date: "$products.deliveryDate", } },
+                            cancelDate: { $dateToString: { format: "%d-%m-%Y", date: "$products.cancelDate", } },
                             prId: { $first: '$productDetails.prId' },
                             title: { $first: '$productDetails.title' },
                             image: { $first: '$productDetails.image' },
@@ -937,9 +949,8 @@ module.exports = {
                     {
                         $project: {
                             countProduct: { $size: '$products' },
-                            orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
-                            date: 1, deliveryDate: 1, cancelDate: 1, status: 1, methord: 1,
-                            products: 1
+                            orId: 1, urId: 1, amount: 1, methord: 1, address: 1,
+                            date: 1, products: 1
                         }
                     },
                     {
@@ -948,17 +959,19 @@ module.exports = {
                     {
                         $lookup: {
                             from: collection.PRODUCT_COLLECTION,
-                            localField: "products",
+                            localField: "products.prId",
                             foreignField: "prId",
                             as: 'productDetails'
                         }
                     },
                     {
                         $project: {
-                            orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1, countProduct: 1,
+                            orId: 1, urId: 1,
+                            status: '$products.status',
+                            amount: 1, methord: 1, address: 1, countProduct: 1,
                             date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
-                            deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
-                            cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                            deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$products.deliveryDate", } },
+                            cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$products.cancelDate", } },
                             prId: { $first: '$productDetails.prId' },
                             title: { $first: '$productDetails.title' },
                             image: { $first: '$productDetails.image' },
@@ -968,13 +981,14 @@ module.exports = {
                             medium: { $first: '$productDetails.medium' },
                             description: { $first: '$productDetails.description' },
                             show: { $eq: [{ $first: '$productDetails.prId' }, prId] },
-                            Placed: { $eq: ["$status", "Placed"] },
-                            Pending: { $eq: ["$status", "Pending"] },
-                            Shipped: { $eq: ["$status", "Shipped"] },
-                            OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
-                            Delivered: { $eq: ["$status", "Delivered"] },
-                            Cancelled: { $eq: ["$status", "Cancelled"] },
+                            Placed: { $eq: ["$products.status", "Placed"] },
+                            Pending: { $eq: ["$products.status", "Pending"] },
+                            Shipped: { $eq: ["$products.status", "Shipped"] },
+                            OutForDelivery: { $eq: ["$products.status", "OutForDelivery"] },
+                            Delivered: { $eq: ["$products.status", "Delivered"] },
+                            Cancelled: { $eq: ["$products.status", "Cancelled"] },
                             Online: { $eq: ['$methord', 'online'] },
+                            
 
                         }
                     }
@@ -986,25 +1000,30 @@ module.exports = {
             }
         })
     },
-    cancelOrder: (orId) => {
+    cancelOrder: (orId, prId, price) => {
+
         return new Promise(async (resolve, reject) => {
             try {
 
                 let order = await db.get().collection(collection.ORDER_COLLECTION).findOne({ orId })
                 if (order) {
                     for (let i = 0; i < order.products.length; i++) {
-                        await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({ prId: order.products[i] },
+                        await db.get().collection(collection.PRODUCT_COLLECTION).updateMany({ prId: order.products[i].prId },
                             {
                                 $set: {
                                     status: 'Approve'
                                 }
                             })
                     }
-                    let response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId }, {
+                    let response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId, 'products.prId': prId }, {
+                        $inc: {
+                            amount: price - (price * 2)
+                        },
                         $set: {
-                            status: 'Cancelled',
-                            cancelDate: new Date()
+                            'products.$.status': 'Cancelled',
+                            'products.$.cancelDate': new Date(),
                         }
+
                     })
                     resolve(response)
 
@@ -1018,7 +1037,8 @@ module.exports = {
     // Order End
     // Online Payment Start
     generateRazorpay: (orId, amount) => {
-
+        amount = Number(amount)
+       
         return new Promise(async (resolve, reject) => {
             try {
                 // Create Order
@@ -1029,13 +1049,15 @@ module.exports = {
 
                 }, (err, order) => {
                     if (err) {
+                       
                     } else {
-
+                      
                         resolve(order)
                     }
                 })
 
             } catch (error) {
+               
                 reject(error)
             }
         })
@@ -1063,7 +1085,7 @@ module.exports = {
             try {
                 db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body['order[receipt]'] }, {
                     $set: {
-                        status: 'Placed'
+                        'products.$[].status': 'Placed'
                     }
                 })
                 resolve()

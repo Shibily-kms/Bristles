@@ -9,11 +9,11 @@ module.exports = {
                 to: `+91${mobile}`,
                 channel: 'sms'
             }).then((response) => {
-                console.log(response);
+              
                 response.valid = true
                 resolve(response)
             }).catch((err)=>{
-                console.log(err,'rrr');
+              
                 reject(err)
             })
 

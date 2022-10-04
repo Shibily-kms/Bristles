@@ -41,10 +41,14 @@ module.exports = {
                 let paymentLastMonth = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
                         $match: {
-                            status: 'Delivered',
-                            deliveryDate: {
-                                $gte: before,
-                                $lte: today
+                            products: {
+                                $elemMatch: {
+                                    status: 'Delivered',
+                                    deliveryDate: {
+                                        $gte: before,
+                                        $lte: today
+                                    }
+                                }
                             }
                         }
                     },
@@ -55,23 +59,34 @@ module.exports = {
                         }
                     }
                 ]).toArray()
+                
                 let productsCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Approve', delete: false }).count()
-                let orderCount = await db.get().collection(collection.ORDER_COLLECTION).find({ status: { $in: ['Placed', 'Pending', 'Shipped', 'OutForDelivery'] } }).count()
+                let orderCount = await db.get().collection(collection.ORDER_COLLECTION).find({
+                    products: {
+                        $elemMatch: {
+                            status: {
+                                $in: ['Placed', 'Pending', 'Shipped', 'OutForDelivery']
+                            }
+                        }
+                    }
+                }).count()
                 let artistCount = await db.get().collection(collection.ARTIST_COLLECTION).find({ status: { $in: ['Active', 'Blocked'] } }).count()
                 let userCount = await db.get().collection(collection.USER_COLLECTION).find().count()
                 let pendingProductCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Pending' }).count()
                 let categoryCount = await db.get().collection(collection.CATEGORY_COLLECTION).find().count()
                 let couponCount = await db.get().collection(collection.COUPON_COLLECTION).find({ used: false, validity: { $gte: todayYMD } }).count()
-
                 let orderStatusBasieCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
+                        $unwind : '$products'
+                    },
+                    {
                         $project: {
-                            status: 1
+                            products: 1
                         }
                     },
                     {
                         $group: {
-                            _id: { status: '$status' },
+                            _id: { status: '$products.status' },
                             count: { $sum: 1 }
                         }
                     },
@@ -83,6 +98,7 @@ module.exports = {
                         }
                     }
                 ]).toArray()
+              
                 let a = [0, 0, 0, 0, 0, 0]
                 for (let i = 0; i < orderStatusBasieCount.length; i++) {
                     if (orderStatusBasieCount[i].status == "Delivered") {
@@ -160,21 +176,25 @@ module.exports = {
                 let revenue = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
                         $match: {
-                            status: 'Delivered',
-                            deliveryDate: {
-                                $gte: before,
-                                $lte: today
+                            products: {
+                                $elemMatch: {
+                                    status: 'Delivered',
+                                    deliveryDate: {
+                                        $gte: before,
+                                        $lte: today
+                                    }
+                                }
                             }
                         }
                     },
                     {
                         $project: {
-                            methord: 1, amount: 1, deliveryDate: 1
+                            methord: 1, amount: 1, date: 1
                         }
                     },
                     {
                         $group: {
-                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } }, methord: '$methord' },
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$date" } }, methord: '$methord' },
                             Amount: { $sum: '$amount' }
                         }
                     },
@@ -222,21 +242,25 @@ module.exports = {
                 let order = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
                         $match: {
-                            status: 'Delivered',
-                            deliveryDate: {
-                                $gte: before,
-                                $lte: today
+                            products: {
+                                $elemMatch: {
+                                    status: 'Delivered',
+                                    deliveryDate: {
+                                        $gte: before,
+                                        $lte: today
+                                    }
+                                }
                             }
                         }
                     },
                     {
                         $project: {
-                            methord: 1, amount: 1, deliveryDate: 1
+                            methord: 1, amount: 1, date: 1
                         }
                     },
                     {
                         $group: {
-                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } }, method: '$methord' },
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$date" } }, method: '$methord' },
                             count: { $sum: 1 }
                         }
                     },
@@ -340,21 +364,25 @@ module.exports = {
                 let orderCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
                         $match: {
-                            status: 'Delivered',
-                            deliveryDate: {
-                                $gte: before,
-                                $lte: today
+                            products: {
+                                $elemMatch: {
+                                    status: 'Delivered',
+                                    deliveryDate: {
+                                        $gte: before,
+                                        $lte: today
+                                    }
+                                }
                             }
                         }
                     },
                     {
                         $project: {
-                            deliveryDate: 1, status: 1
+                            date: 1, status: 1
                         }
                     },
                     {
                         $group: {
-                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$deliveryDate" } } },
+                            _id: { date: { $dateToString: { format: "%m-%Y", date: "$date" } } },
                             myCount: { $sum: 1 }
                         }
                     },
@@ -542,6 +570,7 @@ module.exports = {
                     result.reject = true
                 } else if (result.status == "Approve") {
                     result.status = "In"
+                    result.Approve = true
                 } else if (result.status == "Ordered") {
                     result.status = 'Out'
                     result.OutStoke = true
@@ -985,15 +1014,37 @@ module.exports = {
     getAllOrder: () => {
         return new Promise(async (resolve, reject) => {
             try {
-                let order = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $unwind: "$products"
+                    },
                     {
                         $project: {
-                            orId: 1, urId: 1, methord: 1, amount: 1, status: 1,
+                            orId: 1, urId: 1, date: 1, products: 1
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.PRODUCT_COLLECTION,
+                            localField: "products.prId",
+                            foreignField: "prId",
+                            as: 'productDetails'
+                        }
+                    },
+                    {
+                        $project: {
+                            orId: 1, urId: 1,
+                            status: '$products.status',
                             date: { $dateToString: { format: "%d-%m-%Y", date: "$date", timezone: "+05:30" } },
+
+                            prId: { $first: '$productDetails.prId' },
+                            title: { $first: '$productDetails.title' },
+                            image: { $first: '$productDetails.image' },
+
                         }
                     }
                 ]).sort({ _id: -1 }).toArray()
-                resolve(order)
+                resolve(orders)
 
 
             } catch (error) {
@@ -1001,7 +1052,8 @@ module.exports = {
             }
         })
     },
-    getOneOrder: (orId) => {
+    getOneOrder: (orId, prId) => {
+
         return new Promise(async (resolve, reject) => {
             try {
 
@@ -1025,17 +1077,19 @@ module.exports = {
                     {
                         $lookup: {
                             from: collection.PRODUCT_COLLECTION,
-                            localField: "products",
+                            localField: "products.prId",
                             foreignField: "prId",
                             as: 'productDetails'
                         }
                     },
                     {
                         $project: {
-                            orId: 1, urId: 1, status: 1, amount: 1, methord: 1, address: 1,
+                            orId: 1, urId: 1,
+                            status: '$products.status',
+                            amount: 1, methord: 1, address: 1,
                             date: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
-                            deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$deliveryDate", } },
-                            cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$cancelDate", } },
+                            deliveryDate: { $dateToString: { format: "%d-%m-%Y ", date: "$products.deliveryDate", } },
+                            cancelDate: { $dateToString: { format: "%d-%m-%Y ", date: "$products.cancelDate", } },
                             prId: { $first: '$productDetails.prId' },
                             title: { $first: '$productDetails.title' },
                             prImage: { $first: '$productDetails.image' },
@@ -1044,20 +1098,22 @@ module.exports = {
                             category: { $first: '$productDetails.category' },
                             medium: { $first: '$productDetails.medium' },
                             description: { $first: '$productDetails.description' },
-                            Placed: { $eq: ["$status", "Placed"] },
-                            Pending: { $eq: ["$status", "Pending"] },
-                            Shipped: { $eq: ["$status", "Shipped"] },
-                            OutForDelivery: { $eq: ["$status", "OutForDelivery"] },
-                            Delivered: { $eq: ["$status", "Delivered"] },
-                            Cancelled: { $eq: ["$status", "Cancelled"] },
+                            Placed: { $eq: ["$products.status", "Placed"] },
+                            Pending: { $eq: ["$products.status", "Pending"] },
+                            Shipped: { $eq: ["$products.status", "Shipped"] },
+                            OutForDelivery: { $eq: ["$products.status", "OutForDelivery"] },
+                            Delivered: { $eq: ["$products.status", "Delivered"] },
+                            Cancelled: { $eq: ["$products.status", "Cancelled"] },
                             firstName: { $first: '$user.firstName' },
                             lastName: { $first: '$user.lastName' },
                             email: { $first: '$user.email' },
-                            Online: { $eq: ['$methord', 'online'] }
+                            Online: { $eq: ['$methord', 'online'] },
+                            show: { $eq: [{ $first: '$productDetails.prId' }, prId] },
                         }
                     }
                 ]).toArray()
-                order[0].length = typeof order == "object" ? order.length : 0
+              
+                order[0].length = typeof order == "object" ? order.length - 1 : false
                 resolve(order)
 
             } catch (error) {
@@ -1070,16 +1126,16 @@ module.exports = {
             try {
                 let response = ''
                 if (body.status == 'Delivered') {
-                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
+                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId, 'products.prId': body.prId }, {
                         $set: {
-                            status: body.status,
-                            deliveryDate: new Date()
+                            'products.$.status': body.status,
+                            'products.$.deliveryDate': new Date()
                         }
                     })
                 } else {
-                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId }, {
+                    response = await db.get().collection(collection.ORDER_COLLECTION).updateOne({ orId: body.orId, 'products.prId': body.prId }, {
                         $set: {
-                            status: body.status
+                            'products.$.status': body.status
                         }
                     })
                 }
@@ -1113,21 +1169,21 @@ module.exports = {
                 {
                     $lookup: {
                         from: collection.PRODUCT_COLLECTION,
-                        localField: "products",
+                        localField: "products.prId",
                         foreignField: "prId",
                         as: 'productDetails'
                     }
                 },
                 {
                     $project: {
-                        _id:0,
+                        _id: 0,
                         ORDER_ID: '$orId',
                         USER_ID: '$urId',
                         NAME: { $first: '$user.userName' },
                         EMAIL: { $first: '$user.email' },
                         METHOD: '$method',
                         TOTAL_AMOUNT: '$amount',
-                        STATUS: '$status',
+                        STATUS: '$products.status',
                         DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S", date: "$date", timezone: "+05:30" } },
                         PRODUCT_ID: { $first: '$productDetails.prId' },
                         PRODUCT_TITLE: { $first: '$productDetails.title' },
@@ -1135,8 +1191,8 @@ module.exports = {
                         SIZE: { $first: '$productDetails.size' },
                         MEDIUM: { $first: '$productDetails.medium' },
                         PRODUCT_PRICE: { $first: '$productDetails.price' },
-                        DELIVERY_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$deliveryDate", } },
-                        CANCEL_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$cancelDate", } },
+                        DELIVERY_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$products.deliveryDate", timezone: "+05:30" } },
+                        CANCEL_DATE: { $dateToString: { format: "%d-%m-%Y %H:%M:%S ", date: "$products.cancelDate", timezone: "+05:30" } },
                         ARTIST_ID: { $first: '$productDetails.arId' },
                     }
                 }

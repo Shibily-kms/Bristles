@@ -13,16 +13,28 @@
             <div class="card p-3 mb-3">
                 <div class="row">
                     <div class="col-md-8 col-sm-6 col-7">
-                        <p class="fw-bold text-dark">Delivery address</p>
-                        <p class="fw-bold text-dark">{{order.[0].address.name}}_{{order.[0].urId}}</p>
-                        <p class="text-dark">{{order.[0].email}}<br>{{order.[0].address.landmark}},
-                            {{order.[0].address.locality}},
-                            {{order.[0].address.area}}, {{order.[0].address.city}}
-                            -{{order.[0].address.pincode}} <br>
-                            {{order.[0].address.state}}
-                        </p>
-                        <p class="fw-bold text-dark m-0">Mobile Number</p>
-                        <p class=" text-dark">{{order.[0].address.phone}}</p>
+                        {{#each order}}
+                        {{#if this.show}}
+                        <a href="/admin/products/{{this.category}}/{{this.prId}}/view" target="_blank"
+                            data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                            title="View Product" class="text-dark">
+                            <div class="d-flex">
+                                <img class="order-list-image" src="/images/products/{{this.prImage.[0]}}" alt="">
+                                <div class="d-none d-sm-block">
+                                    <h6 class="m-0 mb-2  text-dark">
+                                        {{this.title}}_{{this.prId}}_{{this.size}}
+                                    </h6>
+                                    <p class="m-1 ">PR ID : {{this.prId}}</p>
+                                    <p class="m-1 ">Category : {{this.category}}</p>
+                                    <p class="m-1 ">Medium : {{this.medium}}</p>
+                                    <p class="m-1 ">Method : {{this.methord}}</p>
+                                    <p id="productId" hidden>{{this.prId}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        {{/if}}
+                        {{/each}}
+
                     </div>
                     <div class="col-md-4 col-sm-6 col-5">
                         <h6 class=" text-end text-dark">Total Amount <br> ₹ {{order.[0].amount}}.00</h6>
@@ -38,54 +50,65 @@
                                 data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
                                 data-bs-html="true" title="Click to view" class="text-primary">Payment Details</a></p>
                         {{/if}}
+                        <div class="d-flex justify-content-end">
+                         
+                            <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                title="Download XL File" class="btn btn-sm text-white fw-bold btn-success ms-1"
+                                href="/admin/order-list/xl-file?orId={{order.[0].orId}}"><i class='bx bx-spreadsheet'></i> XL
+                                file</a>
+                        </div>
                     </div>
                 </div>
             </div>
+            {{#each order}}
+            {{#if this.show}}
             <div class="card p-3 mb-3">
                 <div class="row">
                     <div class="col-12 col-md-5">
                         {{!-- Table --}}
                         <div class="card p-3" style="background-color:rgb(213, 255, 255) ;">
-                            {{#if order.[0].Cancelled}}
+                            {{#if this.Cancelled}}
                             <div class="d-flex justify-content-center align-items-center" style="height: 90px;">
                                 <div>
                                     <p class="text-center text-danger"><i class='bx bxs-check-circle mb-1'
                                             style="font-size: 25px;"></i><br>
-                                        This Product Cancelled on {{order.[0].cancelDate}}</p>
+                                        This Product Cancelled on {{this.cancelDate}}</p>
                                 </div>
                             </div>
-                            {{else}}{{#if order.[0].Delivered}}
+                            {{else}}{{#if this.Delivered}}
                             <div class="d-flex justify-content-center align-items-center" style="height: 90px;">
                                 <div>
                                     <p class="text-center text-success"><i class='bx bxs-check-circle mb-1'
                                             style="font-size: 25px;"></i><br>
-                                        This Product delivered on {{order.[0].deliveryDate}}</p>
+                                        This Product delivered on {{this.deliveryDate}}</p>
                                 </div>
                             </div>
                             {{else}}
                             <form action="">
                                 <p class="fw-bold text-dark m-0 mb-2">Change Status</p>
+
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
-                                        name="status" value="Placed" {{#if order.[0].Placed}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{this.orId}}')"
+                                        name="status" value="Placed" {{#if this.Placed}} checked {{/if}}>
                                     <label class="ml-1" for="">Placed</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
-                                        name="status" value="Shipped" {{#if order.[0].Shipped}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{this.orId}}')"
+                                        name="status" value="Shipped" {{#if this.Shipped}} checked {{/if}}>
                                     <label for="">Shipped</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
-                                        name="status" value="OutForDelivery" {{#if order.[0].OutForDelivery}} checked
+                                    <input type="radio" onchange="changeStatus(this.value,'{{this.orId}}')"
+                                        name="status" value="OutForDelivery" {{#if this.OutForDelivery}} checked
                                         {{/if}}>
                                     <label for="">Out For Delivery</label>
                                 </div>
                                 <div class="my-2 text-dark">
-                                    <input type="radio" onchange="changeStatus(this.value,'{{order.[0].orId}}')"
-                                        name="status" value="Delivered" {{#if order.[0].Delivered}} checked {{/if}}>
+                                    <input type="radio" onchange="changeStatus(this.value,'{{this.orId}}')"
+                                        name="status" value="Delivered" {{#if this.Delivered}} checked {{/if}}>
                                     <label for="">Delivered</label>
                                 </div>
+
                             </form>
                             {{/if}}{{/if}}
                         </div>
@@ -94,59 +117,64 @@
                         <div class="row">
                             <div class="col-12 col-md-10 hh-grayBox pt45 pb20 w-100">
                                 <div class="row justify-content-between aligh-items-center ">
-                                    {{#if order.[0].Cancelled}}
+                                    {{#if this.Cancelled}}
                                     <div class="order-cancel  completed ">
                                         <span class="is-complete"></span>
-                                        <p>Ordered<br><span>{{order.[0].date}}</span></p>
+                                        <p>Ordered<br><span>{{this.date}}</span></p>
                                     </div>
                                     <div class="order-cancel cancelled">
                                         <span class="is-complete"></span>
-                                        <p>Cancelled<br><span>{{order.[0].cancelDate}}</span></p>
+                                        <p>Cancelled<br><span>{{this.cancelDate}}</span></p>
                                     </div>
                                     {{else}}
-                                    <div class="order-tracking {{#if order.[0].Placed}} completed {{/if}}
-                                                {{#if order.[0].Shipped}} completed {{/if}} {{#if order.[0].OutForDelivery}}
-                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}} 
-                                                 {{#if order.[0].Cancelled}} completed {{/if}}">
+                                    <div class="order-tracking {{#if this.Placed}} completed {{/if}}
+                                                {{#if this.Shipped}} completed {{/if}} {{#if this.OutForDelivery}}
+                                                 completed {{/if}} {{#if this.Delivered}} completed {{/if}} 
+                                                 {{#if this.Cancelled}} completed {{/if}}">
                                         <span class="is-complete"></span>
-                                        <p>Ordered<br><span>{{order.[0].date}}</span></p>
+                                        <p>Ordered<br><span>{{this.date}}</span></p>
                                     </div>
                                     <div class="order-tracking 
-                                                {{#if order.[0].Shipped}} completed {{/if}} {{#if order.[0].OutForDelivery}}
-                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}}">
+                                                {{#if this.Shipped}} completed {{/if}} {{#if this.OutForDelivery}}
+                                                 completed {{/if}} {{#if this.Delivered}} completed {{/if}}">
                                         <span class="is-complete"></span>
                                         <p>Shipped</p>
                                     </div>
-                                    <div class="order-tracking {{#if order.[0].OutForDelivery}}
-                                                 completed {{/if}} {{#if order.[0].Delivered}} completed {{/if}}">
+                                    <div class="order-tracking {{#if this.OutForDelivery}}
+                                                 completed {{/if}} {{#if this.Delivered}} completed {{/if}}">
                                         <span class="is-complete"></span>
                                         <p>Out for delivery</p>
                                     </div>
-                                    <div class="order-tracking {{#if order.[0].Delivered}} completed {{/if}}">
+                                    <div class="order-tracking {{#if this.Delivered}} completed {{/if}}">
                                         <span class="is-complete"></span>
-                                        <p>Delivered<br><span>{{order.[0].deliveryDate}}</span></p>
+                                        <p>Delivered<br><span>{{this.deliveryDate}}</span></p>
                                     </div>
                                     {{/if}}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/if}}
+                    {{/each}}
                 </div>
 
 
             </div>
-
+            {{!-- {{#if order.[1]}} --}}
             <div class="card p-3 mb-3">
+                {{#if order.[1]}}
                 <div>
                     <p class="fw-bold text-dark">{{ order.[0].length}} Items in this Order</p>
                 </div>
                 <hr class="my-0" />
+                {{/if}}
                 <div class="row mt-3">
                     {{#each order}}
+                    {{#if this.show}}{{else}}
                     <div class="col-12 col-md-6 mb-3">
-                        <a href="/admin/products/{{this.category}}/{{this.prId}}/view" target="_blank"
+                        <a href="/admin/order-list/details?orId={{this.orId}}&prId={{this.prId}}"
                             data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                            title="View Product" class="text-dark">
+                            title="View Details" class="text-dark">
                             <div class="d-flex">
                                 <img class="order-list-image" src="/images/products/{{this.prImage.[0]}}" alt="">
                                 <div class="d-none d-sm-block">
@@ -162,11 +190,23 @@
                             </div>
                         </a>
                     </div>
-
+                    {{/if}}
                     {{/each}}
+                    <div class="col-12 col-md-6 mb-3">
+                        <p class="fw-bold text-dark">Delivery address</p>
+                        <p class="fw-bold text-dark">{{order.[0].address.name}}_{{order.[0].urId}}</p>
+                        <p class="text-dark">{{order.[0].email}}<br>{{order.[0].address.landmark}},
+                            {{order.[0].address.locality}},
+                            {{order.[0].address.area}}, {{order.[0].address.city}}
+                            -{{order.[0].address.pincode}} <br>
+                            {{order.[0].address.state}}
+                        </p>
+                        <p class="fw-bold text-dark m-0">Mobile Number</p>
+                        <p class=" text-dark">{{order.[0].address.phone}}</p>
+                    </div>
                 </div>
             </div>
-
+            {{!-- {{/if}} --}}
 
         </div>
         {{else}}

@@ -348,7 +348,7 @@
 <script>
 
     $("#payment").submit(function (e) {
-        console.log('hi')
+      
         e.preventDefault(); // avoid to execute the actual submit of the form.
 
         var form = $(this);
@@ -356,7 +356,7 @@
         let amount = document.getElementById('totalPrice').innerHTML
         let couponCode = document.getElementById('couponInput').value
         let buyNow = document.getElementById('buynowPrId').value
-        console.log('hiii')
+       
         let prId = buyNow == '' ? null : buyNow
         $.ajax({
             type: "POST",

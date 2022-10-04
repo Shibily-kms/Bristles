@@ -38,59 +38,62 @@
                     <div class="card-body rounded-3 "
                         style="background-color: rgb(226, 226, 226); padding:20px 10px 10px 10px;">
                         {{#if order}}
+                        {{#each order}}
+                        {{#if this.show}}
                         <div class="card p-3 mb-3">
                             <div class="row">
                                 <div class="col-md-8 col-sm-6 col-7">
                                     <p class="fw-bold text-dark">Delivery address</p>
-                                    <p class="fw-bold text-dark">{{order.[0].address.name}}</p>
-                                    <p class="text-dark">{{order.[0].address.landmark}}, {{order.[0].address.locality}},
-                                        {{order.[0].address.area}}, {{order.[0].address.city}}
-                                        -{{order.[0].address.pincode}} <br>
-                                        {{order.[0].address.state}}
+                                    <p class="fw-bold text-dark">{{this.address.name}}</p>
+                                    <p class="text-dark">{{this.address.landmark}}, {{this.address.locality}},
+                                        {{this.address.area}}, {{this.address.city}}
+                                        -{{this.address.pincode}} <br>
+                                        {{this.address.state}}
                                     </p>
                                     <p class="fw-bold text-dark m-0">Mobile Number</p>
-                                    <p class=" text-dark">{{order.[0].address.phone}}</p>
+                                    <p class=" text-dark">{{this.address.phone}}</p>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-5">
-                                    <h6 class=" text-end text-dark">Total Amount <br> ₹ {{order.[0].amount}}.00</h6>
-                                    {{#if order.[0].Cancelled }}
-                                    <p class=" text-end text-dark">Cancelled on {{order.[0].cancelDate}}
+                                    <h6 class=" text-end text-dark">Total Amount <br> ₹ {{this.amount}}.00</h6>
+                                    {{#if this.Cancelled }}
+                                    <p class=" text-end text-dark">Cancelled on {{this.cancelDate}}
                                     </p>
                                     {{else}}
-                                    <p class=" text-end text-dark">Delivery expected by {{order.[0].deliveryDate}}
+                                    <p class=" text-end text-dark">Delivery expected by {{this.deliveryDate}}
                                     </p>
                                     {{/if}}
                                     <p class="text-end order-list-small text-dark"><span
-                                            class="status status-{{order.[0].status}} p-0 me-2"></span>
+                                            class="status status-{{this.status}} p-0 me-2"></span>
                                         Your Order has been
-                                        {{order.[0].status}}.</p>
-                                    {{#if order.[0].Cancelled }}{{else}} {{#if order.[0].Delivered}}{{else}}
+                                        {{this.status}}.</p>
+                                    {{#if this.Cancelled }}{{else}} {{#if this.Delivered}} {{else}}
                                     <div>
                                         <p class="text-end text-primary cursor-pointer"
-                                            onclick="cancelUserOrder('{{order.[0].orId}}')" class="text-primary">
+                                            onclick="cancelUserOrder('{{this.orId}}','')" class="text-primary">
                                             <i class='bx bxs-message-square-x'></i> Cancel Order ?
                                         </p>
                                     </div>
                                     {{/if}}{{/if}}
                                     <div class="d-flex justify-content-end">
+                                        {{#if this.Delivered}}
                                         <button onclick="PrintDiv('print-container','Bristles.in')"
                                             data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
                                             data-bs-html="true" title="Print Invoice"
                                             class="btn btn-sm text-dark fw-bold btn-warning"><i
                                                 class='bx bx-printer'></i> Invoice</button>
+                                        {{/if}}
                                         <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
                                             data-bs-html="true" title="Download XL File"
                                             class="btn btn-sm text-white fw-bold btn-success ms-1"
-                                            href="/order/xl-file?orId={{order.[0].orId}}"><i
-                                                class='bx bx-spreadsheet'></i> XL file</a>
+                                            href="/order/xl-file?orId={{this.orId}}"><i class='bx bx-spreadsheet'></i>
+                                            XL file</a>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
+
                         <div class="card p-3 mb-3">
-                            {{#each order}}
-                            {{#if this.show}}
                             <div class="row">
                                 <div class="col-12 col-md-5">
                                     <div class="d-flex">
@@ -102,6 +105,8 @@
                                             <p class="m-1 ">Order ID : {{this.orId}}</p>
                                             <p class="m-1 ">{{this.date}}</p>
                                             <p class="m-1 ">Payment Methord : {{this.methord}}</p>
+                                            <p hidden id="productId">{{this.prId}}</p>
+                                            <p hidden id="productPrice">{{this.price}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -155,9 +160,9 @@
                                     </div>
                                 </div>
                             </div>
-                            {{/if}}
-                            {{/each}}
                         </div>
+                        {{/if}}
+                        {{/each}}
                         {{#if order.[1]}}
                         <div class="card p-3 mb-3">
                             <div>
@@ -181,7 +186,10 @@
                                                 <p class="m-1 ">Category : {{this.category}}</p>
                                                 <p class="m-1 ">Medium : {{this.medium}}</p>
                                                 <p class="m-1 ">{{this.date}}</p>
-                                                <p class="m-1 ">{{this.description}}</p>
+                                                {{#if this.Cancelled}}
+                                                <p class="m-1 text-danger"><i class='bx bxs-info-circle'></i> This
+                                                    Product Cancelled !</p>
+                                                {{/if}}
                                             </div>
                                         </div>
                                     </a>
@@ -222,6 +230,7 @@
 
     // Pnding Payment
     function pendingPayment(orId, amount, name, phone) {
+       
         $.ajax({
             url: '/pending-payment',
             data: {

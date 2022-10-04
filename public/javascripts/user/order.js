@@ -3,11 +3,13 @@
 function cancelUserOrder(orId) {
     let alert = confirm('Cancel this Order ?');
     if (alert) {
+        let prId = document.getElementById('productId').innerHTML
+        let price = document.getElementById('productPrice').innerHTML
         $.ajax({
             type: "POST",
             url: '/order/cancel/',
             data: {
-                orId
+                orId, prId, price
             },
             success: function (response) {
                 location.reload()
@@ -18,12 +20,14 @@ function cancelUserOrder(orId) {
 
 // Admin Change Order Status
 function changeStatus(value, orId) {
+    let prId = document.getElementById('productId').innerHTML
+    
     $.ajax({
         type: "POST",
         url: '/admin/order-list/change-order-status',
         data: {
             status: value,
-            orId
+            orId, prId
         },
         success: function (response) {
             location.reload()

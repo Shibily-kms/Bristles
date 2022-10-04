@@ -49,7 +49,7 @@ module.exports = {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
             } else if (response.status) {
-                console.log('here');
+              
                 req.session._BR_DATA = req.body
                 await twilioHelper.dosms(req.body.mobile).then((status) => {
                     if (status) {
@@ -506,7 +506,7 @@ module.exports = {
                 urId = user.urId
             }
             let products = await userHelper.getCartProduct(urId)
-            console.log(products);
+          
             let total = 0
             let discount = 0
             for (let i = 0; i < products.length; i++) {
@@ -600,7 +600,7 @@ module.exports = {
                     } else {
                         ogTotal = ogTotal + Number(products[i].cartItems.price)
                     }
-                    console.log(products[i].outStoke);
+                  
                     if (products[i].outStoke) {
                         flag = true
                     }
@@ -614,8 +614,7 @@ module.exports = {
                     }
                 }
             }
-            console.log('iam here');
-            console.log(flag);
+          
             if (flag == true) {
                 req.session.error = 'Remeove ordered Products from cart'
                 res.redirect('/cart')
@@ -669,7 +668,7 @@ module.exports = {
     // Order Start
     postOrder: async (req, res, next) => {
         let user = req.session._BR_USER
-        console.log('hi');
+      
         try {
 
             let response = await userHelper.orderAccessing(req.body, user.urId)
@@ -750,7 +749,9 @@ module.exports = {
     getCancelOrder: async (req, res, next) => {
         try {
             let orId = req.body.orId
-            let response = await userHelper.cancelOrder(orId)
+            let prId = req.body.prId
+            let price = Number(req.body.price)
+            let response = await userHelper.cancelOrder(orId,prId,price)
             res.json(response)
         } catch (error) {
             next(error)
@@ -760,12 +761,13 @@ module.exports = {
     pendingPaymentCall: async (req, res, next) => {
         let user = req.session._BR_USER
         try {
+          
             let generateResponse = await userHelper.generateRazorpay(req.body.orId, req.body.amount)
             generateResponse.name = req.body.name
             generateResponse.email = user.email
             generateResponse.phone = req.body.phone
             generateResponse.urId = user.urId
-            res.json(generateResponse)
+            res.json(generateResponse)  
 
         } catch (error) {
             next(error)
@@ -779,10 +781,10 @@ module.exports = {
             let orderData = await adminHelpers.getOneOrderForXL(orId)
             // Set to JSON and Path
             orderDate = JSON.stringify(orderData)
-            console.log('hi');
+         
             let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
             let xls = json2xls(JSON.parse(orderDate));
-            console.log('hia');
+         
             // Write file
             fs.writeFileSync(filePath, xls, 'binary', function (err) {
                 if (err) console.log(err);

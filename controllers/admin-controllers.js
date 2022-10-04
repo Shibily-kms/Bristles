@@ -11,9 +11,9 @@ module.exports = {
 
     // Dashboard Start
     getDashboard: async (req, res, next) => {
+        let admin = req.session._BR_ADMIN
+        let CAT = req.session._BR_CAT
         try {
-            let admin = req.session._BR_ADMIN
-            let CAT = req.session._BR_CAT
             let countObj = await adminHelpers.getDashboardCountObj()
             res.render('admin/dashboard', { title: "Dashboard | Admin panel", admin, CAT, countObj })
         } catch (error) {
@@ -352,7 +352,7 @@ module.exports = {
             let NOW_CAT = req.params.NOW_CAT
             let prId = req.params.prId
             let product = await adminHelpers.getOneProduct(prId)
-
+            console.log(product);
             res.render('admin/view-pending', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
 
         } catch (error) {
@@ -370,7 +370,7 @@ module.exports = {
             let response = await adminHelpers.approveAndRejectProduct(prId, choose)
             if (response.approve) {
                 req.session.success = "This Product Approved"
-                res.redirect('/admin/products/' + NOW_CAT + '/' + prId + '/view')
+                res.redirect('/admin/pending-products/' + NOW_CAT)
             } else if (response.reject) {
                 req.session.success = "This Product Rejected"
                 res.redirect('/admin/pending-products/' + NOW_CAT)
@@ -807,8 +807,8 @@ module.exports = {
         let CAT = req.session._BR_CAT
         try {
             let orId = req.query.orId
-            let order = await adminHelpers.getOneOrder(orId)
-            console.log(order);
+            let order = await adminHelpers.getOneOrder(orId,req.query.prId)
+          
             res.render('admin/view-order', { title: "View Order | Admin panel", admin, CAT, order })
 
         } catch (error) {
@@ -834,10 +834,10 @@ module.exports = {
             let orderData = await adminHelpers.getOneOrderForXL(orId)
             // Set to JSON and Path
             orderDate = JSON.stringify(orderData)
-            console.log('hi');
+          
             let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
             let xls = json2xls(JSON.parse(orderDate));
-            console.log('hia');
+          
             // Write file
             fs.writeFileSync(filePath, xls, 'binary', function (err) {
                 if (err) console.log(err);

@@ -68,6 +68,9 @@
                 </div>
                 {{/if}}
                 <h3 class="pt-3 price">₹ {{product.price}}.00</h3>
+                {{#if product.Approve}}
+                <p class="text-success ">This Product Approved !</p>
+                {{else}}
                 <div class="buttons mb-3">
                     <a href="/admin/pending-products/{{product.category}}/{{product.prId}}/approve"
                         class="btn btn-success" onclick="return confirm('Approve this Product ?')"><i
@@ -81,6 +84,7 @@
                             class='bx bx-x'></i> Rejected</a>
                     {{/if}}
                 </div>
+                {{/if}}
                 <h6 class="sub-head">Specification</h6>
                 <hr>
                 <div class="product-list-admin pb-4">

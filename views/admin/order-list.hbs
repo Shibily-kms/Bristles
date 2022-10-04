@@ -16,9 +16,11 @@
                             <th>Sl No</th>
                             <th>Date</th>
                             <th>OR ID</th>
-                            <th>UR ID</th>
-                            <th>Methord</th>
-                            <th>Amount</th>
+                            <th>Image</th>
+                            <th>PR ID</th>
+                            <th>Title</th>
+                            
+                            {{!-- <th>Methord</th> --}}
                             <th>Status</th>
                             <th>View</th>
                         </tr>
@@ -26,33 +28,35 @@
                     <tbody class="table-border-bottom-0">
                         {{#each order}}
                         <tr>
+
+                            <td></td>
+                            <td>{{this.date}}</td>
+                            <td>{{this.orId}}</td>
+                            <td><img style="width: 40px; hight:40px; border-radius: 5px;"
+                                    src="/images/products/{{this.image.[0]}}"></td>
                            
-                                <td></td>
-                                <td>{{this.date}}</td>
-                                <td>{{this.orId}}</td>
-                                <td>{{this.urId}}</td>
-                                <td>{{this.methord}}</td>
-                                <td>₹{{this.amount}}</td>
-                                <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
-                                <td>
-                                    <span class="table-action-td">
-                                        <a href="/admin/order-list/details?orId={{this.orId}}" data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="view order">
-                                            <button type="button" class="btn rounded-pill btn-icon btn-dark">
-                                                <span class="tf-icons bx bxs-show"></span>
-                                            </button>
-                                        </a>
-                                        <a href="/admin/order-list/xl-file?orId={{this.orId}}" data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="Download XL file">
-                                            <button type="button" class="btn rounded-pill btn-icon btn-success">
-                                               <i class='bx bxs-file-archive' ></i>
-                                            </button>
-                                        </a>
-                                    </span>
-                                </td>
-                           
+                            <td>₹{{this.prId}}</td>
+                            <td>{{this.title}}</td>
+                            <td><span class="status status-{{this.status}}">{{this.status}}</span></td>
+                            <td>
+                                <span class="table-action-td">
+                                    <a href="/admin/order-list/details?orId={{this.orId}}&prId={{this.prId}}" data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                        title="view order">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-dark">
+                                            <span class="tf-icons bx bxs-show"></span>
+                                        </button>
+                                    </a>
+                                    {{!-- <a href="/admin/order-list/xl-file?orId={{this.orId}}" data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                        title="Download XL file">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-success">
+                                            <i class='bx bxs-file-archive'></i>
+                                        </button>
+                                    </a> --}}
+                                </span>
+                            </td>
+
                         </tr>
                         {{/each}}
 

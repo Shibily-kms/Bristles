@@ -18,20 +18,10 @@
                         <div class="section-two">
                             <div>
                                 <h2>INVOICE</h2>
-                                {{#if order.[0].Cancelled}}
-                                <h3 class="pending">- Cancelled -</h3>
-                                {{else}}
-                                {{#if order.[0].Delivered}}
+
+
                                 <h3 class="paid"> - Paided -</h3>
-                                {{else}}
-                                {{#if order.[0].Online}}
-                                {{#if order.[0].Pending}}
-                                <h3 class="pending">- Unpaided -</h3>
-                                {{else}}
-                                <h3 class="paid"> - Paided -</h3>
-                                {{/if}}{{else}}
-                                <h3 class="pending">- Unpaided -</h3>
-                                {{/if}}{{/if}}{{/if}}
+
                             </div>
                         </div>
                     </div>
@@ -95,32 +85,34 @@
                 <th class="headerTh">Amount</th>
             </tr>
             {{#each order}}
+            {{#if this.Delivered}}
             <tr>
                 <td class="contentTd"></td>
                 <td class="contentTd">{{this.title}}</td>
                 <td class="contentTd">{{this.category}}</td>
                 <td class="contentTd" id="{{@index}}">{{this.price}}</td>
             </tr>
+            {{/if }}
             {{/each}}
 
             <tr>
                 <th class=""></th>
                 <th class=""></th>
                 <td class="totalTd">Sub Total</td>
-                <td class="totalTd" id="subtotal">{{order.[0].countProduct}}</td>
+                <td class="totalTd" id="subtotal">{{order.[0].amount}}</td>
             </tr>
-            <tr>
+            {{!-- <tr>
                 <th class=""></th>
                 <th class=""></th>
                 <td class="totalTd" style=" border-width: 1px;">coupon offer</td>
                 <td class="totalTd" style=" border-width: 1px;" id="offer">-0</td>
-            </tr>
+            </tr> --}}
             <tr>
                 <th class=""></th>
                 <th class=""></th>
                 <td class="totalTd" style="color: rgb(0, 88, 110); font-weight:bolder; font-size:20px; ">Total</td>
                 <td class="totalTd" style="color: rgb(0, 88, 110); font-weight:bolder; font-size:20px;" id="total">
-                    {{order.[0].amount}}</td>
+                    ₹{{order.[0].amount}}</td>
             </tr>
         </tbody>
         <tfoot>
@@ -250,23 +242,25 @@
         }
     </Style>
     <script>
-        function checkTotal() {
-            let sub = document.getElementById('subtotal')
-            let count = parseInt(sub.innerHTML)
-            let total = document.getElementById('total')
-            let offer = document.getElementById('offer')
-            let ogTotal = 0
-            for (let i = 0; i < count; i++) {
-                let price = document.getElementById(i).innerHTML
-                ogTotal = ogTotal + parseInt(price)
-            }
-            sub.innerHTML = ogTotal
-            let off = 0
-            off = ogTotal - parseInt(total.innerHTML)
-            offer.innerHTML = '-₹' + off
-            offer.style.color = '#00b344'
-            total.innerHTML = '₹' + total.innerHTML
-        }
-        checkTotal()
+      //  function checkTotal() {
+      //      let sub = document.getElementById('subtotal')
+      //      let count = parseInt(sub.innerHTML)
+      //      let total = document.getElementById('total')
+      //      let offer = document.getElementById('offer')
+       //     let ogTotal = 0
+     //       for (let i = 0; i < count; i++) {
+     //           let price = document.getElementById(i).innerHTML
+      //
+      //          alert(price)
+     //           ogTotal = ogTotal + parseInt(price)
+      //      }
+     //       sub.innerHTML = ogTotal
+       //     let off = 0
+    //        off = ogTotal - parseInt(total.innerHTML)
+    //        offer.innerHTML = '-₹' + off
+   //         offer.style.color = '#00b344'
+  //          total.innerHTML = '₹' + total.innerHTML
+   //     }
+ //        checkTotal()
     </script>
 </div>
