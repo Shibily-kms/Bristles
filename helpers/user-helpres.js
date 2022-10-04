@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt');
 
 const Razorpay = require('razorpay');
 const instance = new Razorpay({
-    key_id: 'rzp_test_59KOR6eRcVHKh4',
-    key_secret: 'rEbNwpcSpVyBYMnDxcAauA6W',
+    key_id: process.env.RAZOR_PAY_KEY_ID,
+    key_secret: process.env.RAZOR_PAY_KEY_SECRET,
 });
 
 

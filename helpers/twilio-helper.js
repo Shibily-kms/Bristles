@@ -1,5 +1,5 @@
-const client = require('twilio')('AC72717c826f8ab1f8c921a975f7f71b8c', '936287e96fc4bb59975c684e894c522c');
-const serviceSid = 'VAfd8b8483b29c8a6816871d0c20295559'
+const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const serviceSid = process.env.TWILIO_SERVICE_ID
 
 module.exports = {
 

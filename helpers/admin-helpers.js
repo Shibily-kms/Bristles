@@ -10,8 +10,8 @@ module.exports = {
             try {
                 let adminData = {
                     username: "Bristles",
-                    email: "admin@gmail.com",
-                    password: '123',
+                    email: process.env.ADMIN_EMAIL,
+                    password: process.env.ADMIN_PASSWORD,
                 }
                 if (adminData.email == body.email) {
                     if (adminData.password == body.password) {

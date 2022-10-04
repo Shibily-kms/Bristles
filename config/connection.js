@@ -12,7 +12,7 @@ const store = new MongoDBSession({
 })
 
 module.exports.sessionSet = session({
-    secret: "key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -29,7 +29,7 @@ const state = {
 }
 
 module.exports.connect = function (done) {
-    const url = 'mongodb://localhost:27017'
+    const url = process.env.DATABASE
     const dbname = 'Bristles'
 
     mongoClient.connect(url, (err, data) => {
