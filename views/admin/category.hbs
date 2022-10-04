@@ -1,5 +1,5 @@
- {{>admin-top}}
-  {{>admin-side}}
+{{>admin-top}}
+{{>admin-side}}
 <div class="admin-content-page-over">
     <div class=" container-fluid top-page-padding">
         {{!-- Header --}}
@@ -32,23 +32,21 @@
                             <td>{{this.title}}</td>
                             {{!-- <td>Active</td> --}}
                             <td>
-                                 <span class="table-action-td">
-                                <a href="/admin/category/{{this.cgId}}/edit " data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="Edit">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-primary">
-                                        <span class="tf-icons bx bxs-edit-alt"></span>
-                                    </button>
-                                </a>
-                                <a href="/admin/category/{{this.cgId}}/delete"
-                                    onclick="return confirm('Are you remove this category?')" data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="Delete">
-                                    <button type="button" class="btn rounded-pill btn-icon btn-danger">
-                                        <span class="tf-icons bx bx-trash"></span>
-                                    </button>
-                                </a>
-                                 </span>
+                                <span class="table-action-td">
+                                    <a href="/admin/category/{{this.cgId}}/edit " data-bs-toggle="tooltip"
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Edit">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-primary">
+                                            <span class="tf-icons bx bxs-edit-alt"></span>
+                                        </button>
+                                    </a>
+                                    <a onclick=" BSconfirm('Are you remove this category?','/admin/category/{{this.title}}/delete')"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Delete">
+                                        <button type="button" class="btn rounded-pill btn-icon btn-danger">
+                                            <span class="tf-icons bx bx-trash"></span>
+                                        </button>
+                                    </a>
+                                </span>
                             </td>
                         </tr>
                         {{/each}}
@@ -58,13 +56,11 @@
             </div>
         </div>
         <!--/ Hoverable Table rows -->
-
-
-
-
     </div>
 </div>
-</div>
+
+
+
 
 {{!-- Sidebar Action --}}
 <script>

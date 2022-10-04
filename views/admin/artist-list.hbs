@@ -35,25 +35,24 @@
                             <td>
                                 <span class="table-action-td">
                                     <a href="/admin/artist/{{this.arId}}/view " data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="View">
+                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="View">
                                         <button type="button" class="btn rounded-pill btn-icon btn-dark">
                                             <span class="tf-icons bx bxs-show"></span>
                                         </button>
                                     </a>
                                     {{#if this.active}}
-                                    <a href="/admin/artist/all-artist/{{this.arId}}/blocked " title="Block artist"
-                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                        data-bs-html="true" onclick="return confirm('Block this artist account ?')">
+                                    <a title="Block artist" data-bs-toggle="tooltip" data-bs-offset="0,4"
+                                        data-bs-placement="top" data-bs-html="true"
+                                        onclick="BSconfirm('Block this artist account ?','/admin/artist/all-artist/{{this.arId}}/blocked')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bxs-user-x"></span>
                                         </button>
                                     </a>
                                     {{/if}}
                                     {{#if this.blocked}}
-                                    <a href="/admin/artist/all-artist/{{this.arId}}/active " title="Active artist"
-                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                        data-bs-html="true" onclick="return confirm('Active this artist account ?')">
+                                    <a title="Active artist" data-bs-toggle="tooltip" data-bs-offset="0,4"
+                                        data-bs-placement="top" data-bs-html="true"
+                                        onclick="BSconfirm('Active this artist account ?','/admin/artist/all-artist/{{this.arId}}/active ')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-success">
                                             <span class="tf-icons bx bxs-user-check"></span>
                                         </button>

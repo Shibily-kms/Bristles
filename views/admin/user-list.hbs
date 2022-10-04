@@ -42,18 +42,19 @@
                                         </button>
                                     </a>
                                     {{#if this.active}}
-                                    <a href="/admin/user-list/{{this.urId}}/blocked " title="Block user"
-                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                        data-bs-html="true" onclick="return confirm('Block this user account ?')">
+                                    <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true"
+                                        onclick="BSconfirm('Block this user account ?','/admin/user-list/{{this.urId}}/blocked "
+                                        title="Block user')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bxs-user-x"></span>
                                         </button>
                                     </a>
                                     {{/if}}
                                     {{#if this.blocked}}
-                                    <a href="/admin/user-list/{{this.urId}}/active " title="Active user"
-                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                        data-bs-html="true" onclick="return confirm('Active this user account ?')">
+                                    <a title="Active user" data-bs-toggle="tooltip" data-bs-offset="0,4"
+                                        data-bs-placement="top" data-bs-html="true"
+                                        onclick="BSconfirm('Active this user account ?','/admin/user-list/{{this.urId}}/active')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-success">
                                             <span class="tf-icons bx bxs-user-check"></span>
                                         </button>

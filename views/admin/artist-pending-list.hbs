@@ -37,18 +37,17 @@
                                         </button>
                                     </a>
 
-                                    <a href="/admin/artist/{{this.arId}}/account-approve"
-                                        onclick="return confirm('Approve this Artist ?')" data-bs-toggle="tooltip"
-                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Active">
+                                    <a onclick="BSconfirm('Approve this Artist ?','/admin/artist/{{this.arId}}/account-approve')"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Active">
                                         <button type="button" class="btn rounded-pill btn-icon btn-success">
                                             <span class="tf-icons bx bx-check"></span>
                                         </button>
                                     </a>
                                     {{#if this.pending}}
                                     <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                        data-bs-html="true" title="Reject"
-                                        href="/admin/artist/{{this.arId}}/account-reject"
-                                        onclick="return confirm('Reject this Artist ?')">
+                                        data-bs-html="true" title="Reject" 
+                                        onclick="BSconfirm('Reject this Artist ?','/admin/artist/{{this.arId}}/account-reject')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-x"></span>
                                         </button>

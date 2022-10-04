@@ -43,9 +43,9 @@
                                         </button>
                                     </a>
                                     {{else}}
-                                    <a href="/artist/product-list/{{this.prId}}/delete" data-bs-toggle="tooltip"
-                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Delete"
-                                        onclick="return confirm('Are you remove this product?')">
+                                    <a data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Delete"
+                                        onclick="BSconfirm('Are you remove this product?','/artist/product-list/{{this.prId}}/delete')">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-trash"></span>
                                         </button>

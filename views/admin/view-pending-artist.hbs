@@ -8,15 +8,17 @@
                 <ul class="nav nav-pills flex-column flex-md-row mb-3">
 
                     <li class="nav-item">
-                        <a class=" btn btn-success " href="/admin/artist/{{artist.arId}}/account-approve"
-                            onclick="return confirm('Approve this Artist ?')"><i class="bx bx-check me-1"></i>
+                        <a class=" btn btn-success "
+                            onclick="BSconfirm('Approve this Artist ?','/admin/artist/{{artist.arId}}/account-approve')"><i
+                                class="bx bx-check me-1"></i>
                             Approve</a>
                         {{#if artist.pending}}
-                        <a class="btn btn-danger mx-1" href="/admin/artist/{{artist.arId}}/account-reject"
-                            onclick="return confirm('Reject this Artist ?')"><i class="bx bx-x me-1"></i> Reject</a>
-                            {{else}}
-                            <a class="btn  text-danger"><i class='bx bx-info-circle'></i> This Account was
-                        <strong>Rejected</strong></a>
+                        <a class="btn btn-danger mx-1" 
+                            onclick="BSconfirm('Reject this Artist ?','/admin/artist/{{artist.arId}}/account-reject')"><i
+                                class="bx bx-x me-1"></i> Reject</a>
+                        {{else}}
+                        <a class="btn  text-danger"><i class='bx bx-info-circle'></i> This Account was
+                            <strong>Rejected</strong></a>
                         {{/if}}
                     </li>
 

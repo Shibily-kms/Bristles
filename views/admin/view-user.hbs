@@ -37,9 +37,9 @@
                             {{#if user.active}}
                             <div class="mt-3">
                                 <p>Status : <span class="status status-{{user.status}}">{{user.status}}</span></p>
-                                <a href="/admin/user-list/{{user.urId}}/blocked " title="Block user"
+                                <a  title="Block user"
                                     data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                    data-bs-html="true" onclick="return confirm('Block this user account ?')"
+                                    data-bs-html="true" onclick="BSconfirm('Block this user account ?','/admin/user-list/{{user.urId}}/blocked')"
                                     class="btn btn-danger text-white w-100"><i class='bx bxs-user-x'></i> Block</a>
                             </div>
                             {{/if}}
@@ -47,9 +47,9 @@
                             <div class="mt-3">
                                 <p>Status : <span class="status status-{{user.status}}">{{user.status}}</span></p>
                                 <a class="btn btn-success text-white w-100"
-                                    href="/admin/user-list/{{user.urId}}/active " title="Active user"
+                                     title="Active user"
                                     data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                    data-bs-html="true" onclick="return confirm('Active this user account ?')"><i
+                                    data-bs-html="true" onclick="BSconfirm('Active this user account ?','/admin/user-list/{{user.urId}}/active')"><i
                                         class='bx bxs-user-check'></i>
                                     Active</a>
                             </div>

@@ -59,7 +59,7 @@ module.exports = {
                         }
                     }
                 ]).toArray()
-                
+
                 let productsCount = await db.get().collection(collection.PRODUCT_COLLECTION).find({ status: 'Approve', delete: false }).count()
                 let orderCount = await db.get().collection(collection.ORDER_COLLECTION).find({
                     products: {
@@ -77,7 +77,7 @@ module.exports = {
                 let couponCount = await db.get().collection(collection.COUPON_COLLECTION).find({ used: false, validity: { $gte: todayYMD } }).count()
                 let orderStatusBasieCount = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
-                        $unwind : '$products'
+                        $unwind: '$products'
                     },
                     {
                         $project: {
@@ -98,7 +98,7 @@ module.exports = {
                         }
                     }
                 ]).toArray()
-              
+
                 let a = [0, 0, 0, 0, 0, 0]
                 for (let i = 0; i < orderStatusBasieCount.length; i++) {
                     if (orderStatusBasieCount[i].status == "Delivered") {
@@ -493,11 +493,17 @@ module.exports = {
         })
     },
 
-    deleteCategory: (id) => {
+    deleteCategory: (title) => {
         return new Promise(async (resolve, reject) => {
             try {
-                db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ cgId: id })
-                resolve()
+                let status = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: title }).toArray()
+                if (status.length == 0) {
+                   let response = await db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ title: title })
+                    resolve(response)
+
+                } else {
+                    resolve({ categoryError: true })
+                }
             } catch (error) {
                 reject(error)
             }
@@ -1112,7 +1118,7 @@ module.exports = {
                         }
                     }
                 ]).toArray()
-              
+
                 order[0].length = typeof order == "object" ? order.length - 1 : false
                 resolve(order)
 

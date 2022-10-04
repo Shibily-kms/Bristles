@@ -39,18 +39,17 @@
                                             <span class="tf-icons bx bxs-show"></span>
                                         </button>
                                     </a>
-                                    <a href="/admin/pending-products/{{this.category}}/{{this.prId}}/approve"
-                                        onclick="return confirm('Approve this Artist ?')" data-bs-toggle="tooltip"
-                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                        title="Approve">
+                                    <a onclick="BSconfirm('Approve this Artist ?','/admin/pending-products/{{this.category}}/{{this.prId}}/approve')"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Approve">
                                         <button type="button" class="btn rounded-pill btn-icon btn-success">
                                             <span class="tf-icons bx bx-check"></span>
                                         </button>
                                     </a>
                                     {{#if this.Pending}}
-                                    <a href="/admin/pending-products/{{this.category}}/{{this.prId}}/reject"
-                                        onclick="return confirm('Reject this Artist ?')" data-bs-toggle="tooltip"
-                                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Reject">
+                                    <a onclick="BSconfirm('Reject this Artist ?','/admin/pending-products/{{this.category}}/{{this.prId}}/reject')"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Reject">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-x"></span>
                                         </button>

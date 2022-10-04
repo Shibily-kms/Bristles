@@ -45,19 +45,19 @@
                             {{#if artist.active}}
                             <div class="mt-3">
                                 <p>Status : <span class="status status-{{artist.status}}">{{artist.status}}</span></p>
-                                <a href="/admin/artist/all-artist/{{artist.arId}}/blocked " title="Block artist"
-                                    data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                    data-bs-html="true" onclick="return confirm('Block this artist account ?')"
+                                <a title="Block artist" data-bs-toggle="tooltip" data-bs-offset="0,4"
+                                    data-bs-placement="top" data-bs-html="true"
+                                    onclick="BSconfirm('Block this artist account ?','/admin/artist/all-artist/{{artist.arId}}/blocked')"
                                     class="btn btn-danger text-white w-100"><i class='bx bxs-user-x'></i> Block</a>
                             </div>
                             {{/if}}
                             {{#if artist.blocked}}
                             <div class="mt-3">
                                 <p>Status : <span class="status status-{{artist.status}}">{{artist.status}}</span></p>
-                                <a class="btn btn-success text-white w-100"
-                                    href="/admin/artist/all-artist/{{artist.arId}}/active " title="Active artist"
+                                <a class="btn btn-success text-white w-100" title="Active artist"
                                     data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
-                                    data-bs-html="true" onclick="return confirm('Active this artist account ?')"><i
+                                    data-bs-html="true"
+                                    onclick="BSconfirm('Active this artist account ?','/admin/artist/all-artist/{{artist.arId}}/active')"><i
                                         class='bx bxs-user-check'></i>
                                     Active</a>
                             </div>

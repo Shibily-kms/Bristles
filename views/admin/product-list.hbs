@@ -41,24 +41,23 @@
                             {{/if}}
                             <td>
                                 <span class="table-action-td">
-                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view " data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="view product">
+                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/view "
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="view product">
                                         <button type="button" class="btn rounded-pill btn-icon btn-dark">
                                             <span class="tf-icons bx bxs-show"></span>
                                         </button>
                                     </a>
-                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit " data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="Edit">
+                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/edit "
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Edit">
                                         <button type="button" class="btn rounded-pill btn-icon btn-primary">
                                             <span class="tf-icons bx bxs-edit-alt"></span>
                                         </button>
                                     </a>
-                                    <a href="/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete"
-                                        onclick="return confirm('Are you remove this product?')" data-bs-toggle="tooltip"
-                                            data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
-                                            title="Delete">
+                                    <a onclick="BSconfirm('Are you remove this product?','/admin/products/{{../NOW_CAT}}/{{this.prId}}/delete')"
+                                        data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top"
+                                        data-bs-html="true" title="Delete">
                                         <button type="button" class="btn rounded-pill btn-icon btn-danger">
                                             <span class="tf-icons bx bx-trash"></span>
                                         </button>

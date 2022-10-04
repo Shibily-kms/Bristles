@@ -41,7 +41,8 @@
                 <a href="/admin/artist/{{product.artist.arId}}/view">
                     <div class="artist">
                         <div class="section-one">
-                            <img src="/images/artist/{{product.artist.image}}" onerror="this.onerror=null;callfun(this);" alt="artist_avatar" >
+                            <img src="/images/artist/{{product.artist.image}}"
+                                onerror="this.onerror=null;callfun(this);" alt="artist_avatar">
                             <div class="details">
                                 <h4>{{product.artist.name}}</h4>
                                 <p>Kerala, India - ({{product.artist.arId}})</p>
@@ -72,15 +73,15 @@
                 <p class="text-success ">This Product Approved !</p>
                 {{else}}
                 <div class="buttons mb-3">
-                    <a href="/admin/pending-products/{{product.category}}/{{product.prId}}/approve"
-                        class="btn btn-success" onclick="return confirm('Approve this Product ?')"><i
+                    <a class="btn btn-success"
+                        onclick="BSconfirm('Approve this Product ?','/admin/pending-products/{{product.category}}/{{product.prId}}/approve')"><i
                             class='bx bx-check'></i> Approve </a>
                     {{#if product.reject}}
                     <a class="btn  text-danger"><i class='bx bx-info-circle'></i> This Product was
                         <strong>Rejected</strong></a>
                     {{else}}
-                    <a href="/admin/pending-products/{{product.category}}/{{product.prId}}/reject"
-                        class="btn btn-danger " onclick="return confirm('Reject this Product ?')"><i
+                    <a class="btn btn-danger "
+                        onclick="BSconfirm('Reject this Product ?','/admin/pending-products/{{product.category}}/{{product.prId}}/reject')"><i
                             class='bx bx-x'></i> Rejected</a>
                     {{/if}}
                 </div>
@@ -96,7 +97,7 @@
                             <p>: {{product.prId}}</p>
                         </div>
                     </div>
-                    
+
                     <div class="col row">
                         <div class="col-4">
                             <p>Quality</p>
@@ -184,9 +185,9 @@
 
     // Image Null Avatar
     function callfun(obj) {
-    var noimg = "/images/avatar/avatar3.png";
-    obj.src = noimg;
-}
+        var noimg = "/images/avatar/avatar3.png";
+        obj.src = noimg;
+    }
 </script>
 
 <script>

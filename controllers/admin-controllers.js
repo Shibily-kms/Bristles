@@ -352,7 +352,6 @@ module.exports = {
             let NOW_CAT = req.params.NOW_CAT
             let prId = req.params.prId
             let product = await adminHelpers.getOneProduct(prId)
-            console.log(product);
             res.render('admin/view-pending', { title: "View product | Admin panel", admin, CAT, NOW_CAT, product })
 
         } catch (error) {
@@ -391,6 +390,9 @@ module.exports = {
             if (req.session.success) {
                 res.render('admin/category', { title: "Category | Admin panel", admin, CAT, category, "success": req.session.success })
                 req.session.success = false
+            } else if (req.session.error) {
+                res.render('admin/category', { title: "Category | Admin panel", admin, CAT, category, "error": req.session.error })
+                req.session.error = false
             } else {
                 res.render('admin/category', { title: "Category | Admin panel", admin, CAT, category })
             }
@@ -476,10 +478,15 @@ module.exports = {
     },
     deleteCategory: async (req, res, next) => {
         try {
-            await adminHelpers.deleteCategory(req.params.id)
-            let category = await adminHelpers.getAllCategory()
-            req.session._BR_CAT = category
-            res.redirect('/admin/category')
+            let result = await adminHelpers.deleteCategory(req.params.title)
+            if (result.categoryError) {
+                req.session.error = 'Remove the category products first'
+                res.redirect('/admin/category')
+            } else {
+                let category = await adminHelpers.getAllCategory()
+                req.session._BR_CAT = category
+                res.redirect('/admin/category')
+            }
         } catch (error) {
             next(error)
         }
@@ -807,8 +814,8 @@ module.exports = {
         let CAT = req.session._BR_CAT
         try {
             let orId = req.query.orId
-            let order = await adminHelpers.getOneOrder(orId,req.query.prId)
-          
+            let order = await adminHelpers.getOneOrder(orId, req.query.prId)
+
             res.render('admin/view-order', { title: "View Order | Admin panel", admin, CAT, order })
 
         } catch (error) {
@@ -830,14 +837,14 @@ module.exports = {
     downloadOrderListXLFile: async (req, res, next) => {
         try {
             let orId = req.query.orId
-            
+
             let orderData = await adminHelpers.getOneOrderForXL(orId)
             // Set to JSON and Path
             orderDate = JSON.stringify(orderData)
-          
+
             let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
             let xls = json2xls(JSON.parse(orderDate));
-          
+
             // Write file
             fs.writeFileSync(filePath, xls, 'binary', function (err) {
                 if (err) console.log(err);

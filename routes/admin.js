@@ -35,7 +35,7 @@ router.get('/category/:id/edit', middleware.verifyAdmin, adminController.getEdit
 router.post('/category/:id/edit', middleware.verifyAdmin, adminController.postEditCategory);
 
 // delete Category
-router.get('/category/:id/delete', middleware.verifyAdmin, adminController.deleteCategory);
+router.get('/category/:title/delete', middleware.verifyAdmin, adminController.deleteCategory);
 
 // Product List
 router.get('/products/:_CAT', middleware.verifyAdmin, adminController.getProductList)
