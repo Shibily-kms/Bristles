@@ -424,7 +424,7 @@ module.exports = {
     addCategory: (body) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let result = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ title: body.title })
+                let result = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ title: /body.title/i })
                 if (result) {
                     resolve({ nameError: true })
                 } else {
