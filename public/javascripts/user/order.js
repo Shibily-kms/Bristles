@@ -12,7 +12,7 @@ function cancelUserOrder(orId) {
                 orId, prId, price
             },
             success: function (response) {
-                location.reload()
+                $("#user-order-one").load(window.location.href + " #user-order-one" );
             }
         });
     }
@@ -30,7 +30,9 @@ function changeStatus(value, orId) {
             orId, prId
         },
         success: function (response) {
-            location.reload()
+          
+            $("#admin-user-order-view").load(window.location.href + " #admin-user-order-view" );
+            
         }
     });
 }

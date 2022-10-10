@@ -50,8 +50,8 @@ function removeProduct(prId) {
             method: 'post',
             success: (response) => {
                 if (response) {
-
-                    location.reload()
+                    $("#user-cart").load(window.location.href + " #user-cart" );
+                    
                 }
 
             }
@@ -70,7 +70,7 @@ function deleteAddress(adId) {
             method: 'post',
             success: (response) => {
                 if (response) {
-                    location.reload()
+                    $("#user-address").load(window.location.href + " #user-address" );
                 }
 
             }
@@ -91,7 +91,7 @@ $("#accordionIcon-5").submit(function (e) {
         url: actionUrl,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            location.reload()
+            $("#user-address").load(window.location.href + " #user-address" );
         }
     });
 
@@ -109,7 +109,7 @@ $("#accordionIcon-0").submit(function (e) {
         url: actionUrl,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            location.reload()
+            $("#user-address").load(window.location.href + " #user-address" );
         }
     });
 
@@ -127,7 +127,7 @@ $("#accordionIcon-1").submit(function (e) {
         url: actionUrl,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            location.reload()
+            $("#user-address").load(window.location.href + " #user-address" );
         }
     });
 
@@ -145,7 +145,7 @@ $("#accordionIcon-2").submit(function (e) {
         url: actionUrl,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            location.reload()
+            $("#user-address").load(window.location.href + " #user-address" );
         }
     });
 
@@ -163,7 +163,7 @@ $("#accordionIcon-3").submit(function (e) {
         url: actionUrl,
         data: form.serialize(), // serializes the form's elements.
         success: function (data) {
-            location.reload()
+            $("#user-address").load(window.location.href + " #user-address" );
         }
     });
 
@@ -178,7 +178,7 @@ function changeCurrentAddress(adId) {
         method: 'post',
         success: (response) => {
             if (response) {
-                location.reload()
+                $("#user-address").load(window.location.href + " #user-address" );
             }
 
         }

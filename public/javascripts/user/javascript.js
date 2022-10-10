@@ -34,7 +34,8 @@ function removeWishProduct(prId) {
         },
         method: 'post',
         success: (response) => {
-            location.reload()
+            $("#user-wishlist").load(window.location.href + " #user-wishlist" );
+            PopAlert('Remove from Wishlist')
         }
     })
 }

@@ -29,3 +29,33 @@ function PopAlert(text, type = "success") {
         document.getElementById('value-alert').innerHTML = text
     }
 }
+
+// Network Status
+function hasNetWork(online) {
+    const element = document.querySelector("#networkInfo");
+   
+
+    if (online) {
+        element.className = 'badge rounded-pill bg-success pt-2'
+        element.innerHTML = 'Online'
+        
+    } else {
+        element.className = 'badge rounded-pill bg-danger pt-2'
+        element.innerHTML = 'Offline'
+
+      
+        
+    }
+
+}
+
+window.addEventListener("load", () => {
+    hasNetWork(navigator.onLine);
+
+    window.addEventListener("online", () => {
+        hasNetWork(true)
+    })
+    window.addEventListener("offline", () => {
+        hasNetWork(false)
+    })
+})
