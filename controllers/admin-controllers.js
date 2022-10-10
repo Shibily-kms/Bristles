@@ -466,7 +466,7 @@ module.exports = {
             } else {
                 let category = await adminHelpers.getAllCategory()
                 req.session._BR_CAT = category
-                req.session.success = "New category created"
+                req.session.success = "Category Name Changed"
                 res.redirect('/admin/category')
 
             }
@@ -625,7 +625,7 @@ module.exports = {
             let arId = req.params.arId
             adminHelpers.approveArtist(arId)
             req.session.success = 'Account approved'
-            res.redirect('/admin/artist/new-account' + arId + '/view')
+            res.redirect('/admin/artist/new-account')
 
         } catch (error) {
             next(error)

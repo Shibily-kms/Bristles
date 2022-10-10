@@ -4,6 +4,7 @@ const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcrypt');
 
 const Razorpay = require('razorpay');
+const { response } = require('express');
 const instance = new Razorpay({
     key_id: process.env.RAZOR_PAY_KEY_ID,
     key_secret: process.env.RAZOR_PAY_KEY_SECRET,
@@ -271,7 +272,7 @@ module.exports = {
                         }
                     ]).toArray()
                 } else {
-                    product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] }, delete: false })
+                    product = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: CAT, status: { $in: ['Approve'] }, delete: false }).toArray()
                 }
                 resolve(product)
             } catch (error) {
@@ -352,6 +353,7 @@ module.exports = {
         })
     },
     // Product End
+    
 
     // User About Start
     getUser: (urId) => {
@@ -784,7 +786,7 @@ module.exports = {
                     let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ urId })
                     typeof cart == 'string' ? obj.products.push(cart) : obj.products = cart.list
                 }
-              
+
                 let proObj = []
                 for (let i = 0; i < obj.products.length; i++) {
                     let objNew = {
@@ -795,7 +797,7 @@ module.exports = {
                     proObj.push(objNew)
                 }
                 obj.products = proObj
-              
+
 
                 // Address
                 let address = await db.get().collection(collection.USER_COLLECTION).aggregate([
@@ -988,7 +990,7 @@ module.exports = {
                             Delivered: { $eq: ["$products.status", "Delivered"] },
                             Cancelled: { $eq: ["$products.status", "Cancelled"] },
                             Online: { $eq: ['$methord', 'online'] },
-                            
+
 
                         }
                     }
@@ -1038,7 +1040,7 @@ module.exports = {
     // Online Payment Start
     generateRazorpay: (orId, amount) => {
         amount = Number(amount)
-       
+
         return new Promise(async (resolve, reject) => {
             try {
                 // Create Order
@@ -1049,15 +1051,15 @@ module.exports = {
 
                 }, (err, order) => {
                     if (err) {
-                       
+
                     } else {
-                      
+
                         resolve(order)
                     }
                 })
 
             } catch (error) {
-               
+
                 reject(error)
             }
         })
@@ -1211,8 +1213,28 @@ module.exports = {
                 reject(error)
             }
         })
-    }
+    },
     // Wishlist End
+
+    // Home Page
+    getSixCategory:()=>{
+        return new Promise(async(resolve, reject) => { 
+            try {
+                let response = {}
+                let category = await db.get().collection(collection.CATEGORY_COLLECTION).find().limit(6).toArray()
+                let count = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
+                count = count.length
+                if(count>6){
+                    response.six = true
+                }
+                response.cat = category
+                resolve(response)
+            } catch (error) {
+                reject(error)
+            }
+         })
+    }
+    // Home Page
 
 
 }

@@ -9,6 +9,7 @@ const middleware = require('../helpers/middleware-helpers')
 
 /* GET home page. */
 router.get('/', userController.getHomePage);
+router.get('/category-list',userController.getAllCategory)
 
 
 // User Sign Up

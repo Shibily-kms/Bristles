@@ -7,29 +7,29 @@
         {{#each product}}
         <div class="col-sm-6 col-lg-3 mb-4">
             <div class="card h-100">
-                <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
-                    <img class="card-img-top" src="/images/products/{{this.image.[0]}}" alt="product image" />
-                </a>
-                <div class="heart-icon " onclick="wishProduct('{{this.prId}}')">
-                    <i class='bx bxs-heart' {{#if this.wishlist.[0]}} style="color: red;" {{/if}}
-                        id="icon{{this.prId}}"></i>
+                <div style="position:relative;">
+                    <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
+                        <img class="card-img-top" src="/images/products/{{this.image.[0]}}" alt="product image" />
+                    </a>
+                    <div class="heart-icon " onclick="wishProduct('{{this.prId}}')" data-bs-toggle="tooltip"
+                        data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="Wish product">
+                        <i class='bx bxs-heart' {{#if this.wishlist.[0]}} style="color: red;" {{/if}}
+                            id="icon{{this.prId}}"></i>
+                    </div>
+                    <div class="heart-icon-count ">
+                        <i class='bx bx-heart'></i>
+                        <p class="m-0" id="wishCount{{this.prId}}">{{#if
+                            this.wishCount}}{{this.wishCount}}{{else}}0{{/if}}
+                        </p>
+                    </div>
                 </div>
+
                 <a class="text-secondary" href="/list/{{this.category}}/{{this.prId}}/view">
                     <div class="card-body card-boarder">
                         <h5 class="">{{this.title}}</h5>
                         <p>Size : {{this.size}}</p>
                         <p>{{this.medium}} - {{this.quality}}</p>
-                        <div class="card-rate mt-2">
-                            <div class="artist-rate-card section-two" title="artist-rate">
-                                <div class="rate">
-                                    <p><i class='bx bxs-star'></i> 3.7</p>
-                                </div>
-                            </div>
-                            <div class="favorite">
-                                <i class='bx bxs-heart'></i>
-                                <p id="wishCount{{this.prId}}">{{#if this.wishCount}}{{this.wishCount}}{{else}}0{{/if}}</p>
-                            </div>
-                        </div>
+                       
                         <div class="card-price mt-2">
                             <h4 class="text-dark">₹ {{this.price}}</h4>
                             {{#if this.ogPrice}}

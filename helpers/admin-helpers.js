@@ -424,7 +424,7 @@ module.exports = {
     addCategory: (body) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let result = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ title: /body.title/i })
+                let result = await db.get().collection(collection.CATEGORY_COLLECTION).findOne({ title: body.title })
                 if (result) {
                     resolve({ nameError: true })
                 } else {
@@ -498,7 +498,7 @@ module.exports = {
             try {
                 let status = await db.get().collection(collection.PRODUCT_COLLECTION).find({ category: title }).toArray()
                 if (status.length == 0) {
-                   let response = await db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ title: title })
+                    let response = await db.get().collection(collection.CATEGORY_COLLECTION).deleteOne({ title: title })
                     resolve(response)
 
                 } else {

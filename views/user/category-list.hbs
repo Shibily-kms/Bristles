@@ -1,0 +1,32 @@
+{{>user-top}}
+
+<div class="container user-page">
+    <div class=" flex-grow-1 container-p-y row">
+        {{#if category.[0]}}
+        <h4 class="fw-bold  mb-4">Category List </h4>
+        {{#each category}}
+          <div class="col-sm-6 col-lg-4 mb-4">
+            <a class="text-secondary" href="/list/{{this.title}}">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.title}}</h5>
+                        <p class="card-text "><small class="text-muted">Click to View products</small></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/each}}
+        {{else}}
+        <div class="check-account ">
+            <div class="box-boreder ">
+                <div>
+                    <h1><i style="font-size: 100px; color:rgb(0, 116, 151);" class='bx bxs-category'></i></h1>
+                    <h4 class="mt-3">No Categories<br>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>
+{{>footer}}

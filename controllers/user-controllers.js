@@ -13,13 +13,26 @@ module.exports = {
     getHomePage: async (req, res, next) => {
         let user = req.session._BR_USER
         try {
-            let category = await adminHelpers.getAllCategory()
+            let response = await userHelper.getSixCategory()
+            let category = response.cat
+            let six = response.six ? response.six : false
             let latestProducts = user ? await userHelper.getLatestProducts(user.urId) : await userHelper.getLatestProducts()
             let carousel = await adminHelpers.getCarousel()
-            res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel });
+            res.render('user/home', { title: 'Home | Bristles', category, user, latestProducts, carousel, six });
 
         } catch (error) {
             res.render('error/user-found', { title: 'Home | Bristles', user, });
+
+        }
+    },
+    getAllCategory: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            let category = await adminHelpers.getAllCategory()
+            res.render('user/category-list', { title: 'Category List | Bristles', category, user, });
+
+        } catch (error) {
+            res.render('error/user-found', { title: 'Category List | Bristles' });
 
         }
     },
@@ -49,7 +62,7 @@ module.exports = {
                 req.session.error = "Email Id existed"
                 res.redirect('/sign-up')
             } else if (response.status) {
-              
+
                 req.session._BR_DATA = req.body
                 await twilioHelper.dosms(req.body.mobile).then((status) => {
                     if (status) {
@@ -506,7 +519,7 @@ module.exports = {
                 urId = user.urId
             }
             let products = await userHelper.getCartProduct(urId)
-          
+
             let total = 0
             let discount = 0
             for (let i = 0; i < products.length; i++) {
@@ -593,14 +606,14 @@ module.exports = {
 
             } else {
                 products = await userHelper.getCartProduct(user.urId)
-                
+
                 for (let i = 0; i < products.length; i++) {
                     if (products[i].cartItems.ogPrice) {
                         ogTotal = ogTotal + Number(products[i].cartItems.ogPrice)
                     } else {
                         ogTotal = ogTotal + Number(products[i].cartItems.price)
                     }
-                  
+
                     if (products[i].outStoke) {
                         flag = true
                     }
@@ -614,7 +627,7 @@ module.exports = {
                     }
                 }
             }
-          
+
             if (flag == true) {
                 req.session.error = 'Remeove ordered Products from cart'
                 res.redirect('/cart')
@@ -668,7 +681,7 @@ module.exports = {
     // Order Start
     postOrder: async (req, res, next) => {
         let user = req.session._BR_USER
-      
+
         try {
 
             let response = await userHelper.orderAccessing(req.body, user.urId)
@@ -751,7 +764,7 @@ module.exports = {
             let orId = req.body.orId
             let prId = req.body.prId
             let price = Number(req.body.price)
-            let response = await userHelper.cancelOrder(orId,prId,price)
+            let response = await userHelper.cancelOrder(orId, prId, price)
             res.json(response)
         } catch (error) {
             next(error)
@@ -761,13 +774,13 @@ module.exports = {
     pendingPaymentCall: async (req, res, next) => {
         let user = req.session._BR_USER
         try {
-          
+
             let generateResponse = await userHelper.generateRazorpay(req.body.orId, req.body.amount)
             generateResponse.name = req.body.name
             generateResponse.email = user.email
             generateResponse.phone = req.body.phone
             generateResponse.urId = user.urId
-            res.json(generateResponse)  
+            res.json(generateResponse)
 
         } catch (error) {
             next(error)
@@ -781,10 +794,10 @@ module.exports = {
             let orderData = await adminHelpers.getOneOrderForXL(orId)
             // Set to JSON and Path
             orderDate = JSON.stringify(orderData)
-         
+
             let filePath = path.join(__dirname, '../public/files/excel/' + orderData[0].ORDER_ID + '.xlsx')
             let xls = json2xls(JSON.parse(orderDate));
-         
+
             // Write file
             fs.writeFileSync(filePath, xls, 'binary', function (err) {
                 if (err) console.log(err);

@@ -73,7 +73,7 @@
 .user-header .left .icon-div .cart-count {
     background-color: rgb(0, 167, 0);
     position: absolute;
-    padding: 0px 5px 0px 5px;
+    padding: 0px 7px 0px 7px;
     border-radius: 100px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
@@ -180,6 +180,26 @@
     -ms-border-radius: 100%;
     -o-border-radius: 100%;
     
+}
+
+.card .heart-icon-count {
+    background-color: rgb(255, 198, 198);
+    color: rgb(230, 0, 0);
+    position: absolute;
+    padding: 0 7px 0 5px;
+    bottom: 10px;
+    left: 10px;
+    width: auto;
+    height: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    -ms-border-radius: 100px;
+    -o-border-radius: 100px;
+    font-size: 13px;
 }
 
 /* Search */
