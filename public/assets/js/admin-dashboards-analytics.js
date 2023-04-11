@@ -372,6 +372,7 @@
       data: {},
       method: 'post',
       success: (chartCategory) => {
+        console.log(chartCategory,'ddd')
 
         const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
           orderChartConfig = {

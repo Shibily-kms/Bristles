@@ -1,0 +1,93 @@
+{{>user-top}}
+<div class="container user-page">
+    <div class=" flex-grow-1 container-p-y">
+        <h4 class="fw-bold  mb-4">Account</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/profile"><i class='bx bxs-user me-1'></i>
+                            Profile</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/address"><i class='bx bxs-map'></i> Manage Addresses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wishlist"><i class='bx bxs-heart'></i> Wishlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/order"><i class='bx bxs-package'></i> Orders</a>
+                    </li>
+
+                </ul>
+
+                <div class="card mb-4">
+
+                    <!-- Account -->
+                    <form action="/profile/deactivate-account" method="post"
+                        id="userProfileEditForm" onsubmit="return userChangePassword()">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                <span class="camera-icon-div">
+                                    <img src="/images/user/{{user.image}}" alt="user-avatar" class="d-block rounded"
+                                        height="100" width="100" id="uploadedProfile"
+                                        onerror="this.onerror=null;callfun(this);" />
+                                </span>
+                                <div class="button-wrapper">
+
+
+                                    <h5 class="text-dark mb-1 ">{{user.firstName}} {{user.lastName}}</h5>
+                                    <p class="text-muted mb-1">UR ID : {{user.urId}}</p>
+                                   
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-0" />
+
+
+                        {{!-- Hidden Inputes --}}
+                        <input type="text" name="urId" value="{{user.urId}}" hidden>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <div class="col-12 col-md-6">
+                                    <h5>Are you sure you want to leave?</h5>
+                                    <div class="mb-3 col-12">
+                                        <label for="currentPassword" class="form-label">Email address</label>
+                                        <input class="form-control" type="email" id="currentPassword" readonly
+                                            name="email" value="{{user.email}}"  />
+                                        <small class="text-danger" id="currentAlert" style="display: none;"></small>
+
+                                    </div>
+                                    <div class="mb-3 col-12">
+                                        <label for="newPassword" class="form-label">Enter Password</label>
+                                        <input class="form-control" type="password" id="password" name="newPassword" />
+                                        <small class="text-danger" id="newAlert" style="display: none;"></small>
+                                    </div>
+                                    
+                                    <div class="mb-3 col-12 ">
+                                        <button type="submit"
+                                            class="btn btn-primary col-12">CONFIRM DEACTIVATION</button>
+                                        <a href="/profile"
+                                            class="btn text-primary col-12 me-1 mt-2">NO, LET ME STAY!</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Account -->
+                        </div>
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <!-- / Content -->
+    </div>
+</div>
+{{>footer}}
+<script>
+    
+    document.getElementById('profile').className = "dropdown-item active"
+</script>

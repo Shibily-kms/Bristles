@@ -567,6 +567,15 @@ module.exports = {
             }
         })
     },
+    deactivateAccount:(body)=>{
+        return new Promise((resolve, reject) => { 
+            try {
+                
+            } catch (error) {
+                reject(error)
+            }
+         })
+    },
     // User About End
 
     // Cart Start

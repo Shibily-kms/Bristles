@@ -40,6 +40,8 @@ router.post('/get-all-product', userController.getAllProdutInSearch)
 
 // User Profile
 router.get('/profile', middleware.verifyUser, userController.getProfile)
+router.get('/profile/deactivate-account',middleware.verifyUser,userController.getDeactivatePage)
+router.post('/profile/deactivate-account',middleware.verifyUser,userController.postDeactivateAccount)
 
 // User Profile Edit
 router.get('/profile/edit', middleware.verifyUser, userController.getEditProfile);
@@ -70,7 +72,6 @@ router.get('/cart', userController.getCart);
 router.post('/remove-from-cart', middleware.verifyTokenOrUser, userController.removeFromCart)
 
 // CheckOut 
-// router.get('/buy-now/:prId',userController.getBuyNow)
 router.get('/checkout', middleware.verifyUser, userController.getCheckOut);
 router.post('/change-current-address', middleware.verifyUser, userController.changeCurrentAddress);
 router.post('/checkCoupon', middleware.verifyUser, userController.checkCouponCode)

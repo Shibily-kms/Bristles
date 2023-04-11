@@ -468,7 +468,6 @@ module.exports = {
         try {
             let adId = req.params.adId
             let response = await userHelper.updateAddress(req.body, adId, user.urId)
-            // req.session.success = "Address updated"
             res.json(response)
 
         } catch (error) {
@@ -480,13 +479,28 @@ module.exports = {
         try {
             let user = req.session._BR_USER
             let response = await userHelper.deleteAddress(req.body.adId, user.urId)
-            // req.session.success = "Address Deleted"
             res.json(response)
 
         } catch (error) {
             next(error)
         }
 
+    },
+    getDeactivatePage: async (req, res, next) => {
+        let user = req.session._BR_USER
+        try {
+            res.render('user/deactivate-account', { title: 'Deactivate Account | Bristles', user })
+        } catch (error) {
+            res.render('error/user-found', { title: 'Deactivate Account | Bristles', user })
+        }
+    },
+    postDeactivateAccount:async(req,res,next)=>{
+        let user = req.session._BR_USER
+        try {
+            let deactivate = await userHelper.deactivateAccount(req.body)
+        } catch (error) {
+            res.render('error/user-found', { title: 'Deactivate Account | Bristles', user })
+        }
     },
     // Profile End
 
